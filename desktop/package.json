@@ -1,0 +1,17 @@
+{
+  "name": "select-from-carreira",
+  "productName": "SELECT FROM carreira",
+  "version": "1.0.0",
+  "description": "Jogo em pixel art para aprender SQL e pandas resolvendo demandas de uma empresa.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-packager . \"SELECT FROM carreira\" --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico --ignore=^/dist",
+    "build:mac": "electron-packager . \"SELECT FROM carreira\" --platform=darwin --arch=universal --out=dist --overwrite --ignore=^/dist",
+    "build:linux": "electron-packager . \"SELECT FROM carreira\" --platform=linux --arch=x64 --out=dist --overwrite --ignore=^/dist"
+  },
+  "devDependencies": {
+    "@electron/packager": "18.3.6",
+    "electron": "33.2.1"
+  }
+}

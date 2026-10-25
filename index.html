@@ -1,0 +1,2040 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SELECT * FROM carreira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/alasql@4.4.0/dist/alasql.min.js"></script>
+<style>
+:root{
+  --bg:#d6dce6;--surface:#f5f7fb;--surface2:#e6eaf1;--ink:#1b2233;--muted:#56607a;--edge:#1b2233;--drop:#1b2233;
+  --blue:#2b59c3;--blue-ink:#ffffff;--money:#1f7a45;--alert:#bf3029;--hi:#ffd23f;--hi-ink:#1b2233;
+  --code:#101833;--code-ink:#e6ecf8;--code-mute:#8ea0c4;--hud:#2d3448;--hud-ink:#f2f4f8;
+  --pixel:"Press Start 2P",ui-monospace,"Courier New",monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161f;--surface:#1a2130;--surface2:#232c3e;--ink:#e6ebf5;--muted:#9ba6bd;--edge:#56637f;--drop:#04060a;
+  --blue:#5b85ea;--money:#55c785;--alert:#f06a61;--code:#0a0f1f;color-scheme:dark;}}
+:root[data-theme="dark"]{--bg:#11161f;--surface:#1a2130;--surface2:#232c3e;--ink:#e6ebf5;--muted:#9ba6bd;--edge:#56637f;--drop:#04060a;--blue:#5b85ea;--money:#55c785;--alert:#f06a61;--code:#0a0f1f;color-scheme:dark;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.muted{color:var(--muted)}.small{font-size:13px}
+#app{max-width:1280px;margin:0 auto;padding:12px}
+/* HUD */
+.hud{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--hud);color:var(--hud-ink);padding:10px 14px;border:2px solid #10141f;box-shadow:4px 4px 0 var(--drop)}
+.brand{font-family:var(--pixel);font-size:11px;letter-spacing:.02em;color:var(--hi);margin-right:auto;line-height:1.6}
+.hud-stats{display:flex;gap:18px;align-items:center;font-family:var(--pixel);font-size:10px;flex-wrap:wrap}
+#hDay{font-family:var(--sans);font-size:14px;font-weight:600}
+#hClock{background:#10141f;padding:6px 8px;color:#9fe3b6}
+#hMoney{color:var(--hi)}#hMoney.neg{color:#ff8a80}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;margin-top:14px;align-items:start}
+.stage{position:relative;border:2px solid #10141f;box-shadow:4px 4px 0 var(--drop);background:#2d3448;line-height:0;width:100%;max-width:calc((100vh - 120px) * 1.5);justify-self:center}
+
+.screen{position:relative}
+#cv{width:100%;height:auto;aspect-ratio:3/2;image-rendering:pixelated;image-rendering:crisp-edges;display:block;touch-action:none}
+/* SIDE */
+.side{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:2px solid var(--edge);box-shadow:3px 3px 0 var(--drop);padding:12px}
+.me{display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center}
+#mePort{width:56px;height:56px;image-rendering:pixelated;background:var(--surface2);border:2px solid var(--edge)}
+#meNome{font-weight:700;font-size:16px;line-height:1.2}#meCargo{color:var(--blue);font-weight:600;font-size:14px}#meSal{font-size:12px;color:var(--muted);line-height:1.35}
+.stat{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;font-size:13px;margin-top:8px}
+.meter{position:relative;height:14px;background:var(--surface2);border:2px solid var(--edge)}
+.meter i{position:absolute;inset:0 auto 0 0;background:var(--money);transition:width .3s}
+.meter b{position:absolute;right:4px;top:-1px;font:9px/14px var(--pixel);color:var(--ink)}
+.meter.low i{background:var(--alert)}
+#barChefe i{background:var(--blue)}
+.sk{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;margin-bottom:7px}
+.sk .lv{font:9px/1.8 var(--pixel);color:var(--muted)}
+.bar{grid-column:1/-1;height:6px;background:var(--surface2);border:1px solid var(--edge)}
+.bar i{display:block;height:100%;background:var(--blue)}
+.side h3{margin:0 0 8px;font-size:13px;font-weight:700;display:flex;justify-content:space-between}
+.side h3 b{font:10px/1.6 var(--pixel);background:var(--hi);color:var(--hi-ink);padding:0 6px}
+#missList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}
+#missList li{display:grid;grid-template-columns:auto 1fr;gap:0 8px;font-size:13px;line-height:1.3;padding-bottom:6px;border-bottom:1px dashed var(--muted)}
+#missList li:last-child{border-bottom:0}
+#missList .mt{font-weight:600}#missList .mf{grid-column:2;color:var(--muted);font-size:12px}
+#missList .empty{display:block;color:var(--muted);border:0}
+.due{font:8px/1.9 var(--pixel);padding:2px 5px;background:var(--surface2);align-self:start;white-space:nowrap}
+.due.hot,.ib-due.hot{background:var(--alert);color:#fff}.due.warm,.ib-due.warm{background:var(--hi);color:var(--hi-ink)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border:2px solid var(--edge);background:var(--surface);padding:8px 12px;box-shadow:3px 3px 0 var(--drop);font-weight:600;font-size:14px;line-height:1.2}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--drop)}
+.btn:active:not(:disabled){transform:translate(2px,2px);box-shadow:1px 1px 0 var(--drop)}
+.btn.primary{background:var(--blue);color:var(--blue-ink)}
+.btn.ghost{box-shadow:none;background:transparent}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.glow{background:var(--hi);color:var(--hi-ink)}
+/* DPAD */
+.dpad{display:none;position:absolute;left:10px;bottom:10px;width:132px;height:132px;line-height:1}
+.dpad button{position:absolute;width:44px;height:44px;background:rgba(16,20,31,.72);border:2px solid rgba(255,255,255,.35);color:#fff;font-size:16px;touch-action:none;user-select:none;-webkit-user-select:none}
+.dpad button.on{background:rgba(255,210,63,.85);color:#1b2233}
+.dpad [data-d=Up]{left:44px;top:0}.dpad [data-d=Down]{left:44px;top:88px}.dpad [data-d=Left]{left:0;top:44px}.dpad [data-d=Right]{left:88px;top:44px}
+#btnA{display:none;position:absolute;right:14px;bottom:30px;width:62px;height:62px;border-radius:50%;background:rgba(255,210,63,.9);border:3px solid #1b2233;font:14px var(--pixel);color:#1b2233;touch-action:manipulation}
+@media (pointer:coarse){.dpad,#btnA{display:block}}
+@media (pointer:coarse) and (max-width:900px){.screen{padding-bottom:142px}.dpad{bottom:6px;left:14px}#btnA{bottom:40px;right:24px;width:66px;height:66px}}
+/* DIALOG */
+.dialog{position:absolute;left:3%;right:3%;bottom:3%;background:#fbf7ec;color:#1b2233;border:3px solid #1b2233;box-shadow:0 0 0 3px #c79a5b,5px 5px 0 3px #1b2233;display:grid;grid-template-columns:84px 1fr;gap:12px;padding:12px;line-height:1.45;cursor:pointer;z-index:5}
+.dialog[hidden]{display:none}
+#dlgPort{width:84px;height:84px;image-rendering:pixelated;background:#e5d6b6;border:2px solid #1b2233}
+#dlgName{font:10px/1.6 var(--pixel);color:#8a4b14;margin-bottom:4px}
+#dlgText{font-size:16px;min-height:3em;max-width:68ch}
+#dlgNext{position:absolute;right:12px;bottom:8px;font:10px var(--pixel);color:#8a4b14;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+#dlgChoices{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.choice{border:2px solid #1b2233;background:#fff;padding:7px 12px;font-weight:600;font-size:14px;box-shadow:2px 2px 0 #1b2233;text-align:left;color:#1b2233}
+.choice:hover,.choice:focus-visible{background:var(--hi)}
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(10,14,24,.55);display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px));z-index:20}
+.modal[hidden]{display:none}
+.win{background:var(--surface);border:2px solid var(--edge);box-shadow:6px 6px 0 var(--drop);width:min(560px,100%);max-height:100%;display:flex;flex-direction:column}
+.modal.wide .win{width:min(980px,100%)}
+.titlebar{display:flex;align-items:center;gap:10px;background:var(--hud);color:var(--hud-ink);padding:8px 10px;border-bottom:2px solid var(--edge)}
+#modalTitle{font:10px/1.6 var(--pixel);margin:0;flex:1}
+#modalClose{border:2px solid #10141f;background:#d6453d;color:#fff;width:28px;height:24px;font:12px var(--pixel);line-height:1}
+#modalBody{overflow:auto;padding:16px;flex:1;min-height:0}
+.modal.pc #modalBody{padding:0}
+#modalActions{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;border-top:2px solid var(--edge);flex-wrap:wrap}
+#modalActions[hidden]{display:none}
+/* PC */
+.pc-wrap{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:min(620px,78vh)}
+.pc-nav{background:var(--surface2);border-right:2px solid var(--edge);display:flex;flex-direction:column;padding:10px;gap:6px}
+.pc-nav button{text-align:left;border:2px solid transparent;background:none;padding:8px 10px;font-weight:600;font-size:14px;display:flex;justify-content:space-between;gap:6px}
+.pc-nav button.on{border-color:var(--edge);background:var(--surface);box-shadow:2px 2px 0 var(--drop)}
+.pc-nav button b{font:9px/1.9 var(--pixel);background:var(--hi);color:var(--hi-ink);padding:0 5px}
+.pc-energy{margin-top:auto;font-size:13px;color:var(--muted)}.pc-energy strong{color:var(--ink);font-family:var(--pixel);font-size:10px}
+.pc-main{padding:16px 18px;overflow:auto;min-width:0}
+.inbox{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.inbox button{width:100%;display:grid;grid-template-columns:28px 140px 1fr auto;grid-template-areas:"p f t g" "p f d r";gap:2px 12px;align-items:center;text-align:left;border:2px solid var(--edge);background:var(--surface);padding:8px 12px;box-shadow:2px 2px 0 var(--drop)}
+.inbox button:hover{background:var(--surface2)}
+.inbox canvas{grid-area:p;width:28px;height:28px;image-rendering:pixelated}
+.ib-from{grid-area:f;font-weight:600;font-size:14px;line-height:1.2}.ib-from small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+.ib-title{grid-area:t;font-weight:600}.ib-title em{font-style:normal;color:var(--muted);font-weight:400;font-size:13px}
+.inbox .tag{grid-area:g;justify-self:end}
+.ib-due{grid-area:d;justify-self:start;font:8px/1.9 var(--pixel);padding:1px 6px;background:var(--surface2)}
+.ib-rw{grid-area:r;font-size:13px;color:var(--money);font-weight:600;justify-self:end}
+.tag{font:8px/1.9 var(--pixel);padding:1px 6px;border:1px solid var(--edge)}
+.t-sql{background:#d8e4ff;color:#1c3a8a}.t-py{background:#fff1c2;color:#6b4b00}.t-fill{background:#dff3e6;color:#1d5c37}.t-quiz{background:#f6dcea;color:#7a1f4f}
+.back{border:0;background:none;color:var(--blue);font-weight:600;padding:0;margin-bottom:10px}
+.mail-h{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;border-bottom:2px solid var(--edge);padding-bottom:12px}
+.mail-h canvas{width:44px;height:44px;image-rendering:pixelated;background:var(--surface2);border:2px solid var(--edge)}
+.mail-from{font-size:13px;font-weight:600}.mail-from span{color:var(--muted);font-weight:400}
+.mail-h h3{margin:2px 0 6px;font-size:20px;line-height:1.25}
+.mail-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px}
+.brief{font-size:16px;max-width:70ch;margin:14px 0}
+.ed-head{display:flex;justify-content:space-between;font-size:12px;background:var(--code);color:var(--code-mute);padding:6px 10px;border:2px solid var(--edge);border-bottom:0}
+.ed-head span:first-child{color:var(--hi);font-family:var(--pixel);font-size:9px;line-height:1.9}
+.code{display:block;width:100%;margin:0;background:var(--code);color:var(--code-ink);border:2px solid var(--edge);font:14px/1.6 var(--mono);padding:12px;tab-size:4}
+textarea.code{min-height:150px;resize:vertical}
+pre.fill{white-space:pre-wrap;word-break:break-word}
+.blank{font:inherit;background:#22305c;color:var(--hi);border:0;border-bottom:2px solid var(--hi);padding:0 4px;margin:0 2px;text-transform:none}
+.tbls{margin-top:8px;font-size:13px}.tbls summary{cursor:pointer;color:var(--blue);font-weight:600}
+.tb{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.chip{border:1px solid var(--edge);background:var(--surface2);font:12px var(--mono);padding:1px 6px}.chip.tname{background:var(--hi);color:var(--hi-ink);font-weight:600}
+.ed-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}.ed-actions .sp{flex:1}
+.hint{margin-top:10px;padding:10px 12px;border-left:4px solid var(--hi);background:var(--surface2);font-size:14px}
+.out{margin-top:12px}
+.out-label{font:9px/1.9 var(--pixel);color:var(--muted);margin-bottom:4px}
+.err{background:color-mix(in srgb,var(--alert) 14%,var(--surface));border:2px solid var(--alert);padding:10px 12px;font-size:14px;margin-bottom:10px;white-space:pre-wrap}
+.val{font:16px var(--mono);padding:8px 12px;background:var(--surface2);border:2px solid var(--edge);display:inline-block;margin-bottom:6px}
+.tbl-wrap{overflow-x:auto;border:2px solid var(--edge);max-height:320px;overflow-y:auto}
+table.res{border-collapse:collapse;font:13px var(--mono);width:max-content;min-width:100%}
+table.res th{position:sticky;top:0;background:var(--surface2);text-align:left;padding:5px 10px;border-bottom:2px solid var(--edge);font-weight:600}
+table.res td{padding:4px 10px;border-bottom:1px solid color-mix(in srgb,var(--edge) 25%,transparent);white-space:nowrap}
+table.res .ix{color:var(--muted);font-weight:600}
+.nan{color:var(--muted);font-style:italic}
+.quiz{display:flex;flex-direction:column;gap:8px;max-width:640px}
+.opt{text-align:left;border:2px solid var(--edge);background:var(--surface);padding:10px 14px;font-size:15px;box-shadow:2px 2px 0 var(--drop)}
+.opt:hover:not(:disabled){background:var(--surface2)}.opt.no{text-decoration:line-through;opacity:.55}
+.confirm{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:2px solid var(--edge);padding:10px 12px;background:var(--surface2)}.confirm p{margin:0;flex:1 1 260px}
+.done{display:grid;grid-template-columns:56px 1fr;gap:12px 14px;align-items:center;max-width:680px}
+.done canvas{width:56px;height:56px;image-rendering:pixelated;background:var(--surface2);border:2px solid var(--edge)}
+.done-q{font-size:20px;font-weight:600;margin:0;line-height:1.3}.done-who{margin:2px 0 0;color:var(--muted);font-size:13px}
+.done-rw{grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap;align-items:center;font:11px/1.8 var(--pixel)}
+.done-rw .money{background:var(--money);color:#fff;padding:4px 8px}.done-rw .fast{background:var(--hi);color:var(--hi-ink);padding:4px 8px}
+.insight{grid-column:1/-1;border:2px solid var(--edge);background:var(--surface2);padding:12px 16px;box-shadow:3px 3px 0 var(--drop)}
+.insight h4{margin:0 0 6px;font-size:14px;color:var(--blue)}.insight p{margin:0;font-size:15px;max-width:68ch}
+.done .btn{grid-column:1/-1;justify-self:start}
+.empty-state{padding:40px 10px;max-width:46ch}.empty-state p:first-child{font-size:18px;font-weight:600;margin:0 0 6px}
+.dict{border-bottom:2px dashed var(--edge);padding:12px 0}.dict h4{margin:0;font:11px/1.8 var(--pixel)}.dict h4 span{font:13px var(--sans)}
+.dict p{margin:4px 0 8px}.dict dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px 16px;margin:0 0 8px}
+.dict dl div{display:flex;gap:8px;font-size:13px}.dict dt{font-family:var(--mono);font-weight:600}.dict dd{margin:0;color:var(--muted)}
+.dict summary{cursor:pointer;color:var(--blue);font-weight:600;font-size:13px;margin-bottom:6px}
+table.ledger{border-collapse:collapse;width:100%;font-size:14px}
+table.ledger td{padding:6px 8px;border-bottom:1px solid color-mix(in srgb,var(--edge) 25%,transparent)}
+table.ledger td.num{text-align:right;font-family:var(--mono);white-space:nowrap}
+table.ledger tr.bad td{color:var(--alert)}table.ledger tr.good td{color:var(--money)}
+table.ledger tr.total td{font-weight:700;border-top:2px solid var(--edge);border-bottom:0;font-size:16px}
+table.hist small{display:block;color:var(--muted)}
+.sum-lead{font-size:18px;font-weight:600;margin-top:0}.warn{background:var(--hi);color:var(--hi-ink);padding:8px 12px;font-weight:600}
+/* LOJA */
+.shop-nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.shop-nav button{border:2px solid var(--edge);background:var(--surface2);padding:6px 10px;font-weight:600;font-size:14px}
+.shop-nav button.on{background:var(--hi);color:var(--hi-ink);box-shadow:2px 2px 0 var(--drop)}
+.shop-money{margin-left:auto;font:11px var(--pixel);color:var(--money)}
+.shop-list{display:flex;flex-direction:column;gap:8px}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:2px solid var(--edge);padding:10px 12px;background:var(--surface)}
+.item:not(:has(canvas)){grid-template-columns:1fr auto}
+.item canvas{width:44px;height:44px;image-rendering:pixelated;background:var(--surface2)}
+.item b{font-size:15px}.item p{margin:2px 0 0;font-size:13px;color:var(--muted)}.item .req{color:var(--alert)}
+/* CARREIRA */
+.career{display:grid;grid-template-columns:240px 1fr;gap:20px}
+.ladder{list-style:none;margin:0;padding:0;display:flex;flex-direction:column-reverse;gap:6px;align-self:start}
+.ladder li{border:2px solid var(--edge);padding:8px 10px;display:flex;flex-direction:column;background:var(--surface2);opacity:.6}
+.ladder li span{font-size:12px;color:var(--muted)}
+.ladder li.past{opacity:.85}.ladder li.now{opacity:1;background:var(--hi);color:var(--hi-ink);box-shadow:3px 3px 0 var(--drop)}.ladder li.now span{color:var(--hi-ink)}
+.career h4{margin:0 0 8px;font-size:15px}.career h4:not(:first-child){margin-top:18px}
+.reqs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.reqs li{display:grid;grid-template-columns:130px 1fr 70px;gap:10px;align-items:center;font-size:14px}
+.reqs li .bar{height:10px;grid-column:auto}.reqs li.ok .bar i{background:var(--money)}.reqs .num{text-align:right;font-family:var(--mono);font-size:13px}
+/* AJUDA */
+.help dl{display:grid;gap:6px;margin:12px 0}.help dl div{display:grid;grid-template-columns:110px 1fr;gap:10px}.help dt{font-weight:700}.help dd{margin:0}
+/* INÍCIO */
+.start-hero h1{font:clamp(16px,3.4vw,26px)/1.5 var(--pixel);margin:0 0 10px;color:var(--blue)}
+.start-hero p{font-size:16px;max-width:60ch;margin:0 0 16px}
+.cont{border:2px solid var(--edge);background:var(--surface2);padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.cont p{margin:0;flex:1 1 240px}
+.start h4{margin:8px 0}
+.creator{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start}
+#stPrev{width:112px;height:168px;image-rendering:pixelated;background:var(--surface2);border:2px solid var(--edge)}
+.cr-f{display:flex;flex-direction:column;gap:6px}
+.cr-f label,.cr-f .lbl{font-size:13px;font-weight:600;margin-top:4px}
+#stNome{font:16px var(--sans);padding:8px 10px;border:2px solid var(--edge);background:var(--surface);color:var(--ink);max-width:320px}
+.sw{display:flex;gap:8px;flex-wrap:wrap}.sw button{width:30px;height:30px;border:2px solid var(--edge)}.sw button.on{outline:3px solid var(--hi);outline-offset:1px}
+.seg{display:flex;gap:0;margin-top:8px}.seg button{border:2px solid var(--edge);background:var(--surface2);padding:6px 12px;margin-right:-2px;font-size:14px}.seg button.on{background:var(--blue);color:#fff}
+/* TOAST */
+#toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;align-items:flex-end;z-index:30;pointer-events:none;width:min(420px,calc(100vw - 32px))}
+.toast{background:var(--hud);color:var(--hud-ink);border:2px solid #10141f;box-shadow:3px 3px 0 var(--drop);padding:8px 14px;font-size:14px;transition:opacity .4s,transform .4s}
+.toast.good{border-left:8px solid var(--money)}.toast.gold{background:var(--hi);color:var(--hi-ink)}
+.toast.out{opacity:0;transform:translateY(8px)}
+#confete{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+#confete i{position:absolute;top:-10px;width:8px;height:8px;animation:fall 2.2s linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .stage{max-width:none}
+  .side{display:grid;grid-template-columns:1fr 1fr}
+  .pc-wrap{grid-template-columns:1fr}
+  .pc-nav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:2px solid var(--edge)}
+  .pc-energy{margin:0 0 0 auto;align-self:center}
+  .career{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  #app{padding:8px}
+  .side{grid-template-columns:1fr}
+  .hud{gap:8px}.brand{font-size:9px;width:100%}
+  .inbox button{grid-template-columns:28px 1fr auto;grid-template-areas:"p t g" "p f f" "p d r"}
+  .ib-from{display:flex;gap:6px;align-items:baseline}.ib-from small{display:inline}
+  .dialog{position:relative;left:auto;right:auto;bottom:auto;margin:0;box-shadow:none;border-width:0;border-top:3px solid #c79a5b;grid-template-columns:56px 1fr;padding:10px;gap:10px}#dlgPort{width:56px;height:56px}#dlgText{font-size:14px}
+  .reqs li{grid-template-columns:100px 1fr 56px}
+  .creator{grid-template-columns:1fr}#stPrev{width:84px;height:126px}
+  .help dl div{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="hud">
+    <div class="brand">SELECT * FROM carreira</div>
+    <div class="hud-stats"><span id="hDay">Dia 1</span><span id="hClock">09:00</span><span id="hMoney">R$ 0</span></div>
+  </header>
+  <div class="layout">
+    <div class="stage">
+      <div class="screen">
+      <canvas id="cv" width="384" height="256" aria-label="Escritório da Tabelão S.A. em pixel art"></canvas>
+      <div class="dpad" aria-hidden="true"><button data-d="Up">▲</button><button data-d="Left">◀</button><button data-d="Right">▶</button><button data-d="Down">▼</button></div>
+      <button id="btnA" aria-label="Interagir">A</button>
+      </div>
+      <div id="dialog" class="dialog" hidden role="dialog" aria-live="polite">
+        <canvas id="dlgPort" width="84" height="84"></canvas>
+        <div><div id="dlgName"></div><div id="dlgText"></div><div id="dlgChoices"></div></div>
+        <span id="dlgNext" aria-hidden="true">▼</span>
+      </div>
+    </div>
+    <aside class="side">
+      <section class="card">
+        <div class="me"><canvas id="mePort" width="56" height="56"></canvas><div><div id="meNome"></div><div id="meCargo"></div><div id="meSal"></div></div></div>
+        <div class="stat"><span>Energia</span><div class="meter" id="barEnergia"><i></i><b></b></div></div>
+        <div class="stat"><span>Moral com o chefe</span><div class="meter" id="barChefe"><i></i><b></b></div></div>
+      </section>
+      <section class="card"><h3>Habilidades</h3><div id="skills"></div></section>
+      <section class="card"><h3>Demandas abertas <b id="missCount">0</b></h3><ul id="missList"></ul></section>
+      <section class="card btns">
+        <button class="btn" id="btnLoja">Loja</button>
+        <button class="btn" id="btnCarreira">Carreira</button>
+        <button class="btn" id="btnPC">Onde trabalho?</button>
+        <button class="btn" id="btnAjuda">Como jogar</button>
+      </section>
+    </aside>
+  </div>
+</div>
+<div id="modal" class="modal" hidden><div class="win" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="titlebar"><h2 id="modalTitle"></h2><button id="modalClose" aria-label="Fechar">×</button></div><div id="modalBody"></div><div id="modalActions"></div></div></div>
+<div id="toasts" aria-live="polite"></div>
+<div id="confete" aria-hidden="true"></div>
+<script>
+"use strict";
+/* ============ DADOS DA EMPRESA (gerados com semente fixa) ============ */
+function mulberry(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const DATA=(function(){
+  const R=mulberry(20260105);
+  const pick=a=>a[Math.floor(R()*a.length)];
+  const ri=(a,b)=>a+Math.floor(R()*(b-a+1));
+  const PRODUTOS=[['Notebook','Eletrônicos',3500],['Monitor','Eletrônicos',1200],['Webcam','Eletrônicos',300],['Mouse','Acessórios',80],['Teclado','Acessórios',150],['Headset','Acessórios',250],['Cadeira','Móveis',900],['Mesa','Móveis',1100]];
+  const ESTADOS={SP:'Sudeste',RJ:'Sudeste',MG:'Sudeste',PR:'Sul',RS:'Sul',BA:'Nordeste',PE:'Nordeste',GO:'Centro-Oeste',AM:'Norte'};
+  const UF=['SP','SP','SP','RJ','RJ','MG','MG','PR','RS','BA','PE','GO','AM','SP','PR','BA','SP','RS','MG','GO'];
+  const NOMES=['Padaria Pão Quente','Tech Mais','Escola Saber','Clínica Viva','Mercado Bom Preço','Studio Pixel','Advocacia Lima','Construtora Alicerce','Café da Esquina','Agência Lume','Loja do Zé','Hotel Mirante','Farmácia Saúde','Coworking Hub','Oficina Turbo','Pet Feliz','Livraria Página','Academia Força','Ótica Visão','Gráfica Cor'];
+  const SEG=['Varejo','Atacado','Corporativo'];
+  const clientes=NOMES.map((nome,i)=>({id:i+1,nome,estado:UF[i],segmento:pick(SEG),ativo:R()<0.75?1:0,mes_cadastro:ri(1,6)}));
+  clientes[17].ativo=1;clientes[18].ativo=1;clientes[19].ativo=0;clientes[16].ativo=1;
+  const VEND=['Ana','Bruno','Carla','Diego','Eva'];
+  const CANAIS=['Loja','Loja','Site','Site','Site','App'];
+  const vendas=[];
+  for(let i=1;i<=60;i++){
+    const p=pick(PRODUTOS);const cid=ri(1,16);const c=clientes[cid-1];
+    const q=p[2]>=900?ri(1,3):ri(1,10);const mes=ri(1,6);const dia=ri(1,28);
+    vendas.push({id:i,data_venda:`2026-0${mes}-${String(dia).padStart(2,'0')}`,mes,cliente_id:cid,regiao:ESTADOS[c.estado],produto:p[0],categoria:p[1],vendedor:pick(VEND),canal:pick(CANAIS),quantidade:q,valor:p[2]*q});
+  }
+  const CC=['Instagram','Google Ads','TikTok','E-mail','YouTube','Influencer'];
+  const campanhas=[];let cid=1;
+  for(const mes of [1,2])for(const canal of CC){
+    const investimento=ri(20,150)*100;const cliques=ri(800,20000);
+    const taxa=0.008+R()*0.05;const conversoes=Math.max(5,Math.round(cliques*taxa));
+    campanhas.push({id:cid++,canal,mes,investimento,cliques,conversoes,receita:conversoes*ri(60,320)});
+  }
+  const TR=['RapidLog','TartaLog','VaiVoando'];
+  const entregas=[];
+  for(let i=1;i<=45;i++){
+    const t=pick(TR);const prazo=pick([3,5,7]);
+    let real=R()<0.1?null:Math.max(1,prazo+ri(-2,t==='TartaLog'?6:3));
+    entregas.push({id:i,venda_id:i,transportadora:t,prazo_dias:prazo,dias_reais:real,situacao:real==null?'Em trânsito':(real>prazo?'Atrasado':'Entregue')});
+  }
+  return {vendas,clientes,campanhas,entregas};
+})();
+const SCHEMAS={
+  vendas:{desc:'Cada linha é um pedido.',cols:{id:'número do pedido',data_venda:'data (texto AAAA-MM-DD)',mes:'mês (1 a 6)',cliente_id:'liga com clientes.id',regiao:'região do cliente',produto:'nome do produto',categoria:'Eletrônicos, Acessórios ou Móveis',vendedor:'quem vendeu',canal:'Loja, Site ou App',quantidade:'unidades',valor:'valor total em R$'}},
+  clientes:{desc:'Cadastro de clientes (empresas).',cols:{id:'código do cliente',nome:'razão social',estado:'UF',segmento:'Varejo, Atacado ou Corporativo',ativo:'1 = ativo, 0 = cancelou',mes_cadastro:'mês em que entrou (1 a 6)'}},
+  campanhas:{desc:'Campanhas de marketing por canal e mês.',cols:{id:'código',canal:'canal de mídia',mes:'mês',investimento:'R$ investidos',cliques:'cliques recebidos',conversoes:'vendas geradas',receita:'R$ gerados'}},
+  entregas:{desc:'Entregas dos pedidos.',cols:{id:'código',venda_id:'liga com vendas.id',transportadora:'empresa de frete',prazo_dias:'prazo prometido',dias_reais:'dias que levou (vazio = em trânsito)',situacao:'Entregue, Atrasado ou Em trânsito'}}
+};
+
+/* ============ MINI-PANDAS (subconjunto do pandas que roda no navegador) ============ */
+class PyErr extends Error{}
+const perr=m=>new PyErr(m);
+class DF{constructor(cols,rows,index){this.cols=cols;this.rows=rows;this.index=index||rows.map((_,i)=>i);}}
+class Series{constructor(name,index,values,indexName,isDefault){this.name=name;this.index=index;this.values=values;this.indexName=indexName||null;this.isDefault=!!isDefault;}}
+class GroupBy{constructor(df,keys,sel,asIndex){this.df=df;this.keys=keys;this.sel=sel;this.asIndex=asIndex!==false;}}
+class Tuple{constructor(items){this.items=items;}}
+class PyDict{constructor(entries){this.entries=entries;}get(k){const e=this.entries.find(x=>x[0]===k);return e?e[1]:undefined;}}
+class Bound{constructor(self,name){this.self=self;this.name=name;}}
+class StrAcc{constructor(s){this.s=s;}}
+class LocAcc{constructor(df){this.df=df;}}
+const PD={__pd:true};
+
+function tokenize(src){
+  const toks=[];let i=0,depth=0;
+  while(i<src.length){
+    const c=src[i];
+    if(c==='#'){while(i<src.length&&src[i]!=='\n')i++;continue;}
+    if(c==='\n'||c===';'){if(depth===0)toks.push({t:'nl'});i++;continue;}
+    if(/\s/.test(c)){i++;continue;}
+    if(c==='\\'&&src[i+1]==='\n'){i+=2;continue;}
+    if(/[0-9]/.test(c)||(c==='.'&&/[0-9]/.test(src[i+1]||''))){let j=i;while(j<src.length&&/[0-9._]/.test(src[j]))j++;if(/[eE]/.test(src[j]||'')){j++;if(/[+-]/.test(src[j]))j++;while(/[0-9]/.test(src[j]||''))j++;}toks.push({t:'num',v:parseFloat(src.slice(i,j).replace(/_/g,''))});i=j;continue;}
+    if(c==='"'||c==="'"){let j=i+1,s='';while(j<src.length&&src[j]!==c){if(src[j]==='\n')throw perr('SyntaxError: texto sem fechar aspas');if(src[j]==='\\'){s+=src[j+1];j+=2;}else s+=src[j++];}if(j>=src.length)throw perr('SyntaxError: texto sem fechar aspas');toks.push({t:'str',v:s});i=j+1;continue;}
+    if(/[A-Za-z_\u00C0-\u00FF]/.test(c)){let j=i;while(j<src.length&&/[A-Za-z0-9_\u00C0-\u00FF]/.test(src[j]))j++;const w=src.slice(i,j);
+      if((w==='f'||w==='r')&&(src[j]==='"'||src[j]==="'")){if(w==='f')throw perr('f-strings não são suportadas no simulador. Use print(valor) direto.');i=j;continue;}
+      toks.push({t:'name',v:w});i=j;continue;}
+    const two=src.slice(i,i+2);
+    if(['==','!=','>=','<=','**','//'].includes(two)){toks.push({t:'op',v:two});i+=2;continue;}
+    if('([{'.includes(c)){depth++;toks.push({t:'op',v:c});i++;continue;}
+    if(')]}'.includes(c)){depth=Math.max(0,depth-1);toks.push({t:'op',v:c});i++;continue;}
+    if('+-*/<>=,.:&|~%'.includes(c)){toks.push({t:'op',v:c});i++;continue;}
+    throw perr(`SyntaxError: caractere inesperado “${c}”`);
+  }
+  toks.push({t:'nl'});toks.push({t:'eof'});return toks;
+}
+function parse(src){
+  const T=tokenize(src);let p=0;
+  const peek=(o=0)=>T[p+o];
+  const isOp=(v,o=0)=>T[p+o].t==='op'&&T[p+o].v===v;
+  const isName=(v,o=0)=>T[p+o].t==='name'&&T[p+o].v===v;
+  const expect=v=>{if(!isOp(v))throw perr(`SyntaxError: esperava “${v}”`+(T[p].t!=='eof'&&T[p].t!=='nl'?` perto de “${T[p].v}”`:''));p++;};
+  const stmts=[];
+  while(peek().t!=='eof'){
+    if(peek().t==='nl'){p++;continue;}
+    if(isName('import')||isName('from')){while(peek().t!=='nl')p++;continue;}
+    const e=expr();
+    if(isOp('=')){p++;const v=expr();stmts.push({k:'assign',target:e,value:v});}
+    else stmts.push({k:'expr',e});
+    if(peek().t!=='nl'&&peek().t!=='eof')throw perr(`SyntaxError: sobrou “${peek().v}” no fim da linha`);
+  }
+  return stmts;
+  function expr(){return orE();}
+  function orE(){let a=andE();while(isName('or')){p++;a={k:'bool',op:'or',a,b:andE()};}return a;}
+  function andE(){let a=notE();while(isName('and')){p++;a={k:'bool',op:'and',a,b:notE()};}return a;}
+  function notE(){if(isName('not')){p++;return{k:'un',op:'not',a:notE()};}return cmp();}
+  function cmp(){let a=bor();
+    while(peek().t==='op'&&['==','!=','>','<','>=','<='].includes(peek().v)||isName('in')){const op=peek().v;p++;a={k:'bin',op,a,b:bor()};}
+    return a;}
+  function bor(){let a=band();while(isOp('|')){p++;a={k:'bin',op:'|',a,b:band()};}return a;}
+  function band(){let a=add();while(isOp('&')){p++;a={k:'bin',op:'&',a,b:add()};}return a;}
+  function add(){let a=mul();while(isOp('+')||isOp('-')){const op=peek().v;p++;a={k:'bin',op,a,b:mul()};}return a;}
+  function mul(){let a=un();while(isOp('*')||isOp('/')||isOp('//')||isOp('%')){const op=peek().v;p++;a={k:'bin',op,a,b:un()};}return a;}
+  function un(){if(isOp('-')||isOp('~')||isOp('+')){const op=peek().v;p++;return{k:'un',op,a:un()};}return pow();}
+  function pow(){let a=post();if(isOp('**')){p++;return{k:'bin',op:'**',a,b:un()};}return a;}
+  function post(){let a=prim();
+    for(;;){
+      if(isOp('[')){p++;const items=[];let slice=null;
+        if(isOp(':')||(peek(1).t==='op'&&peek(1).v===':')){let s=null,e=null;if(!isOp(':'))s=expr();expect(':');if(!isOp(']'))e=expr();expect(']');a={k:'slice',obj:a,s,e};continue;}
+        items.push(expr());while(isOp(',')){p++;if(isOp(']'))break;items.push(expr());}expect(']');
+        a={k:'idx',obj:a,key:items.length===1?items[0]:{k:'tuple',items}};}
+      else if(isOp('.')){p++;if(peek().t!=='name')throw perr('SyntaxError: esperava um nome depois do ponto');a={k:'attr',obj:a,name:T[p++].v};}
+      else if(isOp('(')){p++;const args=[],kwargs={};
+        while(!isOp(')')){
+          if(peek().t==='name'&&peek(1).t==='op'&&peek(1).v==='='){const n=T[p].v;p+=2;kwargs[n]=expr();}
+          else args.push(expr());
+          if(isOp(','))p++;else break;}
+        expect(')');a={k:'call',fn:a,args,kwargs};}
+      else break;}
+    return a;}
+  function prim(){const t=peek();
+    if(t.t==='num'){p++;return{k:'lit',v:t.v};}
+    if(t.t==='str'){p++;let v=t.v;while(peek().t==='str'){v+=T[p++].v;}return{k:'lit',v};}
+    if(t.t==='name'){p++;if(t.v==='True')return{k:'lit',v:true};if(t.v==='False')return{k:'lit',v:false};if(t.v==='None')return{k:'lit',v:null};return{k:'name',v:t.v};}
+    if(isOp('(')){p++;if(isOp(')')){p++;return{k:'tuple',items:[]};}const e=expr();if(isOp(',')){const items=[e];while(isOp(',')){p++;if(isOp(')'))break;items.push(expr());}expect(')');return{k:'tuple',items};}expect(')');return e;}
+    if(isOp('[')){p++;const items=[];while(!isOp(']')){items.push(expr());if(isOp(','))p++;else break;}expect(']');return{k:'list',items};}
+    if(isOp('{')){p++;const pairs=[];while(!isOp('}')){const k=expr();expect(':');pairs.push([k,expr()]);if(isOp(','))p++;else break;}expect('}');return{k:'dict',pairs};}
+    if(t.t==='nl'||t.t==='eof')throw perr('SyntaxError: a linha terminou antes da hora (falta fechar algo?)');
+    throw perr(`SyntaxError: não esperava “${t.v}” aqui`);}
+}
+const isNum=v=>typeof v==='number'&&isFinite(v);
+const isNull=v=>v===null||v===undefined||(typeof v==='number'&&isNaN(v));
+function cmpVals(a,b){if(isNull(a))return isNull(b)?0:1;if(isNull(b))return -1;if(typeof a==='number'&&typeof b==='number')return a-b;return String(a).localeCompare(String(b),'pt-BR');}
+const nums=vs=>vs.filter(v=>typeof v==='number'&&!isNaN(v)||typeof v==='boolean').map(Number);
+function aggFn(f,vs){
+  const n=nums(vs);
+  switch(f){
+    case 'sum':return n.reduce((a,b)=>a+b,0);
+    case 'mean':return n.length?n.reduce((a,b)=>a+b,0)/n.length:null;
+    case 'count':return vs.filter(v=>!isNull(v)).length;
+    case 'size':return vs.length;
+    case 'max':{const c=vs.filter(v=>!isNull(v));return c.length?c.reduce((a,b)=>cmpVals(a,b)>=0?a:b):null;}
+    case 'min':{const c=vs.filter(v=>!isNull(v));return c.length?c.reduce((a,b)=>cmpVals(a,b)<=0?a:b):null;}
+    case 'median':{if(!n.length)return null;const s=[...n].sort((a,b)=>a-b);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;}
+    case 'std':{if(n.length<2)return null;const m=n.reduce((a,b)=>a+b,0)/n.length;return Math.sqrt(n.reduce((a,b)=>a+(b-m)**2,0)/(n.length-1));}
+    case 'nunique':return new Set(vs.filter(v=>!isNull(v))).size;
+    case 'first':return vs[0];
+    case 'last':return vs[vs.length-1];
+  }
+  throw perr(`Função de agregação “${f}” não suportada no simulador. Use sum, mean, count, max, min, median, std ou nunique.`);
+}
+function colErr(df,c){return perr(`KeyError: a coluna “${c}” não existe. Colunas disponíveis: ${df.cols.join(', ')}`);}
+function getCol(df,c){if(!df.cols.includes(c))throw colErr(df,c);return new Series(c,df.index.slice(),df.rows.map(r=>r[c]),null,true);}
+function toList(v){if(Array.isArray(v))return v;if(v instanceof Tuple)return v.items;if(v instanceof Series)return v.values;return [v];}
+function kw(args,kwargs,i,name,def){if(name in kwargs)return kwargs[name];if(args.length>i)return args[i];return def;}
+function typeName(v){if(v instanceof DF)return'DataFrame';if(v instanceof Series)return'Series';if(v instanceof GroupBy)return'DataFrameGroupBy';if(v===null)return'None';if(Array.isArray(v))return'list';return typeof v==='number'?'number':typeof v==='string'?'str':typeof v==='boolean'?'bool':'objeto';}
+
+function getItem(o,key){
+  if(o instanceof DF){
+    if(typeof key==='string')return getCol(o,key);
+    if(Array.isArray(key)){key.forEach(c=>{if(!o.cols.includes(c))throw colErr(o,c);});return new DF(key.slice(),o.rows.map(r=>{const n={};key.forEach(c=>n[c]=r[c]);return n;}),o.index.slice());}
+    if(key instanceof Series){
+      if(key.values.length!==o.rows.length)throw perr('O filtro tem tamanho diferente da tabela. Filtre usando colunas da própria tabela.');
+      if(key.values.some(v=>typeof v!=='boolean'))throw perr('O filtro precisa ser verdadeiro/falso, como df[df["coluna"] > 10].');
+      const rows=[],idx=[];key.values.forEach((b,i)=>{if(b){rows.push(o.rows[i]);idx.push(o.index[i]);}});return new DF(o.cols.slice(),rows,idx);}
+    throw perr(`Não sei indexar uma tabela com ${typeName(key)}.`);
+  }
+  if(o instanceof Series){
+    if(key instanceof Series){if(key.values.length!==o.values.length)throw perr('Filtro com tamanho diferente.');const idx=[],vals=[];key.values.forEach((b,i)=>{if(b){idx.push(o.index[i]);vals.push(o.values[i]);}});return new Series(o.name,idx,vals,o.indexName,o.isDefault);}
+    const i=o.index.indexOf(key);if(i<0)throw perr(`KeyError: “${key}” não está no índice.`);return o.values[i];
+  }
+  if(o instanceof GroupBy){if(typeof key==='string'){if(!o.df.cols.includes(key))throw colErr(o.df,key);}else if(Array.isArray(key))key.forEach(c=>{if(!o.df.cols.includes(c))throw colErr(o.df,c);});return new GroupBy(o.df,o.keys,key,o.asIndex);}
+  if(o instanceof LocAcc){
+    let mask=key,cols=null;if(key instanceof Tuple){mask=key.items[0];cols=key.items[1];}
+    let r=o.df;if(mask instanceof Series)r=getItem(r,mask);
+    if(cols!=null)r=getItem(r,cols);return r;}
+  if(o instanceof PyDict){const v=o.get(key);if(v===undefined)throw perr(`KeyError: ${key}`);return v;}
+  if(Array.isArray(o)){if(typeof key!=='number')throw perr('Listas usam índice numérico.');const v=o[key<0?o.length+key:key];if(v===undefined)throw perr('IndexError: posição fora da lista.');return v;}
+  if(o instanceof Tuple)return o.items[key<0?o.items.length+key:key];
+  throw perr(`TypeError: ${typeName(o)} não aceita colchetes.`);
+}
+const DF_METHODS=['head','tail','sort_values','groupby','merge','drop_duplicates','dropna','fillna','isnull','isna','notnull','sum','mean','count','max','min','median','nunique','rename','reset_index','copy','drop','pivot_table','describe','info','plot','query','apply','to_csv'];
+const S_METHODS=['sum','mean','count','max','min','median','std','nunique','unique','value_counts','sort_values','sort_index','head','tail','round','isin','isnull','isna','notnull','notna','idxmax','idxmin','reset_index','abs','cumsum','fillna','astype','between','tolist','to_frame','nlargest','nsmallest','plot','apply','map','describe'];
+const G_METHODS=['sum','mean','count','max','min','median','std','nunique','size','agg','aggregate','first','last'];
+function getAttr(o,n){
+  if(o===PD){if(['merge','pivot_table','DataFrame','concat','read_csv','to_datetime'].includes(n))return new Bound(PD,n);throw perr(`AttributeError: pd.${n} não existe no simulador.`);}
+  if(o instanceof DF){
+    if(n==='shape')return new Tuple([o.rows.length,o.cols.length]);
+    if(n==='columns')return o.cols.slice();
+    if(n==='index')return o.index.slice();
+    if(n==='loc')return new LocAcc(o);
+    if(n==='iloc')throw perr('iloc não é suportado no simulador. Use head(n) ou filtros.');
+    if(n==='dtypes'){return new Series(null,o.cols.slice(),o.cols.map(c=>{const v=o.rows.find(r=>!isNull(r[c]));return v==null?'object':typeof v[c]==='number'?(Number.isInteger(v[c])?'int64':'float64'):'object';}));}
+    if(DF_METHODS.includes(n))return new Bound(o,n);
+    if(o.cols.includes(n))return getCol(o,n);
+    throw perr(`AttributeError: DataFrame não tem “${n}”. Se era uma coluna, as colunas são: ${o.cols.join(', ')}`);}
+  if(o instanceof Series){
+    if(n==='str')return new StrAcc(o);
+    if(n==='values')return o.values.slice();
+    if(n==='index')return o.index.slice();
+    if(n==='name')return o.name;
+    if(n==='shape')return new Tuple([o.values.length]);
+    if(S_METHODS.includes(n))return new Bound(o,n);
+    throw perr(`AttributeError: Series não tem “${n}”.`);}
+  if(o instanceof GroupBy){if(G_METHODS.includes(n))return new Bound(o,n);if(o.df.cols.includes(n))return new GroupBy(o.df,o.keys,n,o.asIndex);throw perr(`AttributeError: groupby não tem “${n}”. Depois do groupby use sum(), mean(), count(), size() ou agg().`);}
+  if(o instanceof StrAcc){if(['contains','upper','lower','strip','startswith','endswith','len','replace'].includes(n))return new Bound(o,n);throw perr(`.str.${n} não é suportado.`);}
+  if(Array.isArray(o)&&['append','count','index'].includes(n))return new Bound(o,n);
+  if(typeof o==='string'&&['upper','lower','strip','replace','startswith'].includes(n))return new Bound(o,n);
+  throw perr(`AttributeError: ${typeName(o)} não tem “${n}”.`);
+}
+function elementwise(a,b,f){
+  if(a instanceof Series&&b instanceof Series){
+    if(a.values.length===b.values.length&&a.index.every((x,i)=>x===b.index[i]))return new Series(a.name,a.index.slice(),a.values.map((v,i)=>f(v,b.values[i])),a.indexName,a.isDefault);
+    const idx=[...new Set([...a.index,...b.index])];
+    return new Series(a.name,idx,idx.map(k=>{const i=a.index.indexOf(k),j=b.index.indexOf(k);return f(i<0?null:a.values[i],j<0?null:b.values[j]);}),a.indexName||b.indexName,false);}
+  if(a instanceof Series)return new Series(a.name,a.index.slice(),a.values.map(v=>f(v,b)),a.indexName,a.isDefault);
+  if(b instanceof Series)return new Series(b.name,b.index.slice(),b.values.map(v=>f(a,v)),b.indexName,b.isDefault);
+  return f(a,b);
+}
+function arith(op,x,y){
+  if(isNull(x)||isNull(y))return null;
+  if(op==='+'){if(typeof x==='string'||typeof y==='string'){if(typeof x!==typeof y)throw perr('TypeError: não dá para somar texto com número. Use str(numero).');return x+y;}return x+y;}
+  if(typeof x==='string'||typeof y==='string')throw perr(`TypeError: operação “${op}” com texto.`);
+  switch(op){case '-':return x-y;case '*':return x*y;case '/':if(y===0)return x===0?null:Infinity;return x/y;case '//':return Math.floor(x/y);case '%':return x%y;case '**':return x**y;}
+}
+function compare(op,x,y){
+  if(op==='=='){if(isNull(x)||isNull(y))return false;return x===y||(typeof x!=='string'&&typeof y!=='string'&&Number(x)===Number(y));}
+  if(op==='!=')return !compare('==',x,y);
+  if(isNull(x)||isNull(y))return false;
+  if((typeof x==='string')!==(typeof y==='string'))throw perr(`TypeError: comparando texto com número (${JSON.stringify(x)} ${op} ${JSON.stringify(y)}).`);
+  switch(op){case '>':return x>y;case '<':return x<y;case '>=':return x>=y;case '<=':return x<=y;}
+}
+function binop(op,a,b){
+  if(a instanceof DF||b instanceof DF)throw perr('Operações matemáticas direto em DataFrame não são suportadas. Selecione uma coluna: df["coluna"].');
+  if(op==='&'||op==='|'){
+    const chk=v=>{if(v instanceof Series&&v.values.some(x=>typeof x!=='boolean'))throw perr('Para combinar condições, coloque cada uma entre parênteses: (df["a"] > 1) & (df["b"] == "X")');};
+    chk(a);chk(b);return elementwise(a,b,(x,y)=>op==='&'?(!!x&&!!y):(!!x||!!y));}
+  if(op==='in'){const l=toList(b);return l.includes(a);}
+  if(['==','!=','>','<','>=','<='].includes(op))return elementwise(a,b,(x,y)=>compare(op,x,y));
+  if(Array.isArray(a)&&Array.isArray(b)&&op==='+')return a.concat(b);
+  return elementwise(a,b,(x,y)=>arith(op,x,y));
+}
+function buildGroups(gb){
+  const keys=toList(gb.keys);keys.forEach(k=>{if(!gb.df.cols.includes(k))throw colErr(gb.df,k);});
+  const m=new Map();
+  gb.df.rows.forEach(r=>{const kv=keys.map(k=>r[k]);if(kv.some(isNull))return;const id=JSON.stringify(kv);if(!m.has(id))m.set(id,{key:kv,rows:[]});m.get(id).rows.push(r);});
+  const g=[...m.values()];
+  g.sort((a,b)=>{for(let i=0;i<a.key.length;i++){const c=cmpVals(a.key[i],b.key[i]);if(c)return c;}return 0;});
+  return {keys,groups:g};
+}
+function numericCols(df,exclude){return df.cols.filter(c=>!exclude.includes(c)&&df.rows.some(r=>typeof r[c]==='number')&&df.rows.every(r=>isNull(r[c])||typeof r[c]==='number'));}
+function gbAgg(gb,f){
+  const {keys,groups}=buildGroups(gb);
+  if(f==='size'){
+    if(keys.length===1&&gb.asIndex)return new Series('size',groups.map(g=>g.key[0]),groups.map(g=>g.rows.length),keys[0]);
+    return new DF([...keys,'size'],groups.map(g=>{const o={};keys.forEach((k,i)=>o[k]=g.key[i]);o.size=g.rows.length;return o;}));}
+  if(typeof gb.sel==='string'){
+    const vals=groups.map(g=>aggFn(f,g.rows.map(r=>r[gb.sel])));
+    if(keys.length===1&&gb.asIndex)return new Series(gb.sel,groups.map(g=>g.key[0]),vals,keys[0]);
+    return new DF([...keys,gb.sel],groups.map((g,i)=>{const o={};keys.forEach((k,j)=>o[k]=g.key[j]);o[gb.sel]=vals[i];return o;}));}
+  const cols=Array.isArray(gb.sel)?gb.sel:(['sum','mean','median','std'].includes(f)?numericCols(gb.df,keys):gb.df.cols.filter(c=>!keys.includes(c)));
+  return new DF([...keys,...cols],groups.map(g=>{const o={};keys.forEach((k,j)=>o[k]=g.key[j]);cols.forEach(c=>o[c]=aggFn(f,g.rows.map(r=>r[c])));return o;}));
+}
+function gbAggSpec(gb,args,kwargs){
+  const {keys,groups}=buildGroups(gb);
+  const mk=(specs)=>new DF([...keys,...specs.map(s=>s[0])],groups.map(g=>{const o={};keys.forEach((k,j)=>o[k]=g.key[j]);specs.forEach(([name,col,f])=>o[name]=aggFn(f,g.rows.map(r=>r[col])));return o;}));
+  if(Object.keys(kwargs).length){
+    const specs=Object.entries(kwargs).map(([name,v])=>{if(!(v instanceof Tuple)||v.items.length!==2)throw perr('Agregação nomeada usa tuplas: total=("coluna", "sum")');if(!gb.df.cols.includes(v.items[0]))throw colErr(gb.df,v.items[0]);return [name,v.items[0],v.items[1]];});
+    return mk(specs);}
+  const a=args[0];
+  if(typeof a==='string')return gbAgg(gb,a);
+  if(Array.isArray(a)){if(typeof gb.sel!=='string')throw perr('Lista de funções no agg: selecione uma coluna antes, ex.: df.groupby("x")["valor"].agg(["sum","mean"])');return mk(a.map(f=>[f,gb.sel,f]));}
+  if(a instanceof PyDict){return mk(a.entries.map(([c,f])=>[c,c,f]));}
+  throw perr('agg() não entendeu os argumentos.');
+}
+function sortDF(df,by,asc){
+  by=toList(by);by.forEach(c=>{if(!df.cols.includes(c))throw colErr(df,c);});
+  const ascs=Array.isArray(asc)?asc:by.map(()=>asc!==false);
+  const ord=df.rows.map((r,i)=>i);
+  ord.sort((i,j)=>{for(let k=0;k<by.length;k++){const a=df.rows[i][by[k]],b=df.rows[j][by[k]];if(isNull(a)&&isNull(b))continue;if(isNull(a))return 1;if(isNull(b))return -1;let c=cmpVals(a,b);if(c)return ascs[k]?c:-c;}return i-j;});
+  return new DF(df.cols.slice(),ord.map(i=>df.rows[i]),ord.map(i=>df.index[i]));
+}
+function merge(l,r,args,kwargs){
+  if(!(l instanceof DF)||!(r instanceof DF))throw perr('merge precisa de duas tabelas.');
+  const how=kw([],kwargs,0,'how','inner');
+  let on=kwargs.on,lo=kwargs.left_on,ro=kwargs.right_on;
+  if(on===undefined&&lo===undefined){const common=l.cols.filter(c=>r.cols.includes(c));if(!common.length)throw perr('As tabelas não têm coluna em comum. Use left_on= e right_on=.');on=common;}
+  let lk,rk;if(on!==undefined){lk=toList(on);rk=lk;}else{lk=toList(lo);rk=toList(ro);}
+  lk.forEach(c=>{if(!l.cols.includes(c))throw colErr(l,c);});rk.forEach(c=>{if(!r.cols.includes(c))throw colErr(r,c);});
+  const sameKeys=on!==undefined;
+  const rCols=r.cols.filter(c=>!(sameKeys&&rk.includes(c)));
+  const lName={},rName={};
+  l.cols.forEach(c=>lName[c]=(rCols.includes(c)&&!(sameKeys&&lk.includes(c)))?c+'_x':c);
+  rCols.forEach(c=>rName[c]=l.cols.includes(c)?c+'_y':c);
+  const cols=[...l.cols.map(c=>lName[c]),...rCols.map(c=>rName[c])];
+  const idx=new Map();r.rows.forEach(row=>{const k=JSON.stringify(rk.map(c=>row[c]));if(!idx.has(k))idx.set(k,[]);idx.get(k).push(row);});
+  const out=[];
+  if(!['inner','left'].includes(how))throw perr('No simulador, merge aceita how="inner" ou how="left".');
+  l.rows.forEach(row=>{const k=JSON.stringify(lk.map(c=>row[c]));const ms=idx.get(k);
+    if(ms)ms.forEach(m=>{const o={};l.cols.forEach(c=>o[lName[c]]=row[c]);rCols.forEach(c=>o[rName[c]]=m[c]);out.push(o);});
+    else if(how==='left'){const o={};l.cols.forEach(c=>o[lName[c]]=row[c]);rCols.forEach(c=>o[rName[c]]=null);out.push(o);}});
+  return new DF(cols,out);
+}
+function pivot(df,args,kwargs){
+  const index=kwargs.index,columns=kwargs.columns,values=kwargs.values,f=kwargs.aggfunc||'mean',fill=kwargs.fill_value;
+  if(!index||!columns||!values)throw perr('pivot_table precisa de index=, columns= e values=.');
+  [index,columns,values].forEach(c=>{if(!df.cols.includes(c))throw colErr(df,c);});
+  const rowsK=[...new Set(df.rows.map(r=>r[index]))].sort(cmpVals),colsK=[...new Set(df.rows.map(r=>r[columns]))].sort(cmpVals);
+  const out=rowsK.map(rk=>{const o={[index]:rk};colsK.forEach(ck=>{const vs=df.rows.filter(r=>r[index]===rk&&r[columns]===ck).map(r=>r[values]);o[ck]=vs.length?aggFn(f,vs):(fill!==undefined?fill:null);});return o;});
+  return new DF([index,...colsK.map(String)],out.map(o=>{const n={};n[index]=o[index];colsK.forEach(c=>n[String(c)]=o[c]);return n;}));
+}
+function seriesOf(name,index,values,indexName){return new Series(name,index,values,indexName,false);}
+function callBound(b,args,kwargs,ctx){
+  const s=b.self,n=b.name;
+  if(s===PD){
+    if(n==='merge')return merge(args[0],args[1],args,kwargs);
+    if(n==='pivot_table'){const d=args[0]||kwargs.data;return pivot(d,args,kwargs);}
+    throw perr(`pd.${n} não está disponível no simulador: as tabelas já estão carregadas (vendas, clientes, campanhas, entregas).`);}
+  if(s instanceof DF){
+    switch(n){
+      case 'head':{const k=kw(args,kwargs,0,'n',5);return new DF(s.cols.slice(),s.rows.slice(0,k),s.index.slice(0,k));}
+      case 'tail':{const k=kw(args,kwargs,0,'n',5);return new DF(s.cols.slice(),s.rows.slice(-k),s.index.slice(-k));}
+      case 'sort_values':return sortDF(s,kw(args,kwargs,0,'by'),kw(args,kwargs,1,'ascending',true));
+      case 'groupby':{const by=kw(args,kwargs,0,'by');if(by===undefined)throw perr('groupby precisa da coluna: df.groupby("coluna")');return new GroupBy(s,by,null,kwargs.as_index);}
+      case 'merge':return merge(s,args[0],args,kwargs);
+      case 'pivot_table':return pivot(s,args,kwargs);
+      case 'drop_duplicates':{const sub=toList(kw(args,kwargs,0,'subset',s.cols));const seen=new Set();const rows=[],idx=[];s.rows.forEach((r,i)=>{const k=JSON.stringify(sub.map(c=>r[c]));if(!seen.has(k)){seen.add(k);rows.push(r);idx.push(s.index[i]);}});return new DF(s.cols.slice(),rows,idx);}
+      case 'dropna':{const sub=toList(kw(args,kwargs,99,'subset',s.cols));const rows=[],idx=[];s.rows.forEach((r,i)=>{if(sub.every(c=>!isNull(r[c]))){rows.push(r);idx.push(s.index[i]);}});return new DF(s.cols.slice(),rows,idx);}
+      case 'fillna':{const v=kw(args,kwargs,0,'value');return new DF(s.cols.slice(),s.rows.map(r=>{const o={};s.cols.forEach(c=>o[c]=isNull(r[c])?v:r[c]);return o;}),s.index.slice());}
+      case 'isnull':case 'isna':case 'notnull':return new DF(s.cols.slice(),s.rows.map(r=>{const o={};s.cols.forEach(c=>o[c]=n==='notnull'?!isNull(r[c]):isNull(r[c]));return o;}),s.index.slice());
+      case 'sum':case 'mean':case 'max':case 'min':case 'median':{const cols=n==='sum'&&s.rows.every(r=>s.cols.every(c=>typeof r[c]==='boolean'))?s.cols:numericCols(s,[]);return seriesOf(null,cols,cols.map(c=>aggFn(n,s.rows.map(r=>r[c]))));}
+      case 'count':case 'nunique':return seriesOf(null,s.cols.slice(),s.cols.map(c=>aggFn(n,s.rows.map(r=>r[c]))));
+      case 'rename':{const m=kwargs.columns;if(!(m instanceof PyDict))throw perr('Use rename(columns={"antigo": "novo"})');const nm=c=>m.get(c)!==undefined?m.get(c):c;return new DF(s.cols.map(nm),s.rows.map(r=>{const o={};s.cols.forEach(c=>o[nm(c)]=r[c]);return o;}),s.index.slice());}
+      case 'reset_index':return new DF(s.cols.slice(),s.rows.slice());
+      case 'copy':return new DF(s.cols.slice(),s.rows.map(r=>({...r})),s.index.slice());
+      case 'drop':{const cs=toList(kwargs.columns||args[0]);cs.forEach(c=>{if(!s.cols.includes(c))throw colErr(s,c);});const keep=s.cols.filter(c=>!cs.includes(c));return getItem(s,keep);}
+      case 'info':case 'describe':throw perr(`${n}() ainda não está no simulador. Tente head(), shape ou isnull().sum().`);
+      case 'plot':throw perr('Gráficos ficam para o Power BI da firma 😉 Aqui, entregue a tabela.');
+      default:throw perr(`${n}() não é suportado no simulador.`);}
+  }
+  if(s instanceof Series){
+    switch(n){
+      case 'sum':case 'mean':case 'count':case 'max':case 'min':case 'median':case 'std':case 'nunique':return aggFn(n,s.values);
+      case 'unique':return [...new Set(s.values)];
+      case 'tolist':return s.values.slice();
+      case 'nlargest':case 'nsmallest':{const k=kw(args,kwargs,0,'n',5);const r=callBound(new Bound(s,'sort_values'),[],{ascending:n==='nsmallest'});return callBound(new Bound(r,'head'),[k],{});}
+      case 'value_counts':{const m=new Map();s.values.forEach(v=>{if(isNull(v))return;m.set(v,(m.get(v)||0)+1);});let e=[...m.entries()].sort((a,b)=>b[1]-a[1]);const norm=kwargs.normalize;const tot=e.reduce((a,x)=>a+x[1],0);if(kwargs.ascending)e.reverse();return seriesOf(norm?'proportion':'count',e.map(x=>x[0]),e.map(x=>norm?x[1]/tot:x[1]),s.name);}
+      case 'sort_values':{const asc=kw(args,kwargs,0,'ascending',true);const o=s.values.map((v,i)=>i);o.sort((i,j)=>{const a=s.values[i],b=s.values[j];if(isNull(a))return 1;if(isNull(b))return -1;const c=cmpVals(a,b);return asc?c:-c;});return new Series(s.name,o.map(i=>s.index[i]),o.map(i=>s.values[i]),s.indexName,s.isDefault);}
+      case 'sort_index':{const asc=kw(args,kwargs,0,'ascending',true);const o=s.index.map((v,i)=>i);o.sort((i,j)=>{const c=cmpVals(s.index[i],s.index[j]);return asc?c:-c;});return new Series(s.name,o.map(i=>s.index[i]),o.map(i=>s.values[i]),s.indexName,s.isDefault);}
+      case 'head':{const k=kw(args,kwargs,0,'n',5);return new Series(s.name,s.index.slice(0,k),s.values.slice(0,k),s.indexName,s.isDefault);}
+      case 'tail':{const k=kw(args,kwargs,0,'n',5);return new Series(s.name,s.index.slice(-k),s.values.slice(-k),s.indexName,s.isDefault);}
+      case 'round':{const d=kw(args,kwargs,0,'decimals',0);return elementwise(s,0,v=>isNull(v)?v:Math.round(v*10**d)/10**d);}
+      case 'abs':return elementwise(s,0,v=>isNull(v)?v:Math.abs(v));
+      case 'cumsum':{let t=0;return new Series(s.name,s.index.slice(),s.values.map(v=>(t+=isNull(v)?0:v)),s.indexName,s.isDefault);}
+      case 'isin':{const l=toList(args[0]);return elementwise(s,0,v=>l.includes(v));}
+      case 'between':return elementwise(s,0,v=>!isNull(v)&&v>=args[0]&&v<=args[1]);
+      case 'isnull':case 'isna':return elementwise(s,0,v=>isNull(v));
+      case 'notnull':case 'notna':return elementwise(s,0,v=>!isNull(v));
+      case 'fillna':return elementwise(s,0,v=>isNull(v)?args[0]:v);
+      case 'astype':{const t=args[0];return elementwise(s,0,v=>isNull(v)?v:(t==='int'||t==='int64')?Math.trunc(Number(v)):(t==='float'||t==='float64')?Number(v):t==='str'?String(v):v);}
+      case 'idxmax':case 'idxmin':{let bi=-1;s.values.forEach((v,i)=>{if(isNull(v))return;if(bi<0||(n==='idxmax'?v>s.values[bi]:v<s.values[bi]))bi=i;});return bi<0?null:s.index[bi];}
+      case 'reset_index':{const nm=kwargs.name||s.name||0;const ic=s.indexName||'index';if(s.isDefault||kwargs.drop)return new Series(s.name,s.values.map((_,i)=>i),s.values.slice(),null,true);return new DF([ic,String(nm)],s.index.map((k,i)=>({[ic]:k,[String(nm)]:s.values[i]})));}
+      case 'to_frame':{const nm=s.name||0;if(s.isDefault)return new DF([String(nm)],s.values.map(v=>({[String(nm)]:v})),s.index.slice());const ic=s.indexName||'index';return new DF([ic,String(nm)],s.index.map((k,i)=>({[ic]:k,[String(nm)]:s.values[i]})));}
+      case 'plot':throw perr('Gráficos ficam para o Power BI da firma 😉 Aqui, entregue os números.');
+      default:throw perr(`${n}() não é suportado no simulador.`);}
+  }
+  if(s instanceof GroupBy){
+    if(n==='agg'||n==='aggregate')return gbAggSpec(s,args,kwargs);
+    return gbAgg(s,n);}
+  if(s instanceof StrAcc){
+    const v=s.s;const f={contains:x=>typeof x==='string'&&(kwargs.case===false?x.toLowerCase().includes(String(args[0]).toLowerCase()):x.includes(args[0])),upper:x=>typeof x==='string'?x.toUpperCase():x,lower:x=>typeof x==='string'?x.toLowerCase():x,strip:x=>typeof x==='string'?x.trim():x,startswith:x=>typeof x==='string'&&x.startsWith(args[0]),endswith:x=>typeof x==='string'&&x.endsWith(args[0]),len:x=>typeof x==='string'?x.length:null,replace:x=>typeof x==='string'?x.split(args[0]).join(args[1]):x}[n];
+    return elementwise(v,0,x=>f(x));}
+  if(Array.isArray(s)){if(n==='append'){s.push(args[0]);return null;}if(n==='count')return s.filter(x=>x===args[0]).length;if(n==='index')return s.indexOf(args[0]);}
+  if(typeof s==='string'){if(n==='upper')return s.toUpperCase();if(n==='lower')return s.toLowerCase();if(n==='strip')return s.trim();if(n==='replace')return s.split(args[0]).join(args[1]);if(n==='startswith')return s.startsWith(args[0]);}
+  throw perr(`${n}() não suportado.`);
+}
+const BUILTINS={
+  len:a=>{const x=a[0];if(x instanceof DF)return x.rows.length;if(x instanceof Series)return x.values.length;if(Array.isArray(x)||typeof x==='string')return x.length;if(x instanceof Tuple)return x.items.length;throw perr('len() não funciona aqui.');},
+  round:a=>{const d=a[1]||0;if(a[0] instanceof Series)return callBound(new Bound(a[0],'round'),[d],{});if(isNull(a[0]))return a[0];return Math.round(a[0]*10**d)/10**d;},
+  sum:a=>toList(a[0]).reduce((x,y)=>x+y,0),
+  max:a=>{const l=a.length>1?a:toList(a[0]);return l.reduce((x,y)=>cmpVals(x,y)>=0?x:y);},
+  min:a=>{const l=a.length>1?a:toList(a[0]);return l.reduce((x,y)=>cmpVals(x,y)<=0?x:y);},
+  abs:a=>Math.abs(a[0]),int:a=>Math.trunc(Number(a[0])),float:a=>Number(a[0]),str:a=>fmtScalar(a[0]),
+  list:a=>a[0] instanceof Series?a[0].values.slice():toList(a[0]).slice(),
+  sorted:a=>[...toList(a[0])].sort(cmpVals),
+  type:a=>`<class '${typeName(a[0])}'>`
+};
+function fmtScalar(v){if(v===null||v===undefined)return'None';if(v===true)return'True';if(v===false)return'False';if(typeof v==='number'){if(!isFinite(v))return v>0?'inf':'nan';return Number.isInteger(v)?String(v):String(Math.round(v*10000)/10000);}if(Array.isArray(v))return'['+v.map(x=>typeof x==='string'?`'${x}'`:fmtScalar(x)).join(', ')+']';if(v instanceof Tuple)return'('+v.items.map(fmtScalar).join(', ')+')';return String(v);}
+function evalNode(n,env,ctx){
+  switch(n.k){
+    case 'lit':return n.v;
+    case 'name':if(Object.prototype.hasOwnProperty.call(env,n.v))return env[n.v];if(BUILTINS[n.v]||n.v==='print')return{builtin:n.v};throw perr(`NameError: “${n.v}” não foi definido. Tabelas disponíveis: vendas, clientes, campanhas, entregas.`);
+    case 'list':return n.items.map(x=>evalNode(x,env,ctx));
+    case 'tuple':return new Tuple(n.items.map(x=>evalNode(x,env,ctx)));
+    case 'dict':return new PyDict(n.pairs.map(([k,v])=>[evalNode(k,env,ctx),evalNode(v,env,ctx)]));
+    case 'bool':{const a=evalNode(n.a,env,ctx);if(a instanceof Series)throw perr('Com Series use & (e) e | (ou), com parênteses em cada condição, em vez de and/or.');if(n.op==='and')return a?evalNode(n.b,env,ctx):a;return a?a:evalNode(n.b,env,ctx);}
+    case 'bin':return binop(n.op,evalNode(n.a,env,ctx),evalNode(n.b,env,ctx));
+    case 'un':{const a=evalNode(n.a,env,ctx);if(n.op==='-')return elementwise(a,0,v=>isNull(v)?v:-v);if(n.op==='+')return a;if(n.op==='~'){if(a instanceof Series)return elementwise(a,0,v=>!v);return ~a;}if(n.op==='not'){if(a instanceof Series)throw perr('Para negar um filtro use ~ (til).');return !a;}}
+    case 'idx':return getItem(evalNode(n.obj,env,ctx),evalNode(n.key,env,ctx));
+    case 'slice':{const o=evalNode(n.obj,env,ctx);const s=n.s?evalNode(n.s,env,ctx):0;const e=n.e?evalNode(n.e,env,ctx):undefined;if(o instanceof DF)return new DF(o.cols.slice(),o.rows.slice(s,e),o.index.slice(s,e));if(o instanceof Series)return new Series(o.name,o.index.slice(s,e),o.values.slice(s,e),o.indexName,o.isDefault);if(Array.isArray(o)||typeof o==='string')return o.slice(s,e);throw perr('Fatiamento não suportado aqui.');}
+    case 'attr':return getAttr(evalNode(n.obj,env,ctx),n.name);
+    case 'call':{const f=evalNode(n.fn,env,ctx);const args=n.args.map(x=>evalNode(x,env,ctx));const kwargs={};for(const k in n.kwargs)kwargs[k]=evalNode(n.kwargs[k],env,ctx);
+      if(f instanceof Bound)return callBound(f,args,kwargs,ctx);
+      if(f&&f.builtin==='print'){ctx.out.push(args.length===1?args[0]:args.map(fmtScalar).join(' '));ctx.lastPrint=args.length===1?args[0]:undefined;return null;}
+      if(f&&f.builtin)return BUILTINS[f.builtin](args,kwargs);
+      throw perr(`TypeError: ${typeName(f)} não é uma função.`);}
+  }
+  throw perr('Expressão não suportada.');
+}
+function cloneTables(){const env={pd:PD};for(const t in DATA){const rows=DATA[t].map(r=>({...r}));env[t]=new DF(Object.keys(DATA[t][0]),rows);}return env;}
+function runPython(code){
+  const env=cloneTables();const ctx={out:[],lastPrint:undefined};
+  const stmts=parse(code);let last;let hasValue=false;
+  for(const s of stmts){
+    if(s.k==='assign'){
+      const v=evalNode(s.value,env,ctx);
+      if(s.target.k==='name')env[s.target.v]=v;
+      else if(s.target.k==='idx'){const o=evalNode(s.target.obj,env,ctx);const key=evalNode(s.target.key,env,ctx);
+        if(o instanceof DF&&typeof key==='string'){const vals=v instanceof Series?v.values:o.rows.map(()=>v);if(vals.length!==o.rows.length)throw perr('A nova coluna precisa ter o mesmo tamanho da tabela.');o.rows=o.rows.map((r,i)=>({...r,[key]:vals[i]}));if(!o.cols.includes(key))o.cols.push(key);}
+        else throw perr('Só dá para atribuir colunas assim: df["nova"] = ...');}
+      else throw perr('Atribuição não suportada.');
+      last=undefined;hasValue=false;
+    }else{last=evalNode(s.e,env,ctx);hasValue=!(s.e.k==='call'&&s.e.fn.k==='name'&&s.e.fn.v==='print');}
+  }
+  let result=hasValue?last:ctx.lastPrint;
+  return {result,prints:ctx.out,hasResult:result!==undefined};
+}
+
+/* ============ SQL (alasql) ============ */
+let SQLDB=null;
+function sqlDb(){if(SQLDB)return SQLDB;const db=new alasql.Database();for(const t in DATA){db.exec(`CREATE TABLE ${t}`);db.tables[t].data=DATA[t].map(r=>({...r}));}SQLDB=db;return db;}
+function runSQL(code){
+  let q=code.replace(/--[^\n]*/g,'').replace(/\/\*[\s\S]*?\*\//g,'').trim().replace(/;+\s*$/,'');
+  if(!q)throw new Error('Escreva uma consulta.');
+  if(q.includes(';'))throw new Error('Envie uma consulta por vez (sem ; no meio).');
+  if(!/^(select|with)\b/i.test(q)){
+    if(/^(delete|drop|update|insert|truncate|alter)\b/i.test(q))throw new Error('Opa! Essa base é de produção. Aqui só rodamos SELECT. (O Kevin manda lembranças.)');
+    throw new Error('A consulta precisa começar com SELECT.');}
+  q=q.split(/('(?:[^']|'')*')/).map((part,i)=>i%2?part:part.replace(/\bAS\s+(count|sum|top|desc|asc|order|group|avg|min|max)\b/gi,'AS `$1`').replace(/(^|[^`\w.])(total|value|index)\b(?!\s*\()/gi,'$1`$2`')).join('');
+  const db=sqlDb();
+  for(const t in DATA)db.tables[t].data=DATA[t].map(r=>({...r}));
+  let res;
+  try{res=db.exec(q);}catch(e){throw new Error(traduzErroSQL(e.message||String(e)));}
+  if(!Array.isArray(res))throw new Error('A consulta não retornou linhas.');
+  const cols=res.length?Object.keys(res[0]):[];
+  return new DF(cols,res.map(r=>{const o={};cols.forEach(c=>o[c]=r[c]===undefined?null:r[c]);return o;}));
+}
+function traduzErroSQL(m){
+  if(/Table .* does not exist|Table does not exist/i.test(m))return 'Tabela não encontrada. As tabelas são: vendas, clientes, campanhas, entregas.';
+  if(/Parse error/i.test(m))return 'Erro de sintaxe no SQL. Confira vírgulas, aspas simples nos textos e a ordem SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT.';
+  if(/Column .* not found|Cannot read/i.test(m))return 'Alguma coluna não existe ou está escrita errado. Confira o dicionário de dados.';
+  return 'Erro no SQL: '+m;
+}
+
+/* ============ VERIFICADOR ============ */
+function normalize(v){
+  if(v instanceof DF)return v.rows.map(r=>v.cols.map(c=>r[c]));
+  if(v instanceof Series)return v.isDefault?v.values.map(x=>[x]):v.index.map((k,i)=>[k,v.values[i]]);
+  if(Array.isArray(v))return v.map(x=>[x]);
+  if(v instanceof Tuple)return [v.items];
+  return [[v]];
+}
+function cellKey(c){if(isNull(c))return'∅';if(typeof c==='boolean')return c?'1':'0';if(typeof c==='number')return'#';return'$'+String(c).trim().toLowerCase();}
+function rowSig(row){const s=row.map(cellKey).filter(k=>k[0]==='$').sort();return s.join('|');}
+function sameRow(a,b){
+  if(a.length!==b.length)return false;
+  const sa=a.filter(c=>typeof c==='string').map(x=>x.trim().toLowerCase()).sort(),sb=b.filter(c=>typeof c==='string').map(x=>x.trim().toLowerCase()).sort();
+  if(sa.join('|')!==sb.join('|'))return false;
+  const toN=c=>isNull(c)?null:typeof c==='boolean'?(c?1:0):c;
+  const na=a.filter(c=>typeof c!=='string').map(toN),nb=b.filter(c=>typeof c!=='string').map(toN);
+  const sortN=x=>x.slice().sort((p,q)=>p===null?1:q===null?-1:p-q);
+  const xa=sortN(na),xb=sortN(nb);
+  return xa.every((x,i)=>{const y=xb[i];if(x===null||y===null)return x===y;return Math.abs(x-y)<=Math.max(0.051,Math.abs(y)*0.0006);});
+}
+function compareResults(got,exp,ordered){
+  const A=normalize(got),B=normalize(exp);
+  if(A.length!==B.length)return {ok:false,msg:`Seu resultado tem ${A.length} linha(s); o esperado tem ${B.length}.`};
+  if(A[0]&&B[0]&&A[0].length!==B[0].length)return {ok:false,msg:`Seu resultado tem ${A[0].length} coluna(s); o esperado tem ${B[0].length}. Retorne só o que foi pedido.`};
+  if(ordered){for(let i=0;i<A.length;i++)if(!sameRow(A[i],B[i]))return {ok:false,msg:i===0&&A.length>1?'Os valores ou a ordem não batem. Confira o critério de ordenação.':`A linha ${i+1} não bate com o esperado.`};return{ok:true};}
+  const used=new Array(B.length).fill(false);
+  for(const r of A){const j=B.findIndex((b,k)=>!used[k]&&sameRow(r,b));if(j<0)return {ok:false,msg:'Os valores não batem com o esperado. Confira filtros e agregações.'};used[j]=true;}
+  return {ok:true};
+}
+function runCode(lang,code){if(lang==='sql')return {result:runSQL(code),prints:[],hasResult:true};return runPython(code);}
+
+if(typeof module!=='undefined')module.exports={DATA,runPython,runSQL,compareResults,normalize,DF,Series,fmtScalar,setAlasql:a=>{global.alasql=a;}};
+
+/* ============ PERSONAGENS ============ */
+const NPCS={
+  chefe:{nome:'Seu Ronaldo',cargo:'Gerente de BI',dept:'Diretoria',skin:'#c68c5a',hair:'#9a9a9a',shirt:'#3a4a7a',pants:'#2a2f3d',tie:'#c0392b',bald:true},
+  bia:{nome:'Bia',cargo:'Marketing',dept:'Marketing',skin:'#f1c7a1',hair:'#7b3fa0',shirt:'#e85d9a',pants:'#3b3561',long:true},
+  carlao:{nome:'Carlão',cargo:'Vendas',dept:'Vendas',skin:'#a86a43',hair:'#2b1d14',shirt:'#f0f0f0',pants:'#2f3b52',tie:'#2a7de1',beard:true},
+  neide:{nome:'Dona Neide',cargo:'Operações',dept:'Operações',skin:'#e6b48a',hair:'#d8d8d8',shirt:'#4f8a5b',pants:'#4a4038',long:true,glasses:true},
+  jorge:{nome:'Jorge',cargo:'Financeiro',dept:'Financeiro',skin:'#f2d0b0',hair:'#3a2a1a',shirt:'#c9d6e8',pants:'#1f2633',glasses:true},
+  kevin:{nome:'Kevin',cargo:'Estagiário',dept:'Dados',skin:'#f0c9a6',hair:'#e0b84a',shirt:'#f39c12',pants:'#2f5aa8',cap:true},
+  fabio:{nome:'Fábio da TI',cargo:'Suporte',dept:'TI',skin:'#8d5a3b',hair:'#111111',shirt:'#2d2d2d',pants:'#2b2b2b',headset:true}
+};
+const DEPTS=['Marketing','Vendas','Operações','Financeiro'];
+const DEPT_OF={bia:'Marketing',carlao:'Vendas',neide:'Operações',jorge:'Financeiro'};
+
+const CARREIRA=[
+  {nome:'Estagiário(a)',salario:1800,req:null},
+  {nome:'Analista Júnior',salario:3500,req:{xp:250,missoes:6,sql:2,py:1}},
+  {nome:'Analista Pleno',salario:6000,req:{xp:800,missoes:14,sql:3,py:3,negocio:2}},
+  {nome:'Analista Sênior',salario:9500,req:{xp:1800,missoes:24,sql:5,py:4,negocio:3,com:2}},
+  {nome:'Coordenador(a) de Dados',salario:14000,req:{xp:3200,missoes:34,sql:6,py:5,negocio:5,com:4,rep:62}},
+  {nome:'Head de Dados',salario:22000,req:{xp:5200,missoes:46,sql:7,py:7,negocio:6,com:6,rep:70,auto:3}}
+];
+
+/* ============ MISSÕES ============
+ kind: fill (lacunas) | sql | py | quiz ; tier = nível mínimo de cargo */
+const MISSOES=[
+ // ---------- ESTAGIÁRIO ----------
+ {id:'f1',tier:0,from:'carlao',kind:'fill',lang:'sql',title:'O sistema tá vivo?',
+  brief:'Oi, novato! Me mostra as 5 primeiras linhas da tabela de vendas? Quero ver se o sistema tá vivo ou se é melhor eu voltar pro meu caderninho.',
+  template:'___ * FROM vendas LIMIT 5;',answers:['SELECT'],hint:'O comando que seleciona colunas começa com S.',
+  insight:'Antes de qualquer análise, olhe algumas linhas. Você descobre formatos, colunas e sujeira nos dados antes de tirar conclusões erradas.'},
+ {id:'f2',tier:0,from:'neide',kind:'fill',lang:'sql',title:'Quem está atrasando?',
+  brief:'Meu filho, preciso da lista de entregas com situação “Atrasado”. Cliente ligando aqui igual telemarketing.',
+  template:"SELECT * FROM entregas WHERE situacao ___ 'Atrasado';",answers:['='],hint:'Em SQL, igualdade é um sinal só.',
+  insight:'Entrega atrasada vira ligação no SAC, reembolso e nota baixa. Operações usa essa lista para cobrar a transportadora e avisar o cliente antes que ele reclame.'},
+ {id:'f3',tier:0,from:'bia',kind:'fill',lang:'py',title:'Espiadinha nas campanhas',
+  brief:'Amigo, me mostra as 3 primeiras linhas da tabela de campanhas em pandas? Só pra eu ver se tem algo viral ali ✨',
+  template:'campanhas.___(3)',answers:['head'],hint:'O método que mostra as primeiras linhas tem nome de parte do corpo.',
+  insight:'head() é o “olá” de toda análise em pandas. Marketing costuma ter várias fontes; conferir as colunas evita misturar cliques com impressões.'},
+ {id:'f4',tier:0,from:'jorge',kind:'fill',lang:'sql',title:'Quantos pedidos, afinal?',
+  brief:'Preciso do número total de pedidos para o fechamento. Um número. Um. Por favor.',
+  template:'SELECT ___(*) FROM vendas;',answers:['COUNT'],hint:'Contar em inglês.',
+  insight:'Volume de pedidos é a base do ticket médio (faturamento ÷ pedidos). O Financeiro usa para projetar caixa e comissão.'},
+ {id:'f5',tier:0,from:'carlao',kind:'fill',lang:'py',title:'Só as vendas do site',
+  brief:'Filtra pra mim só as vendas do canal “Site”? O diretor quer saber se o e-commerce paga a conta.',
+  template:"vendas[vendas['canal'] ___ 'Site']",answers:['=='],hint:'Em Python, comparar igualdade usa dois sinais de igual.',
+  insight:'Separar por canal mostra onde investir. Se o site vende bem com custo menor que a loja física, a estratégia muda.'},
+ {id:'f6',tier:0,from:'bia',kind:'fill',lang:'sql',title:'Ranking de receita',
+  brief:'Quero as campanhas da que mais deu receita para a que menos deu. Vou colocar no slide com MUITA cor.',
+  template:'SELECT canal, receita FROM campanhas ORDER BY receita ___;',answers:['DESC'],ordered:true,hint:'Do maior para o menor é ordem decrescente.',
+  insight:'Ranking de receita sozinho engana: uma campanha cara pode trazer muita receita e pouco lucro. Logo, logo você vai calcular ROI.'},
+ {id:'f7',tier:0,from:'neide',kind:'fill',lang:'py',title:'Contagem por transportadora',
+  brief:'Quantas entregas cada transportadora fez? Quero saber em quem a gente tá mais dependente.',
+  template:"entregas['transportadora'].___()",answers:['value_counts'],hint:'Conta os valores: value_...',
+  insight:'Concentração em um fornecedor é risco operacional. Se 50% das entregas dependem de uma empresa, uma greve para metade da operação.'},
+ {id:'q1',tier:0,from:'chefe',kind:'quiz',title:'Pergunta de corredor',
+  brief:'Ô, estagiário! Rapidinho: o que é ticket médio?',
+  options:['Faturamento dividido pelo número de pedidos','O maior pedido do mês','Preço médio da tabela de produtos','Lucro dividido por clientes'],answer:0,
+  insight:'Ticket médio = faturamento ÷ pedidos. Para crescer receita há três alavancas: mais clientes, mais pedidos por cliente ou ticket maior.'},
+ {id:'q2',tier:0,from:'carlao',kind:'quiz',title:'“Vendas de ontem”',
+  brief:'Me passa as vendas de ontem? Qual a PRIMEIRA coisa que você deveria me perguntar?',
+  options:['Qual a definição: pedido feito, faturado ou pago? Bruto ou líquido?','Qual cor você quer no gráfico?','Posso fazer em Python?','Ontem de manhã ou de tarde?'],answer:0,
+  insight:'Metade dos “números errados” no mundo corporativo são definições diferentes. Alinhar a métrica antes de rodar a query economiza retrabalho e discussão.'},
+ {id:'q3',tier:0,from:'bia',kind:'quiz',title:'Sopa de letrinhas',
+  brief:'O diretor perguntou o CTR da campanha e eu sorri e acenei. O que é CTR?',
+  options:['Cliques ÷ impressões','Conversões ÷ cliques','Receita ÷ investimento','Custo ÷ clientes novos'],answer:0,
+  insight:'CTR mede se o anúncio chama atenção. Conversão mede se o clique vira venda. Um CTR alto com conversão baixa geralmente indica promessa do anúncio diferente da página.'},
+ {id:'q4',tier:0,from:'jorge',kind:'quiz',title:'Excel, nosso velho amigo',
+  brief:'No Excel, qual função faz algo parecido com um JOIN do SQL?',
+  options:['PROCV / PROCX','SOMA','CONCATENAR','SE'],answer:0,
+  insight:'PROCV é um JOIN de pobre: traz uma coluna de outra tabela por uma chave. Entender isso ajuda a traduzir pedidos de quem só usa Excel.'},
+ // ---------- JÚNIOR ----------
+ {id:'f8',tier:1,from:'carlao',kind:'fill',lang:'sql',title:'Faturamento por região',
+  brief:'Reunião de metas! Preciso do faturamento somado de cada região.',
+  template:'SELECT regiao, ___(valor) AS total FROM vendas ___ BY regiao;',answers:['SUM','GROUP'],hint:'Somar e agrupar.',
+  insight:'O Sudeste concentra a maior parte do faturamento. Isso orienta onde colocar vendedores, mas também revela regiões pouco exploradas com potencial de crescimento.'},
+ {id:'f9',tier:1,from:'jorge',kind:'fill',lang:'py',title:'Comissão dos vendedores',
+  brief:'Preciso do total vendido por vendedor para calcular comissão. Sem isso, o Carlão me persegue no corredor.',
+  template:"vendas.___('vendedor')['valor'].___()",answers:['groupby','sum'],hint:'Agrupar e somar, em inglês.',
+  insight:'Comissão é custo variável. O Financeiro precisa desse número antes da folha; um erro aqui vira problema trabalhista e de clima.'},
+ {id:'s1',tier:1,from:'carlao',kind:'sql',title:'O app vende?',
+  brief:'Quanto faturamos no canal App? Só o total, um número.',
+  starter:'-- Escreva sua consulta aqui\n',solution:"SELECT SUM(valor) FROM vendas WHERE canal = 'App';",hint:'SUM(valor) com WHERE canal = \'App\'.',
+  insight:'O app tem ticket médio maior que os outros canais. Isso pode justificar investir em push e cupons exclusivos para o app.'},
+ {id:'s2',tier:1,from:'neide',kind:'sql',title:'Volume por transportadora',
+  brief:'Quero a quantidade de entregas por transportadora, em SQL desta vez. O Fábio disse que é “mais profissional”.',
+  starter:'-- Uma linha por transportadora\n',solution:'SELECT transportadora, COUNT(*) FROM entregas GROUP BY transportadora;',hint:'COUNT(*) com GROUP BY transportadora.',
+  insight:'Volume sozinho não diz qualidade. Cruzando com atrasos, você descobre se a transportadora mais usada é também a mais confiável.'},
+ {id:'s3',tier:1,from:'bia',kind:'sql',title:'Campanhas caras',
+  brief:'Lista todas as campanhas (todas as colunas) com investimento acima de R$ 10.000. O Jorge quer “conversar” sobre elas.',
+  starter:'',solution:'SELECT * FROM campanhas WHERE investimento > 10000;',hint:'WHERE investimento > 10000 (sem ponto no número).',
+  insight:'Campanhas caras precisam provar retorno. Separar as maiores é o primeiro passo para uma revisão de verba.'},
+ {id:'p1',tier:1,from:'bia',kind:'py',title:'Quanto já gastamos?',
+  brief:'Qual o total investido em todas as campanhas? Em pandas, por favor.',
+  starter:'# a tabela já está carregada como campanhas\n',solution:"campanhas['investimento'].sum()",hint:"Selecione a coluna investimento e use .sum().",
+  insight:'Investimento total é o denominador do ROI e do CAC. Marketing sem esse número não consegue defender orçamento.'},
+ {id:'p2',tier:1,from:'carlao',kind:'py',title:'Pedidos gordinhos',
+  brief:'Quero ver todas as vendas acima de R$ 3.000, com todas as colunas. São os clientes que eu levo pra almoçar.',
+  starter:'',solution:"vendas[vendas['valor'] > 3000]",hint:"Filtro booleano: vendas[ condição ].",
+  insight:'Pedidos grandes costumam ser poucos clientes com muito peso. Perder um deles dói; vale um atendimento dedicado.'},
+ {id:'p3',tier:1,from:'neide',kind:'py',title:'Promessa média',
+  brief:'Qual o prazo médio prometido (coluna prazo_dias) nas entregas?',
+  starter:'',solution:"entregas['prazo_dias'].mean()",hint:'.mean() calcula a média.',
+  insight:'Prazo prometido é marketing; prazo real é operação. A diferença entre os dois é a promessa quebrada que vira reclamação.'},
+ {id:'q5',tier:1,from:'chefe',kind:'quiz',title:'Média traiçoeira',
+  brief:'Temos alguns pedidos de notebook enormes e muitos de mouse. Para descrever o pedido “típico”, o melhor é…',
+  options:['A mediana, que não é puxada pelos extremos','A média, sempre','O maior valor','A soma'],answer:0,
+  insight:'Com outliers, a média engana. Mediana descreve o caso típico; média continua útil para projetar receita total.'},
+ {id:'q6',tier:1,from:'jorge',kind:'quiz',title:'WHERE ou HAVING?',
+  brief:'Quero só os vendedores cuja SOMA de vendas passa de R$ 40 mil. Qual cláusula filtra depois do agrupamento?',
+  options:['HAVING','WHERE','ORDER BY','LIMIT'],answer:0,
+  insight:'WHERE filtra linhas antes de agrupar; HAVING filtra grupos depois. Confundir os dois é um dos erros mais comuns em entrevista técnica.'},
+ {id:'q7',tier:1,from:'fabio',kind:'quiz',title:'O idioma do Power BI',
+  brief:'Já tentou desligar e ligar? Brincadeira. Qual linguagem cria medidas no Power BI?',
+  options:['DAX','VBA','HTML','Bash'],answer:0,
+  insight:'SQL busca, pandas transforma, DAX mede no dashboard. Saber qual ferramenta usar em cada etapa é o que diferencia um analista sênior.'},
+ // ---------- PLENO ----------
+ {id:'s4',tier:2,from:'carlao',kind:'sql',title:'Ticket médio por canal',
+  brief:'Qual canal traz pedidos maiores? Quero o ticket médio (média de valor) por canal.',
+  starter:'',solution:'SELECT canal, AVG(valor) FROM vendas GROUP BY canal;',hint:'AVG(valor) agrupado por canal.',
+  insight:'Canais com ticket maior merecem ofertas de produtos premium. Canais com ticket menor podem receber kits e combos para subir o valor.'},
+ {id:'s5',tier:2,from:'jorge',kind:'sql',title:'Clube dos 40 mil',
+  brief:'Quais vendedores venderam mais de R$ 40.000 no total? Quero vendedor e total.',
+  starter:'',solution:'SELECT vendedor, SUM(valor) FROM vendas GROUP BY vendedor HAVING SUM(valor) > 40000;',hint:'GROUP BY vendedor e HAVING SUM(valor) > 40000.',
+  insight:'Esses vendedores batem a meta de bônus. Entender o que fazem diferente (carteira, produto, canal) vale mais que o próprio bônus.'},
+ {id:'s6',tier:2,from:'bia',kind:'sql',title:'Quem é nosso cliente?',
+  brief:'Faturamento por segmento de cliente (Varejo, Atacado, Corporativo). Os dados de segmento estão na tabela clientes.',
+  starter:'',solution:'SELECT c.segmento, SUM(v.valor) FROM vendas v JOIN clientes c ON v.cliente_id = c.id GROUP BY c.segmento;',hint:'JOIN clientes c ON v.cliente_id = c.id, depois GROUP BY c.segmento.',
+  insight:'Varejo lidera a receita. A comunicação de marketing deve falar a língua do pequeno lojista, não do comprador corporativo.'},
+ {id:'s7',tier:2,from:'neide',kind:'sql',title:'Unidades por categoria',
+  brief:'Pra planejar o estoque: quantas unidades (quantidade) saíram de cada categoria?',
+  starter:'',solution:'SELECT categoria, SUM(quantidade) FROM vendas GROUP BY categoria;',hint:'SUM(quantidade) por categoria.',
+  insight:'Acessórios saem em volume, eletrônicos em valor. Estoque e armazém são planejados por unidade; o caixa, por valor.'},
+ {id:'p4',tier:2,from:'bia',kind:'py',title:'ROI de verdade',
+  brief:'Crie a coluna roi = (receita − investimento) ÷ investimento e me devolva o ROI médio por canal, do maior para o menor.',
+  starter:"campanhas['roi'] = \n",solution:"campanhas['roi'] = (campanhas['receita'] - campanhas['investimento']) / campanhas['investimento']\ncampanhas.groupby('canal')['roi'].mean().sort_values(ascending=False)",ordered:true,hint:"Depois de criar a coluna: groupby('canal')['roi'].mean().sort_values(ascending=False)",
+  insight:'YouTube tem o melhor retorno por real investido, mesmo sem ser o canal com mais receita. Realocar verba para ele tende a aumentar o lucro total.'},
+ {id:'p5',tier:2,from:'neide',kind:'py',title:'Atrasos por transportadora',
+  brief:'Quantas entregas ATRASADAS cada transportadora teve?',
+  starter:'',solution:"entregas[entregas['situacao'] == 'Atrasado']['transportadora'].value_counts()",hint:'Filtre situacao == "Atrasado" e depois value_counts() na transportadora.',
+  insight:'Em números absolutos a VaiVoando atrasa mais, mas ela também entrega mais. Sempre olhe proporção, não só contagem.'},
+ {id:'p6',tier:2,from:'fabio',kind:'py',title:'Dados faltando',
+  brief:'Alguém disse que tem buraco na tabela de entregas. Conte os valores vazios de cada coluna.',
+  starter:'',solution:'entregas.isnull().sum()',hint:'isnull() marca vazios; sum() conta por coluna.',
+  insight:'Vazio em dias_reais significa “em trânsito”, não erro. Entender por que um dado falta é tão importante quanto contá-lo.'},
+ {id:'q8',tier:2,from:'chefe',kind:'quiz',title:'Corte de verba',
+  brief:'Precisamos cortar 20% da verba de marketing. Qual critério você usaria para escolher o que cortar?',
+  options:['Cortar os canais com menor ROI e menor potencial de escala','Cortar igualmente todos os canais','Cortar o canal com menor receita absoluta','Cortar o canal que o diretor não gosta'],answer:0,
+  insight:'Corte linear é confortável politicamente e ruim financeiramente. Decisão de verba é sobre retorno marginal: onde o próximo real rende menos.'},
+ {id:'q9',tier:2,from:'kevin',kind:'quiz',title:'Kevin aprendendo R',
+  brief:'O Kevin entrou num curso de R. Qual pacote faz em R o papel que o pandas faz em Python?',
+  options:['dplyr (tidyverse)','ggplot2','shiny','knitr'],answer:0,
+  insight:'dplyr filtra, agrupa e resume, como pandas. ggplot2 é para gráficos. Os conceitos se transferem entre linguagens; a sintaxe é detalhe.'},
+ // ---------- SÊNIOR ----------
+ {id:'s8',tier:3,from:'bia',kind:'sql',title:'Taxa de conversão por canal',
+  brief:'Taxa de conversão (%) por canal = soma de conversões × 100 ÷ soma de cliques. Ordene da maior para a menor.',
+  starter:'',solution:'SELECT canal, SUM(conversoes) * 100.0 / SUM(cliques) AS taxa FROM campanhas GROUP BY canal ORDER BY taxa DESC;',ordered:true,hint:'Use SUM(conversoes) * 100.0 / SUM(cliques). O 100.0 evita divisão inteira em bancos reais.',
+  insight:'Somar antes de dividir dá a taxa ponderada. Fazer média das taxas mensais distorce quando os volumes são diferentes. E-mail converte pouco: talvez a lista esteja velha.'},
+ {id:'s9',tier:3,from:'carlao',kind:'sql',title:'Faixas de pedido',
+  brief:'Classifique os pedidos em faixas: “Alto” (valor ≥ 3000), “Médio” (≥ 1000) e “Baixo” (o resto). Quero faixa e quantidade de pedidos.',
+  starter:'',solution:"SELECT CASE WHEN valor >= 3000 THEN 'Alto' WHEN valor >= 1000 THEN 'Médio' ELSE 'Baixo' END AS faixa, COUNT(*) FROM vendas GROUP BY CASE WHEN valor >= 3000 THEN 'Alto' WHEN valor >= 1000 THEN 'Médio' ELSE 'Baixo' END;",hint:"CASE WHEN ... THEN 'Alto' ... END, e agrupe pela mesma expressão.",
+  insight:'Segmentar pedidos por faixa permite políticas diferentes: frete grátis no Médio para empurrar para o Alto, atendimento consultivo no Alto.'},
+ {id:'s10',tier:3,from:'carlao',kind:'sql',title:'Clientes fantasmas',
+  brief:'Quais clientes ATIVOS nunca compraram nada? Quero só o nome deles. Vou ligar um por um.',
+  starter:'',solution:'SELECT c.nome FROM clientes c LEFT JOIN vendas v ON v.cliente_id = c.id WHERE c.ativo = 1 AND v.id IS NULL;',hint:'LEFT JOIN de clientes com vendas e filtre v.id IS NULL. Ou use NOT IN.',
+  insight:'Cliente ativo sem compra é receita parada. Uma ação de reativação nessa lista costuma ter custo baixíssimo e retorno rápido.'},
+ {id:'s11',tier:3,from:'jorge',kind:'sql',title:'Acima da média',
+  brief:'Quantos pedidos ficaram acima do ticket médio geral? Use uma subconsulta.',
+  starter:'',solution:'SELECT COUNT(*) FROM vendas WHERE valor > (SELECT AVG(valor) FROM vendas);',hint:'WHERE valor > (SELECT AVG(valor) FROM vendas)',
+  insight:'Menos da metade dos pedidos fica acima da média: os pedidos grandes puxam a média para cima, típico de B2B. Planeje com mediana, projete receita com média.'},
+ {id:'p7',tier:3,from:'jorge',kind:'py',title:'Faturamento por estado',
+  brief:'Junte vendas com clientes e me dê o faturamento por estado. Em vendas a chave é cliente_id; em clientes, id.',
+  starter:'',solution:"pd.merge(vendas, clientes, left_on='cliente_id', right_on='id').groupby('estado')['valor'].sum()",hint:"pd.merge(vendas, clientes, left_on='cliente_id', right_on='id'), depois groupby('estado').",
+  insight:'Estado define imposto (ICMS) e frete. Um estado com muita venda e frete caro pode estar dando prejuízo escondido.'},
+ {id:'p8',tier:3,from:'carlao',kind:'py',title:'Matriz região × canal',
+  brief:'Monte uma tabela dinâmica: regiões nas linhas, canais nas colunas, soma de valor. Onde não tiver venda, coloque 0.',
+  starter:'',solution:"pd.pivot_table(vendas, index='regiao', columns='canal', values='valor', aggfunc='sum', fill_value=0)",hint:"pd.pivot_table(vendas, index=..., columns=..., values=..., aggfunc='sum', fill_value=0)",
+  insight:'Os zeros contam a história: o App só vende no Sudeste e no Sul, e o Norte compra apenas pelo Site. Ou falta divulgação do app, ou falta presença física nessas regiões.'},
+ {id:'p9',tier:3,from:'carlao',kind:'py',title:'Top 3 produtos',
+  brief:'Quais os 3 produtos com maior faturamento? Do maior para o menor.',
+  starter:'',solution:"vendas.groupby('produto')['valor'].sum().sort_values(ascending=False).head(3)",ordered:true,hint:'groupby, sum, sort_values(ascending=False), head(3).',
+  insight:'O Notebook sozinho faz mais da metade da receita. Dependência de um produto é risco: uma falta de estoque derruba o mês.'},
+ {id:'q10',tier:3,from:'chefe',kind:'quiz',title:'Black Friday',
+  brief:'O comercial quer 40% de desconto em tudo na Black Friday. O que você checa antes de apoiar?',
+  options:['Margem por produto e elasticidade: se o volume extra cobre o desconto','Se os concorrentes também vão dar 40%','Se o site aguenta','Nada, desconto sempre aumenta o lucro'],answer:0,
+  insight:'Desconto aumenta receita fácil e lucro difícil. Com margem de 30%, um desconto de 40% vende abaixo do custo: quanto mais vende, mais perde.'},
+ {id:'q11',tier:3,from:'bia',kind:'quiz',title:'Teste A/B',
+  brief:'A nova página teve conversão 3,2% contra 3,0% da antiga, com p-valor de 0,30. O que recomendar?',
+  options:['Ainda não há evidência de diferença; continuar o teste ou aceitar empate','Trocar já, ganhou!','Voltar para a antiga','Refazer com cores diferentes'],answer:0,
+  insight:'p-valor alto indica que a diferença pode ser acaso. Decidir com ruído gera “vitórias” que somem no mês seguinte.'},
+ // ---------- COORDENAÇÃO ----------
+ {id:'s12',tier:4,from:'chefe',kind:'sql',title:'Curva do semestre',
+  brief:'Faturamento por mês, em ordem de mês, para a apresentação da diretoria.',
+  starter:'',solution:'SELECT mes, SUM(valor) FROM vendas GROUP BY mes ORDER BY mes;',ordered:true,hint:'GROUP BY mes ORDER BY mes.',
+  insight:'Queda forte em maio e junho. Antes de culpar o mercado, cruze com campanhas e estoque: talvez o problema seja interno.'},
+ {id:'s13',tier:4,from:'chefe',kind:'sql',title:'Churn da base',
+  brief:'Qual o percentual de clientes inativos (ativo = 0) sobre o total? Um número.',
+  starter:'',solution:'SELECT 100.0 * SUM(CASE WHEN ativo = 0 THEN 1 ELSE 0 END) / COUNT(*) FROM clientes;',hint:'SUM(CASE WHEN ativo = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)',
+  insight:'Churn de 20% significa repor um em cada cinco clientes só para ficar no lugar. Reter costuma custar muito menos que adquirir.'},
+ {id:'s14',tier:4,from:'neide',kind:'sql',title:'Quem mais estoura prazo',
+  brief:'Atraso médio em dias (dias_reais − prazo_dias) por transportadora, ignorando as em trânsito. Do pior para o melhor.',
+  starter:'',solution:'SELECT transportadora, AVG(dias_reais - prazo_dias) AS atraso FROM entregas WHERE dias_reais IS NOT NULL GROUP BY transportadora ORDER BY atraso DESC;',ordered:true,hint:'WHERE dias_reais IS NOT NULL, AVG(dias_reais - prazo_dias), ORDER BY ... DESC.',
+  insight:'A TartaLog atrasa mais de 2 dias em média. Com esse dado a Neide renegocia contrato com multa por atraso, ou troca de fornecedor.'},
+ {id:'p10',tier:4,from:'jorge',kind:'py',title:'Participação por região',
+  brief:'Participação (%) de cada região no faturamento total, arredondada para 1 casa decimal.',
+  starter:'',solution:"(vendas.groupby('regiao')['valor'].sum() / vendas['valor'].sum() * 100).round(1)",hint:'Divida o groupby pela soma total, multiplique por 100 e use .round(1).',
+  insight:'Quase 60% no Sudeste. Expandir para o Sul, que já responde por 21%, é mais barato que abrir o Norte do zero.'},
+ {id:'p11',tier:4,from:'bia',kind:'py',title:'Safras de clientes',
+  brief:'Quantos clientes entraram em cada mês (mes_cadastro)? É o começo da nossa análise de coorte.',
+  starter:'',solution:"clientes.groupby('mes_cadastro')['id'].count()",hint:"groupby('mes_cadastro')['id'].count()",
+  insight:'Coorte agrupa clientes pelo mês de entrada. Depois você acompanha quantos de cada safra seguem ativos: é assim que se mede retenção de verdade.'},
+ {id:'p12',tier:4,from:'chefe',kind:'py',title:'Ranking comercial',
+  brief:'Por vendedor: total vendido (coluna total) e número de pedidos (coluna pedidos), ordenado pelo total, do maior para o menor.',
+  starter:'',solution:"vendas.groupby('vendedor').agg(total=('valor', 'sum'), pedidos=('id', 'count')).sort_values('total', ascending=False)",ordered:true,hint:"agg(total=('valor','sum'), pedidos=('id','count')) e sort_values('total', ascending=False).",
+  insight:'A Carla vende mais com pedidos parecidos com os da Ana: ticket maior. Treinar o time no discurso dela vale mais que contratar.'},
+ {id:'q12',tier:4,from:'chefe',kind:'quiz',title:'IA em tudo',
+  brief:'A diretoria quer “uma IA que preveja churn” para semana que vem. Os dados de cancelamento estão espalhados em três planilhas. Primeiro passo?',
+  options:['Definir churn com o negócio e consolidar um histórico confiável','Contratar uma ferramenta de IA','Treinar um modelo com o que tiver','Dizer que é impossível'],answer:0,
+  insight:'Modelo bom com dado ruim é chute caro. Na maioria dos projetos, 80% do valor está em definir o problema e organizar os dados.'},
+ {id:'q13',tier:4,from:'chefe',kind:'quiz',title:'Apresentando para a diretoria',
+  brief:'Você tem 5 minutos com o CEO. Como abre a apresentação?',
+  options:['Com a recomendação e o impacto em R$; detalhes depois, se pedirem','Com a metodologia completa','Com todos os gráficos que você fez','Com uma piada sobre SQL'],answer:0,
+  insight:'Executivos decidem por conclusão, não por processo. Comece pelo “e daí?”; a metodologia é seu respaldo, não seu roteiro.'}
+];
+/* Missões recorrentes: automatizáveis */
+const RECORRENTES={
+  rel_vendas:{nome:'Relatório diário de vendas',from:'carlao',lang:'sql',variants:[
+    {brief:'Relatório diário: faturamento total de todas as vendas. Um número.',solution:'SELECT SUM(valor) FROM vendas;'},
+    {brief:'Relatório diário: número total de pedidos.',solution:'SELECT COUNT(*) FROM vendas;'},
+    {brief:'Relatório diário: faturamento só da região Sudeste.',solution:"SELECT SUM(valor) FROM vendas WHERE regiao = 'Sudeste';"}]},
+  rel_mkt:{nome:'Relatório diário de marketing',from:'bia',lang:'py',variants:[
+    {brief:'Relatório do dia: total de conversões de todas as campanhas (pandas).',solution:"campanhas['conversoes'].sum()"},
+    {brief:'Relatório do dia: receita total das campanhas (pandas).',solution:"campanhas['receita'].sum()"},
+    {brief:'Relatório do dia: média de cliques por campanha (pandas).',solution:"campanhas['cliques'].mean()"}]},
+  rel_ops:{nome:'Relatório diário de operações',from:'neide',lang:'sql',variants:[
+    {brief:'Relatório do dia: quantas entregas estão atrasadas?',solution:"SELECT COUNT(*) FROM entregas WHERE situacao = 'Atrasado';"},
+    {brief:'Relatório do dia: quantas entregas estão em trânsito?',solution:"SELECT COUNT(*) FROM entregas WHERE situacao = 'Em trânsito';"},
+    {brief:'Relatório do dia: quantas entregas foram concluídas no prazo (Entregue)?',solution:"SELECT COUNT(*) FROM entregas WHERE situacao = 'Entregue';"}]}
+};
+const MISSOES_EVENTO={
+  maes:{from:'bia',kind:'sql',lang:'sql',title:'Campanha de Dia das Mães',brief:'Dia das Mães chegando! Qual categoria tem mais pedidos? Quero categoria e quantidade de pedidos, de todas as categorias.',solution:'SELECT categoria, COUNT(*) FROM vendas GROUP BY categoria;',hint:'COUNT(*) por categoria.',insight:'Datas comemorativas pedem o produto certo. Eletrônicos lideram em pedidos: bom foco para presente de maior valor, com parcelamento em destaque.'},
+  blackfriday:{from:'carlao',kind:'sql',lang:'sql',title:'Estoque para Black Friday',brief:'BLACK FRIDAY! Quais os 3 produtos com mais unidades vendidas? Produto e unidades, do maior para o menor.',solution:'SELECT produto, SUM(quantidade) AS unidades FROM vendas GROUP BY produto ORDER BY unidades DESC LIMIT 3;',ordered:true,hint:'SUM(quantidade), GROUP BY produto, ORDER BY ... DESC LIMIT 3.',insight:'Faltar o produto mais vendido na Black Friday é dinheiro deixado na mesa. Estoque se planeja por unidade, não por receita.'},
+  natal:{from:'jorge',kind:'py',lang:'py',title:'Fechamento do ano',brief:'Antes do amigo secreto: faturamento total por categoria, em pandas.',solution:"vendas.groupby('categoria')['valor'].sum()",hint:"groupby('categoria')['valor'].sum()",insight:'Eletrônicos puxam a receita. O orçamento do ano que vem começa aqui.'}
+};
+
+/* ============ LOJA ============ */
+const LOJA={
+  roupas:[
+    {id:'basica',nome:'Camiseta básica',preco:0,desc:'O clássico do primeiro dia.',shirt:'#5aa0d8'},
+    {id:'select',nome:'Camiseta SELECT * FROM café',preco:180,desc:'Piada interna. Só os de dados riem.',shirt:'#2b2b33',print:true},
+    {id:'moletom',nome:'Moletom de dev',preco:280,desc:'Ar-condicionado a 17 °C não te vence mais.',shirt:'#4b5563',hood:true},
+    {id:'polo',nome:'Camisa polo',preco:350,desc:'Casual de sexta, todos os dias.',shirt:'#1f8a70',collar:true},
+    {id:'social',nome:'Camisa social',preco:600,desc:'Para reunião com diretoria.',shirt:'#eef2f7',collar:true},
+    {id:'blazer',nome:'Blazer',preco:1400,desc:'Impõe respeito em apresentação.',shirt:'#eef2f7',jacket:'#22325a',collar:true},
+    {id:'terno',nome:'Terno completo',preco:3200,desc:'Roupa de quem decide orçamento.',shirt:'#eef2f7',jacket:'#2b2b2f',tie:'#b8322a',collar:true}
+  ],
+  acessorios:[
+    {id:'oculos',nome:'Óculos de analista',preco:220,desc:'+1 de credibilidade visual.'},
+    {id:'fone',nome:'Fone com cancelamento de ruído',preco:450,desc:'O Carlão no telefone vira um sussurro.'},
+    {id:'cracha',nome:'Crachá dourado',preco:900,desc:'Brilha mais que dashboard em reunião.'}
+  ],
+  mesa:[
+    {id:'planta',nome:'Planta na mesa',preco:120,desc:'+10 de energia no começo do dia.'},
+    {id:'caneca',nome:'Caneca “Confia nos dados”',preco:60,desc:'Café custa a metade.'},
+    {id:'pato',nome:'Patinho de borracha',preco:80,desc:'1 dica grátis por dia. Explique o código pro pato.'},
+    {id:'monitor2',nome:'Segundo monitor',preco:1200,desc:'+15% de XP em todas as missões.'},
+    {id:'cadeira',nome:'Cadeira ergonômica',preco:1600,desc:'Missões gastam 30% menos energia.'},
+    {id:'quadro',nome:'Quadro “Em Deus confiamos, o resto traga dados”',preco:250,desc:'+5% em bônus de missão.'},
+    {id:'cafeteira',nome:'Cafeteira própria',preco:2400,desc:'Café grátis e sem fila na copa.'}
+  ],
+  cursos:[
+    {id:'c_sql1',nome:'SQL do zero ao JOIN',preco:400,desc:'+120 XP de SQL.',skill:'sql',xp:120},
+    {id:'c_py1',nome:'Pandas na prática',preco:400,desc:'+120 XP de Python.',skill:'py',xp:120},
+    {id:'c_neg1',nome:'Métricas de negócio',preco:500,desc:'+150 XP de Negócio.',skill:'negocio',xp:150},
+    {id:'c_com1',nome:'Comunicação com dados',preco:500,desc:'+150 XP de Comunicação.',skill:'com',xp:150},
+    {id:'c_sql2',nome:'SQL avançado: subconsultas e CASE',preco:1500,desc:'+350 XP de SQL.',skill:'sql',xp:350,min:2},
+    {id:'c_py2',nome:'Python para automação',preco:1500,desc:'+350 XP de Python.',skill:'py',xp:350,min:2},
+    {id:'c_neg2',nome:'MBA relâmpago (só os slides)',preco:3500,desc:'+600 XP de Negócio.',skill:'negocio',xp:600,min:3},
+    {id:'c_ml',nome:'Machine Learning aplicado',preco:6000,desc:'+500 XP de Python e +300 de Negócio.',skill:'py',xp:500,extra:{negocio:300},min:4}
+  ],
+  automacoes:[
+    {id:'a_vendas',nome:'Robô do relatório de vendas',preco:900,rec:'rel_vendas',req:{py:2,feitos:3},renda:90,dept:'Vendas',desc:'Script agendado envia o relatório de vendas sozinho.'},
+    {id:'a_mkt',nome:'Dashboard automático de marketing',preco:1600,rec:'rel_mkt',req:{py:3,sql:3,feitos:3},renda:150,dept:'Marketing',desc:'A Bia para de pedir print do Excel.'},
+    {id:'a_ops',nome:'Alerta de atrasos de entrega',preco:2600,rec:'rel_ops',req:{py:4,feitos:3},renda:220,dept:'Operações',desc:'Avisa a Neide antes do cliente ligar.'},
+    {id:'a_etl',nome:'Pipeline ETL noturno',preco:6000,req:{py:5,sql:5},renda:450,desc:'Os dados chegam limpos às 7h. +10% de XP.'},
+    {id:'a_ia',nome:'Agente de IA de previsões',preco:14000,req:{py:7,negocio:5},renda:1000,desc:'Previsão de vendas diária. A diretoria te ama.'}
+  ]
+};
+
+/* ============ CENAS CÔMICAS ============ */
+const CENAS={
+  kevin_delete:[['kevin','Gente… uma pergunta hipotética.'],['kevin','O que acontece se alguém rodar DELETE FROM vendas… sem WHERE?'],['fabio','…'],['fabio','Kevin. Larga. O. Teclado.'],['chefe','KEVIN!'],['fabio','Relaxa, tem backup de ontem. Mas a gente PERDEU as vendas de hoje de manhã.'],['eu','Lição do dia: produção não é lugar de teste. E backup não é opcional.',null,{com:10}]],
+  pizza:[['chefe','Preciso de um gráfico de pizza com as 37 categorias de despesa.'],['chefe','Em 3D. Com sombra. A diretoria ADORA pizza.'],{q:'O que você faz?',opts:[
+    {t:'Sugerir um gráfico de barras ordenado',fx:{negocio:20,boss:-3},r:[['chefe','Barras? Hmm… é, dá pra ler. Mas eu ia gostar da sombra.']]},
+    {t:'Fazer a pizza 3D, sombra e tudo',fx:{boss:6},r:[['chefe','LINDO! Ninguém entendeu nada, mas aplaudiram.']]}]}],
+  reuniao:[['chefe','Reunião às 14h para alinharmos quando será a reunião de alinhamento.'],['jorge','Não podia ser um e-mail?'],['chefe','Podia. Mas aí não teria pão de queijo.'],['eu','(2 horas depois) Decidimos marcar outra reunião.',null,{energia:-10}]],
+  carlao_rapidinho:[['carlao','Só um número rapidinho: vendas por região, por produto, por vendedor, comparando com o ano passado.'],['carlao','Pra daqui 5 minutos. Rapidinho mesmo.'],{q:'Como responder?',opts:[
+    {t:'Alinhar prioridade e prazo realistas',fx:{com:20,rep:{Vendas:2}},r:[['carlao','Tá, amanhã de manhã serve. Você é chato, mas é confiável.']]},
+    {t:'Aceitar e correr',fx:{energia:-20,rep:{Vendas:5}},r:[['carlao','VALEU! Errou duas regiões, mas valeu!']]}]}],
+  impressora:[['neide','Fábio, a impressora tá piscando “PC LOAD LETTER”.'],['fabio','Já tentou desligar e ligar?'],['neide','Já. Ela respondeu “não”.'],['fabio','…isso é novo.']],
+  caderno:[['neide','O sistema diz que temos 40 cadeiras no estoque.'],['neide','Meu caderninho diz 12. E o caderninho nunca errou.'],['eu','Contagem física: 12 cadeiras. O caderno venceu o ERP.'],['neide','Dado que ninguém confere vira ficção, meu filho.',null,{negocio:10}]],
+  viral:[['bia','Seu dashboard tá ótimo, mas dá pra deixar ele mais… viral?'],['eu','Viral… como?'],['bia','Mais roxo. E se os números piscassem?'],['eu','(Os números não vão piscar.)']],
+  nao_fecha:[['jorge','Isso aqui não fecha.'],['eu','Quanto de diferença?'],['jorge','R$ 0,03.'],['jorge','Arredondamento. Arredonda só no final, nunca no meio da conta.',null,{negocio:10}]],
+  excel:[['carlao','O Excel travou. A planilha tem 1 milhão e 48 mil linhas.'],['eu','É o limite do Excel, Carlão. Essa base precisa ir para um banco de dados.'],['carlao','Banco eu conheço, é onde tá meu dinheiro.'],['eu','Te mostro como o SQL faz isso em 2 segundos.',null,{rep:{Vendas:3},com:10}]],
+  cafe:[['kevin','ACABOU O CAFÉ.'],['jorge','Calma.'],['kevin','O CAFÉ, JORGE.'],['eu','A produtividade do andar caiu 40%.',null,{energia:-10}]],
+  ia_tudo:[['chefe','Li no LinkedIn: precisamos de IA em tudo.'],['chefe','Até na cafeteira.'],['fabio','A cafeteira não tem nem Wi-Fi.'],['chefe','Então já começa com um projeto de infraestrutura!']],
+  final_v3:[['kevin','Pode revisar minha planilha? É rapidinho.'],['eu','“relatorio_final_v3_AGORA_VAI_revisado (2).xlsx”… com 47 abas?'],['kevin','A aba 31 é a certa. Acho.'],['eu','Vamos falar sobre versionamento, Kevin.',null,{com:10}]],
+  sujos:[['bia','Por que tem cliente em “SP”, “sp”, “São Paulo” e “Sampa”?'],['eu','Formulário de texto livre. Clássico.'],['bia','E o que faz?'],['eu','Padroniza na entrada com uma lista fixa. Limpar depois é sempre mais caro.',null,{negocio:10}]]
+};
+const CENAS_ALEATORIAS=['kevin_delete','pizza','reuniao','carlao_rapidinho','impressora','caderno','viral','nao_fecha','excel','cafe','ia_tudo','final_v3','sujos'];
+
+/* ============ CALENDÁRIO (cada dia de jogo = uma semana do ano) ============ */
+const MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const EVENTOS={
+  1:{nome:'Primeiro dia',deco:null},
+  3:{nome:'Planejamento anual',cena:[['chefe','Este ano somos data-driven! Por isso aprovei o orçamento com base no feeling.'],['jorge','…'],['eu','Vou anotar isso no meu caderno de frases.']]},
+  7:{nome:'Carnaval',deco:'carnaval',bonus:{energia:15},cena:[['bia','Vim de fantasia de gráfico de pizza! 🎉'],['chefe','Finalmente uma pizza com poucas fatias.'],['kevin','Eu vim de bug.'],['fabio','Esse a gente já conhece.']]},
+  10:{nome:'Dia da Mulher',cena:[['chefe','Hoje a diretoria homenageia as mulheres da empresa!'],['neide','Com flor ou com equiparação salarial?'],['chefe','…com flor, por enquanto.'],['bia','Anotado, Seu Ronaldo. Anotadíssimo.']]},
+  14:{nome:'Páscoa',deco:'pascoa',bonus:{energia:20},cena:[['kevin','Tem ovo de chocolate na copa!'],['jorge','Classifiquei o ovo como despesa de bem-estar.'],['eu','+20 de energia no açúcar.']]},
+  18:{nome:'Dia do Trabalhador',bonus:{dinheiro:200},cena:[['chefe','Feliz Dia do Trabalhador! Como presente… um vale de R$ 200.'],['carlao','E a folga?'],['chefe','A folga é o vale.']]},
+  19:{nome:'Dia das Mães',missao:'maes',cena:[['bia','Campanha de Dia das Mães! Preciso dos dados ONTEM.'],['eu','Pode deixar, sai hoje.']]},
+  24:{nome:'Festa Junina',deco:'junina',bonus:{energia:20},cena:[['chefe','Arraiá da firma! Vim de caipira executivo.'],['neide','Fiz o quentão. Não pergunte a receita.'],['kevin','Ganhei no correio elegante: “Seu código compila no meu coração.”'],['fabio','Quem mandou isso?'],['bia','👀']]},
+  32:{nome:'Dia dos Pais',cena:[['carlao','Meu filho disse que quer ser vendedor igual eu.'],['jorge','Coitado.'],['carlao','Ele é ótimo! Já me vendeu um videogame.']]},
+  37:{nome:'Dia do Programador',deco:'prog',bonus:{energia:15},cena:[['fabio','Hoje é o 256º dia do ano. Nosso dia.'],['fabio','Pedi pizza. 8 bits de calabresa.'],['chefe','Então essa é a famosa pizza que vocês tanto pedem!']]},
+  41:{nome:'Dia das Crianças',cena:[['kevin','Trouxe meu sobrinho pra conhecer o escritório.'],['eu','Ele está… no seu computador?'],['kevin','Ele que fez minha última query.'],['chefe','E ficou melhor que as suas.']]},
+  44:{nome:'Halloween',deco:'halloween',cena:[['bia','Hoje vou contar a história mais assustadora do mundo corporativo.'],['bia','Era uma vez uma planilha… SEM BACKUP.'],['kevin','Para! Para!']]},
+  47:{nome:'Black Friday',deco:'bf',mult:2,missao:'blackfriday',cena:[['carlao','BLACK FRIDAY! Missões valem o dobro hoje!'],['jorge','E o lucro?'],['carlao','O lucro a gente vê em dezembro.'],['jorge','É isso que me preocupa.']]},
+  51:{nome:'Natal',deco:'natal',bonus:{decimo:true},missao:'natal',cena:[['chefe','Amigo secreto!'],['kevin','Tirei o Seu Ronaldo. Comprei uma caneca: “Melhor chefe do mundo (segundo ele mesmo)”.'],['chefe','…adorei.'],['jorge','E o 13º salário caiu na conta. Isso fecha.']]},
+  52:{nome:'Réveillon',deco:'reveillon',cena:[['chefe','Ano que vem: mais dados, menos achismo!'],['eu','Meta registrada. E dessa vez com indicador.']]}
+};
+const ANIVERSARIOS={5:'jorge',12:'bia',28:'neide',35:'carlao',45:'kevin',49:'fabio'};
+
+/* ============ FALAS SOLTAS ============ */
+const FALAS={
+  chefe:['Precisamos de mais sinergia entre as áreas. Não sei o que é, mas precisamos.','Meu sobrinho disse que IA resolve tudo. Já resolveu o seu relatório?','Lembre: dado sem decisão é só curiosidade cara.','Gráfico de pizza é subestimado. Pense nisso.'],
+  bia:['Esse mês a meta é engajamento. Ou conversão. Os dois! Tudo!','Você acha que o algoritmo do Instagram gosta de mim?','Dashboard sem roxo é só uma tabela triste.','O TikTok trouxe 300 vendas. Ou 30. Confere pra mim?'],
+  carlao:['Cliente bom é cliente que paga. O resto é estatística.','Fechei com o Hotel Mirante! Coloca no sistema aí.','Sabia que o Excel aguenta 1 milhão de linhas? Eu testei. Eu descobri.','Se o número não for bom, arredonda pra cima.'],
+  neide:['Trinta anos de operação, meu filho. Já vi três ERPs morrerem.','A TartaLog atrasou de novo. Anota aí.','Dado bom é dado conferido.','Quer um café? Fui eu que fiz, é forte.'],
+  jorge:['Isso aqui não fecha.','Receita não é lucro. Repita comigo.','Planilha de orçamento: versão 14. Ainda não fecha.','Toda reunião deveria ter um custo por minuto no canto da tela.'],
+  kevin:['Achei um atalho que apaga tudo! Quer dizer… salva. Salva tudo.','Você usa SELECT * em produção? Eu uso. Não devia?','Meu código funciona e eu não sei por quê. Isso é normal?','Fiz um dashboard com 48 gráficos!'],
+  fabio:['Já tentou desligar e ligar?','A senha não pode ser “senha123”. Nem “Senha123”.','O servidor caiu porque alguém rodou um SELECT sem LIMIT em 80 milhões de linhas.','Não, eu não consigo recuperar o arquivo que você salvou por cima.']
+};
+if(typeof module!=='undefined')module.exports={MISSOES,RECORRENTES,MISSOES_EVENTO};
+MISSOES.forEach(m=>{if(!m.lang&&m.kind!=='quiz')m.lang=m.kind;});
+
+/* ================= ESTADO ================= */
+const SAVE_KEY='select-from-carreira-v1';
+const T=16,MW=24,MH=16;
+const $=s=>document.querySelector(s);
+const cv=$('#cv'),ctx=cv.getContext('2d');ctx.imageSmoothingEnabled=false;
+const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+let S=null;
+function novoEstado(nome,look){
+  return {v:1,nome,look,dia:1,minuto:540,dinheiro:300,salario:CARREIRA[0].salario,cargo:0,xp:0,
+    skills:{sql:0,py:0,negocio:0,com:0},energia:100,rep:{Marketing:50,Vendas:50,'Operações':50,Financeiro:50},chefe:50,
+    missoes:[],feitas:{},totalFeitas:0,recFeitos:{rel_vendas:0,rel_mkt:0,rel_ops:0},
+    roupa:'basica',owned:['basica'],acess:[],cursos:[],autos:[],ultimoAumento:-99,falou:{},pato:0,
+    pos:{x:11,y:14},dir:'up',hoje:{entregas:[],ganhos:0,xp:0,atrasos:[]},cenasVistas:[],uid:1,aviso18:false,histor:[]};
+}
+function salvar(){if(!S)return;if(typeof player!=='undefined'&&player)S.pos={x:player.x,y:player.y};try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}}
+function carregar(){try{const s=localStorage.getItem(SAVE_KEY);return s?JSON.parse(s):null;}catch(e){return null;}}
+const lvl=x=>Math.floor(Math.sqrt(x/30));
+const lvlProg=x=>{const l=lvl(x);return (x-30*l*l)/(30*((l+1)**2-l*l));};
+const avgRep=()=>Math.round(DEPTS.reduce((a,d)=>a+S.rep[d],0)/DEPTS.length);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const brl=v=>(v<0?'−':'')+'R$ '+Math.abs(Math.round(v)).toLocaleString('pt-BR');
+const has=id=>S.owned.includes(id);
+const horaStr=m=>`${String(Math.floor(m/60)).padStart(2,'0')}:${String(Math.floor(m%60)).padStart(2,'0')}`;
+const mesDoDia=d=>MESES[Math.min(11,Math.floor(((d-1)%52)*12/52))];
+const semana=d=>((d-1)%52)+1;
+const eventoHoje=()=>{const w=semana(S.dia);if(w===1&&S.dia>1)return{nome:'Ano novo'};return EVENTOS[w]||null;};
+
+/* ================= MAPA ================= */
+let solid,inter,floorT,furn,npcs,player;
+const DESKS=[
+  {x:3,y:12,w:3,cx:3,cy:13,nome:'Bancada dos estagiários'},
+  {x:10,y:8,w:2,cx:10,cy:9,nome:'Sua mesa no open space'},
+  {x:10,y:8,w:2,cx:10,cy:9,nome:'Sua mesa no open space'},
+  {x:19,y:9,w:2,cx:19,cy:10,nome:'Mesa de canto, perto do chefe'},
+  {x:19,y:12,w:2,cx:19,cy:13,nome:'Sua sala com parede de vidro'},
+  {x:19,y:12,w:2,cx:19,cy:13,nome:'Sua sala com parede de vidro'}
+];
+function deskAtual(){return DESKS[S.cargo];}
+function buildMap(){
+  solid=[...Array(MH)].map(()=>Array(MW).fill(false));
+  inter=[...Array(MH)].map(()=>Array(MW).fill(null));
+  floorT=[...Array(MH)].map((_,y)=>[...Array(MW)].map((_,x)=>{
+    if(x>=1&&x<=5&&y>=2&&y<=6)return'tile';
+    if(x>=17&&x<=22&&y>=2&&y<=6)return'wood';
+    if(x>=17&&x<=22&&y>=12&&y<=14)return'wood';
+    return'carpet';}));
+  furn=[];
+  const S_=(x,y,w=1,h=1)=>{for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)solid[j][i]=true;};
+  const I_=(x,y,w,h,v)=>{for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)inter[j][i]=v;};
+  const F=(type,x,y,w=1,h=1,extra={})=>{furn.push({type,x,y,w,h,...extra});};
+  for(let x=0;x<MW;x++){S_(x,0);S_(x,1);S_(x,15);}
+  for(let y=0;y<MH;y++){S_(0,y);S_(23,y);}
+  // copa
+  F('cafe',1,2);S_(1,2);I_(1,2,1,1,{t:'cafe',label:'Pegar café'});
+  F('geladeira',2,2);S_(2,2);I_(2,2,1,1,{t:'obj',id:'geladeira',label:'Abrir a geladeira'});
+  F('balcao',3,2,2);S_(3,2,2);I_(3,2,2,1,{t:'obj',id:'pia',label:'Olhar a pia'});
+  F('mesacopa',2,5,2);S_(2,5,2);I_(2,5,2,1,{t:'obj',id:'mesacopa',label:'Mesa da copa'});
+  F('divisoria',6,2,1,3);S_(6,2,1,3);
+  // áreas
+  const areaDesk=(x,y,npc,dept)=>{F('deskNpc',x,y,2,1,{npc});S_(x,y,2);I_(x,y,2,1,{t:'npc',id:npc,label:`Falar com ${NPCS[npc].nome} (${NPCS[npc].cargo})`});F('cadeira',x,y-1,1,1,{cor:'#3b4254',behind:true});};
+  areaDesk(7,3,'bia');areaDesk(10,3,'carlao');areaDesk(13,3,'jorge');areaDesk(7,8,'neide');areaDesk(13,8,'fabio');
+  F('rack',15,8);S_(15,8);I_(15,8,1,1,{t:'obj',id:'rack',label:'Servidor'});
+  F('quadro',11,1,2);I_(11,1,2,1,{t:'carreira',label:'Quadro de metas (plano de carreira)'});
+  // sala do chefe
+  for(let y=2;y<=6;y++){F('vidroV',16,y);S_(16,y);}
+  for(let x=16;x<=22;x++){if(x===19)continue;F('vidroH',x,7);S_(x,7);}
+  F('mesaChefe',19,4,2);S_(19,4,2);I_(19,4,2,1,{t:'npc',id:'chefe',label:'Falar com Seu Ronaldo (Gerente de BI)'});
+  F('estante',22,2);S_(22,2);F('planta',17,2);S_(17,2);
+  F('cadeira',19,3,1,1,{cor:'#5b2a2a',behind:true,grande:true});
+  // sala de vidro inferior
+  for(let x=16;x<=22;x++){if(x===18)continue;F('vidroH',x,11);S_(x,11);}
+  for(let y=12;y<=14;y++){F('vidroV',16,y);S_(16,y);}
+  F('planta',22,14);S_(22,14);
+  // outros
+  F('impressora',1,8);S_(1,8);I_(1,8,1,1,{t:'obj',id:'impressora',label:'Impressora'});
+  F('bebedouro',5,7);S_(5,7);I_(5,7,1,1,{t:'obj',id:'bebedouro',label:'Bebedouro (rádio-corredor)'});
+  F('planta',1,10);S_(1,10);F('planta',22,8);S_(22,8);F('planta',5,14);S_(5,14);
+  F('porta',11,15,2);I_(11,15,2,1,{t:'porta',label:'Ir para casa'});
+  // mesa do jogador
+  const d=deskAtual();
+  if(S.cargo<4){F('mesaReuniao',19,13,2);S_(19,13,2);I_(19,13,2,1,{t:'obj',id:'reuniao',label:'Sala de reunião'});}
+  if(S.cargo>=1&&S.cargo<=2){F('bancada',2,12,3,1,{vazia:true});S_(2,12,3);I_(2,12,3,1,{t:'obj',id:'bancada',label:'Antiga bancada dos estagiários'});}
+  if(S.cargo===0){F('bancada',2,12,3,1);S_(2,12,3);I_(3,12,2,1,{t:'pc',label:'Usar o computador'});I_(2,12,1,1,{t:'npc',id:'kevin',label:'Falar com Kevin (estagiário)'});}
+  else{F('deskPlayer',d.x,d.y,d.w,1);S_(d.x,d.y,d.w);I_(d.x,d.y,d.w,1,{t:'pc',label:'Usar o computador'});}
+  F('cadeiraPlayer',d.cx,d.cy,1,1);
+  if(S.autos.length){F('servidores',d.x+d.w,d.y,1,1);S_(d.x+d.w,d.y);I_(d.x+d.w,d.y,1,1,{t:'obj',id:'autos',label:'Suas automações'});}
+  // NPCs
+  npcs={
+    bia:mkNpc('bia',7,2),carlao:mkNpc('carlao',10,2),jorge:mkNpc('jorge',13,2),neide:mkNpc('neide',7,7),fabio:mkNpc('fabio',13,7),
+    chefe:mkNpc('chefe',19,3),kevin:mkNpc('kevin',2,13,true)};
+}
+function mkNpc(id,x,y,wander){return {id,x,y,px:x*T,py:y*T,dir:'down',moving:false,wander:!!wander,timer:2+Math.random()*3,frame:0,home:{x,y}};}
+function blocked(x,y,who){
+  if(x<0||y<0||x>=MW||y>=MH)return true;
+  if(solid[y][x])return true;
+  if(who!=='player'&&player.x===x&&player.y===y)return true;
+  if(who!=='player'&&player.tx===x&&player.ty===y)return true;
+  for(const k in npcs){const n=npcs[k];if(n===who)continue;if((n.x===x&&n.y===y)||(n.tx===x&&n.ty===y))return true;}
+  return false;
+}
+
+/* ================= DESENHO ================= */
+const P={carpet:'#6f7f9e',carpet2:'#687897',tile:'#d9dee6',tile2:'#c9d0db',wood:'#b07a4a',wood2:'#a06d40',wallTop:'#2d3448',wall:'#e8e3d6',wall2:'#cfc8b6',base:'#7a6a55'};
+function R(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w,h);}
+function drawFloor(){
+  for(let y=2;y<15;y++)for(let x=1;x<23;x++){
+    const t=floorT[y][x],px=x*T,py=y*T;
+    if(t==='carpet'){R(px,py,T,T,(x+y)%2?P.carpet:P.carpet2);if((x*7+y*3)%11===0)R(px+5,py+9,2,1,'#7b8bab');}
+    else if(t==='tile'){R(px,py,T,T,P.tile);R(px,py,T,1,P.tile2);R(px,py,1,T,P.tile2);}
+    else{R(px,py,T,T,P.wood);for(let k=0;k<4;k++)R(px,py+k*4+3,T,1,P.wood2);R(px+((y%2)?6:12),py,1,T,P.wood2);}
+  }
+}
+function janelaCor(){const m=S.minuto;if(m<600)return['#a8dcff','#d7f0ff'];if(m<1020)return['#8ccaf2','#c3e7ff'];if(m<1110)return['#f4a259','#f9d38c'];return['#1d2a4d','#2c3d69'];}
+function drawWalls(){
+  R(0,0,MW*T,T,P.wallTop);R(0,T,MW*T,T,P.wall);R(0,T*2-3,MW*T,3,P.base);
+  const [c1,c2]=janelaCor();
+  for(const wx of [2,8,14,18,21]){
+    const px=wx*T;R(px-1,T+1,T*2-2+2,T-5,'#5a5f6e');R(px+1,T+3,T*2-6,T-9,c1);R(px+1,T+3,T*2-6,3,c2);R(px+T-2,T+3,2,T-9,'#5a5f6e');
+    if(S.minuto>=1110){R(px+4,T+5,1,1,'#fff');R(px+20,T+4,1,1,'#fff');}
+    else{R(px+3,T+9,6,3,'#5d6b85');R(px+10,T+7,4,5,'#4e5b74');R(px+19,T+8,5,4,'#5d6b85');}
+  }
+  R(0,T*15,MW*T,T,P.wallTop);R(0,0,T,MH*T,P.wallTop);R(T*23,0,T,MH*T,P.wallTop);
+}
+function rr(x,y,w,h,c){R(x,y,w,h,c);}
+function drawFurn(f){
+  const px=f.x*T,py=f.y*T,t=Date.now();
+  switch(f.type){
+    case 'cafe':R(px+2,py-6,12,20,'#3a3f4b');R(px+4,py-4,8,5,'#1b1e25');R(px+5,py-3,2,1,'#ff5d5d');R(px+5,py+4,6,5,'#2a2d35');R(px+6,py+6,4,3,'#f3efe6');R(px+7,py+7,2,1,'#6b4426');break;
+    case 'geladeira':R(px+1,py-10,14,24,'#e9eef4');R(px+1,py-10,14,1,'#ffffff');R(px+1,py+1,14,1,'#b8c2cf');R(px+12,py-6,1,5,'#8a96a8');R(px+12,py+4,1,6,'#8a96a8');break;
+    case 'balcao':R(px,py-2,T*f.w,16,'#c7b79a');R(px,py-2,T*f.w,3,'#e4d8c0');R(px+T+3,py-1,9,2,'#9fb3c8');R(px+T+7,py-5,1,4,'#8a96a8');R(px+3,py-6,4,4,'#d95d39');break;
+    case 'mesacopa':R(px+1,py-2,T*2-2,9,'#c58b5b');R(px+1,py-2,T*2-2,2,'#dba57a');R(px+3,py+7,2,6,'#7a5235');R(px+T*2-5,py+7,2,6,'#7a5235');
+      if(S.aniversario){R(px+10,py-8,10,6,'#f6d6e6');R(px+10,py-8,10,2,'#e85d9a');R(px+14,py-11,1,3,'#ffd23f');R(px+14,py-12,1,1,'#ff8c3b');}
+      if(eventoHoje()&&eventoHoje().deco==='pascoa'){R(px+6,py-5,4,4,'#7b4a2a');R(px+20,py-5,4,4,'#a8673d');R(px+21,py-4,2,1,'#ffd23f');}break;
+    case 'divisoria':R(px+4,py-4,8,T*3+2,'#9aa4b5');R(px+4,py-4,8,2,'#c1c9d6');for(let k=0;k<3;k++)R(px+5,py+k*T+2,6,1,'#7d889b');break;
+    case 'deskNpc':{R(px,py-4,T*2,8,'#a46d3f');R(px,py-4,T*2,2,'#c48a55');R(px,py+4,T*2,9,'#7c5130');R(px+2,py+4,2,10,'#5e3c22');R(px+T*2-4,py+4,2,10,'#5e3c22');
+      R(px+9,py-12,12,9,'#3d4352');R(px+13,py-4,4,1,'#3d4352');R(px+3,py-3,5,3,'#f3f3f3');R(px+24,py-3,4,2,'#e1c76a');
+      if(f.npc==='bia'){R(px+25,py-6,3,3,'#e85d9a');}if(f.npc==='carlao'){R(px+2,py-6,5,3,'#2ecc71');}if(f.npc==='jorge'){R(px+24,py-6,5,4,'#1f6f43');R(px+25,py-5,3,1,'#bfe6cf');}if(f.npc==='neide'){R(px+2,py-5,6,3,'#c0392b');R(px+2,py-5,6,1,'#e74c3c');}if(f.npc==='fabio'){R(px+2,py-6,4,3,'#222');R(px+3,py-5,1,1,'#2ecc71');}
+      break;}
+    case 'deskPlayer':{const w=T*f.w;R(px,py-4,w,8,'#a46d3f');R(px,py-4,w,2,'#c48a55');R(px,py+4,w,9,'#7c5130');R(px+2,py+4,2,10,'#5e3c22');R(px+w-4,py+4,2,10,'#5e3c22');
+      drawMonitor(px+9,py-14);if(has('monitor2'))drawMonitor(px+20,py-13,true);drawDeskDecor(px,py,w);break;}
+    case 'bancada':{const w=T*3;R(px,py-4,w,8,'#9b9b9b');R(px,py-4,w,2,'#bdbdbd');R(px,py+4,w,9,'#6d6d6d');R(px+2,py+4,2,10,'#4f4f4f');R(px+w-4,py+4,2,10,'#4f4f4f');
+      if(!f.vidas&&!f.vazia){R(px+3,py-12,10,8,'#3d4352');R(px+4,py-11,8,6,'#1e3a5f');R(px+5,py-10,3,1,'#e74c3c');drawMonitor(px+T+9,py-14);drawDeskDecor(px+T,py,T*2);}
+      if(f.vazia){R(px+12,py-3,10,3,'#f3f3f3');R(px+26,py-6,4,4,'#e0b84a');}
+      break;}
+    case 'cadeira':{const c=f.cor;if(f.grande){R(px+3,py-6,10,12,c);R(px+3,py-6,10,2,'#7a3a3a');}else{R(px+4,py-3,8,8,c);R(px+4,py-3,8,2,'#4d5468');}R(px+7,py+5,2,4,'#2a2d35');R(px+4,py+9,8,2,'#2a2d35');break;}
+    case 'cadeiraPlayer':{const ergo=has('cadeira');const c=ergo?'#1f6f8b':'#3b4254';R(px+4,py+2,8,6,c);R(px+3,py+8,10,3,c);if(ergo){R(px+4,py+1,8,2,'#2a9fc7');R(px+2,py+6,1,4,'#2a2d35');R(px+13,py+6,1,4,'#2a2d35');}R(px+7,py+11,2,3,'#2a2d35');R(px+4,py+14,8,1,'#2a2d35');break;}
+    case 'rack':{R(px+2,py-10,12,24,'#1f232c');for(let k=0;k<5;k++){R(px+4,py-8+k*4,8,2,'#2f3542');R(px+10,py-8+k*4,1,1,((t/300+k)|0)%2?'#2ecc71':'#0f5132');}break;}
+    case 'servidores':{R(px+3,py-8,10,20,'#20242e');const n=S.autos.length;for(let k=0;k<5;k++){R(px+5,py-6+k*4,6,2,'#2f3542');if(k<n)R(px+9,py-6+k*4,1,1,((t/250+k)|0)%2?'#4fc3f7':'#0d3c55');}
+      R(px+4,py-12,8,4,'#9aa4b5');R(px+5,py-11,2,1,'#4fc3f7');R(px+9,py-11,2,1,'#4fc3f7');break;}
+    case 'quadro':{R(px+1,py+2,T*2-2,12,'#f6f7f9');R(px+1,py+2,T*2-2,1,'#9aa4b5');R(px+4,py+5,10,1,'#2b59c3');R(px+4,py+8,16,1,'#d6453d');R(px+4,py+11,8,1,'#2f9e5b');R(px+20,py+4,7,7,'#ffd23f');break;}
+    case 'vidroV':R(px+6,py-6,4,T+6,'rgba(170,215,240,.55)');R(px+6,py-6,1,T+6,'#d8f0ff');R(px+9,py-6,1,T+6,'#6d8aa6');break;
+    case 'vidroH':R(px,py-6,T,12,'rgba(170,215,240,.5)');R(px,py-6,T,1,'#d8f0ff');R(px,py+5,T,2,'#6d8aa6');R(px+(f.x%2?3:9),py-4,1,6,'rgba(255,255,255,.7)');break;
+    case 'mesaChefe':{R(px-2,py-4,T*2+4,9,'#5a3420');R(px-2,py-4,T*2+4,2,'#7b4a2e');R(px-2,py+5,T*2+4,9,'#43261a');R(px+10,py+7,12,3,'#d4af37');R(px+3,py-11,10,8,'#2c3140');R(px+22,py-7,4,4,'#e8e3d6');if(S.cargo<5)R(px+23,py-6,2,1,'#c0392b');break;}
+    case 'estante':R(px+1,py-10,14,24,'#6b4426');for(let k=0;k<3;k++){R(px+2,py-8+k*7,12,1,'#4a2e19');R(px+3,py-13+k*7+6,2,5,['#c0392b','#2b59c3','#2f9e5b'][k]);R(px+6,py-13+k*7+6,2,5,'#ffd23f');R(px+9,py-13+k*7+7,3,4,'#8e44ad');}break;
+    case 'planta':R(px+4,py+4,8,8,'#b5651d');R(px+4,py+4,8,2,'#cf7a2a');R(px+3,py-5,10,10,'#2f8f4e');R(px+1,py-2,4,5,'#3fae63');R(px+11,py-3,4,5,'#3fae63');R(px+6,py-8,4,4,'#3fae63');break;
+    case 'impressora':R(px+1,py-2,14,12,'#d8dce3');R(px+1,py-2,14,3,'#eef1f5');R(px+3,py+3,10,2,'#2a2d35');R(px+4,py-5,8,3,'#ffffff');R(px+12,py,1,1,((t/400)|0)%2?'#ffd23f':'#d6453d');R(px+3,py+10,10,3,'#b8bec9');break;
+    case 'bebedouro':R(px+4,py-10,8,8,'rgba(120,190,240,.8)');R(px+4,py-10,8,2,'#cfe9ff');R(px+3,py-2,10,15,'#e8ecf2');R(px+5,py+1,6,2,'#9aa4b5');break;
+    case 'porta':{const w=T*2;R(px,py,w,T,'#6b4f37');R(px+2,py+1,w/2-3,T-1,'#8a6849');R(px+w/2+1,py+1,w/2-3,T-1,'#8a6849');R(px+w/2-3,py+7,1,3,'#d4af37');R(px+w/2+2,py+7,1,3,'#d4af37');R(px+8,py-2,16,4,'#2f9e5b');R(px+10,py-1,12,2,'#bff0cf');break;}
+    case 'mesaReuniao':R(px-6,py-4,T*2+12,10,'#7b4a2e');R(px-6,py-4,T*2+12,2,'#9b623d');R(px-2,py+6,2,7,'#4a2e19');R(px+T*2,py+6,2,7,'#4a2e19');R(px+4,py-3,4,3,'#f3f3f3');R(px+18,py-3,3,3,'#d95d39');break;
+  }
+}
+function drawMonitor(x,y,small){
+  const t=Date.now();const pend=S.missoes.length>0;
+  R(x,y,12,9,'#2c3140');R(x+1,y+1,10,7,pend?'#1d4f91':'#16314f');R(x+5,y+9,2,2,'#2c3140');R(x+3,y+11,6,1,'#2c3140');
+  if(!small){R(x+2,y+2,5,1,'#8fc1ff');R(x+2,y+4,7,1,'#5d8fd6');if(pend&&((t/450)|0)%2){R(x+8,y+2,2,3,'#ffd23f');}}
+  else{R(x+2,y+3,6,3,'#2f9e5b');R(x+3,y+2,1,4,'#bff0cf');}
+  R(x-1,y+13,14,2,'#d9dce3');
+}
+function drawDeskDecor(px,py,w){
+  if(has('planta')){R(px+2,py-6,5,4,'#b5651d');R(px+1,py-11,7,5,'#3fae63');R(px+3,py-13,3,2,'#2f8f4e');}
+  if(has('caneca')){R(px+w-7,py-6,4,4,'#f6f7f9');R(px+w-3,py-5,1,2,'#f6f7f9');R(px+w-6,py-5,2,1,'#2b59c3');}
+  if(has('pato')){R(px+3,py-2,4,3,'#ffd23f');R(px+6,py-3,2,2,'#ffd23f');R(px+8,py-2,1,1,'#ff8c3b');}
+  if(has('cafeteira')){R(px+w-14,py-10,6,8,'#3a3f4b');R(px+w-13,py-5,4,2,'#6b4426');}
+  if(has('quadro')){R(px+w-10,py-14,8,7,'#6b4426');R(px+w-9,py-13,6,5,'#f6f7f9');R(px+w-8,py-11,4,1,'#2b59c3');}
+}
+function drawDeco(){
+  const ev=eventoHoje();if(!ev||!ev.deco)return;const t=Date.now();
+  if(ev.deco==='junina'||ev.deco==='carnaval'){const cols=ev.deco==='junina'?['#d6453d','#ffd23f','#2b59c3','#2f9e5b']:['#e85d9a','#ffd23f','#4fc3f7','#8e44ad'];
+    for(let x=1;x<23;x++){const c=cols[x%4];for(let k=0;k<4;k++)R(x*T+4+k,T*2+1+k,8-2*k,1,c);}R(T,T*2,22*T,1,'#5a3420');}
+  if(ev.deco==='carnaval'||ev.deco==='reveillon'){const cols=ev.deco==='carnaval'?['#e85d9a','#ffd23f','#4fc3f7','#2ecc71']:['#ffd23f','#f6f7f9','#d4af37'];for(let i=0;i<70;i++){const x=(i*97)%(22*T)+T,y=(i*53)%(12*T)+3*T;R(x,y,2,1,cols[i%cols.length]);}}
+  if(ev.deco==='natal'){const px=T*1,py=T*12;R(px+6,py+8,4,6,'#6b4426');for(let k=0;k<4;k++)R(px+2+k*1,py-2+k*3-6,12-k*2,4,'#2f8f4e');R(px+7,py-12,2,2,'#ffd23f');for(let i=0;i<20;i++)R(T+i*T+4,T*2+1,2,2,['#d6453d','#ffd23f','#2ecc71','#4fc3f7'][(i+((t/500)|0))%4]);}
+  if(ev.deco==='halloween'){for(const [x,y] of [[6,6],[12,10],[21,10],[4,10]]){R(x*T+3,y*T+6,10,8,'#e67e22');R(x*T+7,y*T+4,2,2,'#2f8f4e');R(x*T+5,y*T+8,2,2,'#1b1b1b');R(x*T+9,y*T+8,2,2,'#1b1b1b');R(x*T+6,y*T+11,4,1,'#1b1b1b');}}
+  if(ev.deco==='bf'||ev.deco==='prog'){const txt=ev.deco==='bf'?'BLACK FRIDAY':'DIA 256';R(T*4,T+2,T*3+8,10,ev.deco==='bf'?'#111':'#2b59c3');ctx.fillStyle=ev.deco==='bf'?'#ffd23f':'#fff';ctx.font='6px "Press Start 2P", monospace';ctx.textBaseline='top';ctx.fillText(txt,T*4+3,T+4);}
+  if(ev.deco==='pascoa'){for(const [x,y] of [[9,6],[17,9],[4,13]]){R(x*T+5,y*T+6,5,6,['#e85d9a','#4fc3f7','#ffd23f'][x%3]);R(x*T+5,y*T+8,5,1,'#fff');}}
+}
+/* ---- personagens ---- */
+function lookOf(id){
+  if(id==='eu'||id==='player'){const r=LOJA.roupas.find(x=>x.id===S.roupa)||LOJA.roupas[0];
+    return {skin:S.look.skin,hair:S.look.hair,style:S.look.style,shirt:r.shirt,jacket:r.jacket,tie:r.tie,collar:r.collar,hood:r.hood,print:r.print,pants:'#2b3550',glasses:S.acess.includes('oculos'),headset:S.acess.includes('fone'),cracha:S.acess.includes('cracha')};}
+  const n=NPCS[id];return {skin:n.skin,hair:n.hair,style:n.bald?'careca':n.long?'longo':'curto',shirt:n.shirt,tie:n.tie,pants:n.pants,glasses:n.glasses,headset:n.headset,cap:n.cap,beard:n.beard,collar:!!n.tie};
+}
+function drawChar(c,x0,y0,L,dir,frame,scale){
+  const s=scale||1;const flip=dir==='right';
+  const r=(x,y,w,h,col)=>{if(!col)return;const xx=flip?(12-x-w):x;c.fillStyle=col;c.fillRect(x0+xx*s,y0+y*s,w*s,h*s);};
+  const side=dir==='left'||dir==='right';const up=dir==='up';
+  const dark='#1b1f2a';const sleeve=L.jacket||L.shirt;
+  const step=frame%2;
+  // pernas
+  const lift=frame>0,lA=lift&&step===1,lB=lift&&step===0;
+  if(side){r(4,14,2,lA?3:4,L.pants);r(6,14,2,lB?3:4,L.pants);r(4,lA?17:18,3,1,dark);r(6,lB?17:18,3,1,dark);}
+  else{r(3,14,2,lA?3:4,L.pants);r(7,14,2,lB?3:4,L.pants);r(3,lA?17:18,2,1,dark);r(7,lB?17:18,2,1,dark);}
+  // tronco
+  if(side){r(3,9,6,5,L.shirt);if(L.jacket){r(3,9,6,5,L.jacket);r(3,9,1,2,L.shirt);}const ao=lift?(step?1:-1):0;r(5+ao,10,2,3,sleeve);r(5+ao,13,2,1,L.skin);}
+  else{r(2,9,8,5,L.shirt);
+    if(L.hood&&!up)r(2,9,8,1,'#3a414e');
+    if(L.jacket){r(2,9,3,5,L.jacket);r(7,9,3,5,L.jacket);}
+    if(!up){if(L.collar){r(4,9,1,1,'#ffffff');r(7,9,1,1,'#ffffff');}if(L.tie)r(5,10,2,4,L.tie);if(L.print){r(4,11,4,1,'#ffd23f');r(4,12,2,1,'#4fc3f7');}if(L.cracha)r(8,11,1,2,'#d4af37');}
+    r(1,9,1,4,sleeve);r(10,9,1,4,sleeve);r(1,13,1,1,L.skin);r(10,13,1,1,L.skin);}
+  if(L.hood&&up)r(2,7,8,3,'#3a414e');
+  // cabeça
+  r(2,1,8,8,L.skin);
+  const H=L.hair;
+  if(L.style==='careca'){r(2,3,1,3,H);r(9,3,1,3,H);if(!up)r(4,1,2,1,'#ffffff55');if(up)r(2,3,8,3,H);}
+  else{
+    r(2,0,8,3,H);
+    if(up){r(2,0,8,7,H);if(L.style==='longo')r(2,7,8,3,H);}
+    else if(side){r(7,1,3,6,H);if(L.style==='longo')r(7,6,3,4,H);}
+    else{r(2,3,1,2,H);r(9,3,1,2,H);if(L.style==='longo'){r(1,3,2,7,H);r(9,3,2,7,H);}}
+  }
+  if(L.cap){r(2,-1,8,3,'#2b59c3');if(!up&&!side)r(1,2,10,1,'#1f3f8f');if(side)r(0,2,3,1,'#1f3f8f');}
+  if(!up){
+    if(side){r(3,5,1,1,dark);if(L.glasses){r(2,4,3,1,'#2a2d35');}}
+    else{r(4,5,1,1,dark);r(7,5,1,1,dark);r(5,7,2,1,'#00000033');if(L.glasses){r(3,4,3,1,'#2a2d35');r(6,4,3,1,'#2a2d35');r(3,6,3,1,'#2a2d3588');r(6,6,3,1,'#2a2d3588');}}
+    if(L.beard){if(side)r(2,6,5,3,H);else{r(3,6,6,3,H);r(5,7,2,1,'#c0806066');}}
+  }
+  if(L.headset){r(1,3,1,4,'#222');r(10,3,1,4,'#222');r(2,-1,8,1,'#222');if(!up&&!side)r(2,7,2,1,'#222');}
+}
+function drawPortrait(canvas,id){
+  const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;c.clearRect(0,0,canvas.width,canvas.height);
+  const s=canvas.width/14;drawChar(c,s*1,s*2,lookOf(id),'down',0,s);
+}
+function drawShadow(px,py){ctx.fillStyle='rgba(20,25,40,.28)';ctx.fillRect(px+3,py+13,10,2);ctx.fillRect(px+4,py+12,8,1);}
+function bubble(px,py,txt,col){ctx.fillStyle=col||'#fff';ctx.fillRect(px+4,py-15,9,8);ctx.fillRect(px+6,py-7,2,2);ctx.fillStyle='#1b2233';
+  if(txt==='!'){ctx.fillRect(px+8,py-14,1,4);ctx.fillRect(px+8,py-9,1,1);}else{ctx.fillRect(px+6,py-11,1,1);ctx.fillRect(px+8,py-11,1,1);ctx.fillRect(px+10,py-11,1,1);}}
+
+/* ================= LOOP ================= */
+let keys={},lastT=0,paused=true,inPC=false,frameN=0;
+function npcHasDueToday(id){return S.missoes.some(e=>{const m=getM(e);return m&&m.from===id&&e.due<=S.dia;});}
+function render(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  drawWalls();drawFloor();
+  const items=[];
+  furn.forEach(f=>items.push({z:f.y*T+(f.behind?-8:(f.type==='vidroH'?6:4)),fn:()=>drawFurn(f)}));
+  const chars=[...Object.values(npcs),player];
+  chars.forEach(ch=>items.push({z:ch.py+8,fn:()=>{
+    drawShadow(ch.px,ch.py);
+    const L=ch===player?lookOf('eu'):lookOf(ch.id);
+    drawChar(ctx,ch.px+2,ch.py-6,L,ch.dir,ch.moving?1+(((ch.anim||0)*6)|0)%2:0,1);
+    if(ch!==player){
+      if(npcHasDueToday(ch.id))bubble(ch.px,ch.py,'!','#ffd23f');
+      else if(S.falou[ch.id]!==S.dia&&!paused)bubble(ch.px,ch.py,'…','#ffffff');
+    }}}));
+  items.sort((a,b)=>a.z-b.z).forEach(i=>i.fn());
+  drawDeco();
+  if(S.minuto>=1080){ctx.fillStyle=`rgba(20,30,70,${Math.min(.28,(S.minuto-1080)/400)})`;ctx.fillRect(0,0,cv.width,cv.height);}
+  const tgt=alvo();if(tgt&&!paused){const [tx,ty]=tgt.pos;R(tx*T+5,ty*T-10,7,7,'#1b2233');ctx.fillStyle='#ffd23f';ctx.font='5px "Press Start 2P", monospace';ctx.textBaseline='top';ctx.fillText('E',tx*T+6,ty*T-9);}
+}
+function alvo(){
+  const d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[player.dir];
+  const x=player.x+d[0],y=player.y+d[1];
+  for(const k in npcs){const n=npcs[k];if(n.x===x&&n.y===y)return {t:'npc',id:k,label:`Falar com ${NPCS[k].nome} (${NPCS[k].cargo})`,pos:[x,y]};}
+  if(y>=0&&y<MH&&x>=0&&x<MW&&inter[y][x])return {...inter[y][x],pos:[x,y]};
+  return null;
+}
+function stepChar(ch,dt,speed){
+  if(!ch.moving)return;
+  ch.anim=(ch.anim||0)+dt;
+  const tx=ch.tx*T,ty=ch.ty*T;const v=speed*T*dt;
+  const dx=tx-ch.px,dy=ty-ch.py;const dist=Math.hypot(dx,dy);
+  if(dist<=v){ch.px=tx;ch.py=ty;ch.x=ch.tx;ch.y=ch.ty;ch.tx=undefined;ch.ty=undefined;ch.moving=false;}
+  else{ch.px+=dx/dist*v;ch.py+=dy/dist*v;}
+}
+const DIRS={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+function heldDir(){
+  if(keys.ArrowUp||keys.KeyW||keys.dUp)return'up';if(keys.ArrowDown||keys.KeyS||keys.dDown)return'down';
+  if(keys.ArrowLeft||keys.KeyA||keys.dLeft)return'left';if(keys.ArrowRight||keys.KeyD||keys.dRight)return'right';return null;
+}
+function update(dt){
+  if(!paused){
+    if(!player.moving){const d=heldDir();if(d){player.dir=d;const [dx,dy]=DIRS[d];const nx=player.x+dx,ny=player.y+dy;if(!blocked(nx,ny,'player')){player.tx=nx;player.ty=ny;player.moving=true;}else player.anim=0;}}
+    stepChar(player,dt,5.5);
+    for(const k in npcs){const n=npcs[k];
+      if(n.wander&&!n.moving){n.timer-=dt;if(n.timer<=0){n.timer=1.5+Math.random()*4;const ds=Object.keys(DIRS);const d=ds[Math.floor(Math.random()*4)];const [dx,dy]=DIRS[d];n.dir=d;
+        const nx=n.x+dx,ny=n.y+dy;const far=Math.abs(nx-n.home.x)+Math.abs(ny-n.home.y)>9;if(!far&&!blocked(nx,ny,n)&&!inter[ny][nx]){n.tx=nx;n.ty=ny;n.moving=true;}}}
+      stepChar(n,dt,3);}
+    const vel=inPC?1.1:2.2;
+    S.minuto+=dt*vel;
+    if(S.minuto>=1080&&!S.aviso18){S.aviso18=true;toast('18:00. Expediente encerrado: saia pela porta quando quiser. Hora extra conta pontos com o chefe, mas cansa.');}
+    if(S.minuto>=1260){S.minuto=1260;fimDoDia(true);}
+    updateHud();
+  }else if(inPC){S.minuto+=dt*1.1;if(S.minuto>=1260)S.minuto=1260;updateClock();}
+}
+function loop(t){
+  const dt=Math.min(.05,(t-lastT)/1000||0);lastT=t;frameN++;
+  if(S){update(dt);render();}
+  requestAnimationFrame(loop);
+}
+
+/* ================= HUD ================= */
+function updateClock(){$('#hClock').textContent=horaStr(S.minuto);}
+let lastHud='';
+function updateHud(){
+  updateClock();
+  const ev=eventoHoje();
+  const key=[S.dia,Math.round(S.dinheiro),S.energia,S.xp,S.cargo,S.missoes.length,S.chefe,JSON.stringify(S.skills),S.salario,S.missoes.map(m=>m.due).join()].join('|');
+  if(key===lastHud)return;lastHud=key;
+  $('#hDay').textContent=`Dia ${S.dia} · ${mesDoDia(S.dia)}${ev?' · '+ev.nome:''}`;
+  $('#hMoney').textContent=brl(S.dinheiro);
+  $('#hMoney').classList.toggle('neg',S.dinheiro<0);
+  $('#meNome').textContent=S.nome;$('#meCargo').textContent=CARREIRA[S.cargo].nome;$('#meSal').textContent=brl(S.salario)+' por mês (pago a cada 4 dias)';
+  setBar('#barEnergia',S.energia/100,S.energia);setBar('#barChefe',S.chefe/100,S.chefe);
+  drawPortrait($('#mePort'),'eu');
+  const sk=[['sql','SQL'],['py','Python'],['negocio','Negócio'],['com','Comunicação']];
+  $('#skills').innerHTML=sk.map(([k,n])=>`<div class="sk"><span>${n}</span><span class="lv">nv ${lvl(S.skills[k])}</span><div class="bar"><i style="width:${Math.round(lvlProg(S.skills[k])*100)}%"></i></div></div>`).join('');
+  const ms=S.missoes.map(e=>({e,m:getM(e)})).filter(x=>x.m);
+  $('#missList').innerHTML=ms.length?ms.map(({e,m})=>`<li><span class="due ${dueCls(e)}">${dueTxt(e)}</span><span class="mt">${m.title}</span><span class="mf">${NPCS[m.from].nome}</span></li>`).join(''):'<li class="empty">Nenhuma demanda aberta. Converse com as áreas ou espere o próximo dia.</li>';
+  $('#missCount').textContent=ms.length;
+  const pode=podePromover();$('#btnCarreira').classList.toggle('glow',pode.ok&&S.cargo<5);
+}
+function setBar(sel,p,v){const el=$(sel);el.querySelector('i').style.width=clamp(p,0,1)*100+'%';el.querySelector('b').textContent=Math.round(v);el.classList.toggle('low',p<.25);}
+function dueTxt(e){const d=e.due-S.dia;return d<0?'Atrasada':d===0?'Hoje':d===1?'Amanhã':`Em ${d} dias`;}
+function dueCls(e){const d=e.due-S.dia;return d<=0?'hot':d===1?'warm':'';}
+let toastT=null;
+function toast(msg,kind){const box=$('#toasts');while(box.children.length>=3)box.firstChild.remove();const el=document.createElement('div');el.className='toast '+(kind||'');el.textContent=msg;$('#toasts').appendChild(el);setTimeout(()=>el.classList.add('out'),3800);setTimeout(()=>el.remove(),4300);}
+
+/* ================= MISSÕES ================= */
+const PAY=[90,160,280,450,700,900],XPT=[30,45,70,100,140,160];
+function getM(e){
+  if(e.ref.startsWith('rec:')){const [,k,vi]=e.ref.split(':');const r=RECORRENTES[k];const v=r.variants[+vi];
+    return {id:e.ref,rec:k,tier:Math.min(S.cargo,3),from:r.from,kind:r.lang,lang:r.lang,title:r.nome,brief:v.brief,solution:v.solution,starter:'',hint:r.lang==='sql'?'Uma consulta simples com SUM, COUNT ou WHERE resolve.':'Selecione a coluna e use sum() ou mean().',
+      insight:'Tarefa repetitiva é candidata a automação. Depois de 3 entregas e com Python suficiente, compre a automação na loja e nunca mais faça este relatório na mão.'};}
+  if(e.ref.startsWith('evt:')){const k=e.ref.slice(4);return {id:e.ref,evt:k,tier:Math.min(S.cargo,3),...MISSOES_EVENTO[k],starter:''};}
+  return MISSOES.find(m=>m.id===e.ref);
+}
+function rewardOf(m,e){
+  let pay=m.rec?70+30*S.cargo:PAY[m.tier];let xp=m.rec?20:XPT[m.tier];
+  if(m.evt)pay*=2;
+  if(e&&e.revisao){pay*=.5;xp*=.5;}
+  const ev=eventoHoje();if(ev&&ev.mult)pay*=ev.mult;
+  if(has('quadro'))pay*=1.05;if(has('monitor2'))xp*=1.15;if(S.autos.includes('a_etl'))xp*=1.1;
+  return {pay:Math.round(pay),xp:Math.round(xp)};
+}
+function poolDisponivel(from){
+  const ativos=new Set(S.missoes.map(e=>e.ref));
+  let p=MISSOES.filter(m=>m.tier<=S.cargo&&!S.feitas[m.id]&&!ativos.has(m.id)&&(!from||m.from===from));
+  const novas=p.filter(m=>m.tier>=S.cargo-1);if(novas.length)p=novas;
+  if(!p.length){p=MISSOES.filter(m=>m.tier<=S.cargo&&m.tier>=S.cargo-1&&!ativos.has(m.id)&&(!from||m.from===from)).map(m=>({...m,_rev:true}));}
+  return p;
+}
+function addMissao(m,dueExtra){
+  const due=S.dia+(dueExtra!=null?dueExtra:(m.kind==='quiz'||m.kind==='fill'?1:2));
+  const e={uid:S.uid++,ref:m.id,due,start:S.dia,wrong:0,gab:false,draft:null};if(m._rev)e.revisao=true;
+  S.missoes.push(e);return e;
+}
+function gerarMissoesDoDia(){
+  // recorrente
+  if(S.cargo>=1){
+    const recs=Object.keys(RECORRENTES).filter(k=>!LOJA.automacoes.some(a=>a.rec===k&&S.autos.includes(a.id)));
+    const ativos=S.missoes.filter(e=>e.ref.startsWith('rec:')).length;
+    if(recs.length&&ativos===0){const k=recs[S.dia%recs.length];const vi=S.dia%RECORRENTES[k].variants.length;S.missoes.push({uid:S.uid++,ref:`rec:${k}:${vi}`,due:S.dia,start:S.dia,wrong:0,gab:false,draft:null});}
+  }
+  const ev=eventoHoje();
+  if(ev&&ev.missao&&!S.missoes.some(e=>e.ref==='evt:'+ev.missao)){S.missoes.push({uid:S.uid++,ref:'evt:'+ev.missao,due:S.dia,start:S.dia,wrong:0,gab:false,draft:null});}
+  const regulares=S.missoes.filter(e=>!e.ref.includes(':')).length;
+  let novas=Math.max(0,Math.min(2,4-regulares));
+  if(S.dia===1)novas=3;
+  for(let i=0;i<novas;i++){const p=poolDisponivel();if(!p.length)break;
+    const prefer=p.filter(m=>m.tier===S.cargo);const src=prefer.length&&Math.random()<.7?prefer:p;
+    addMissao(src[Math.floor(Math.random()*src.length)]);}
+}
+const expCache=new Map();
+function solutionCode(m){if(m.kind==='fill'){let i=0;return m.template.replace(/___/g,()=>m.answers[i++]);}return m.solution;}
+function expected(m){const code=solutionCode(m);if(!expCache.has(code))expCache.set(code,runCode(m.lang,code).result);return expCache.get(code);}
+function custoEnergia(){return has('cadeira')?10:15;}
+function concluir(e,extra){
+  const m=getM(e);const rw=rewardOf(m,e);
+  let pay=rw.pay,xp=rw.xp;
+  const rapido=e.start===S.dia&&!e.revisao;
+  if(rapido){pay=Math.round(pay*1.2);}
+  const penal=e.gab?.3:Math.max(.4,1-.15*e.wrong);
+  pay=Math.round(pay*penal);xp=Math.round(xp*penal);
+  S.dinheiro+=pay;S.xp+=xp;
+  if(m.kind==='quiz')S.skills.negocio+=xp;else{S.skills[m.lang==='sql'?'sql':'py']+=xp;S.skills.negocio+=Math.round(xp*.25);}
+  S.skills.com+=5;
+  const dept=DEPT_OF[m.from];if(dept)S.rep[dept]=clamp(S.rep[dept]+(e.gab?1:4),0,100);
+  S.chefe=clamp(S.chefe+(m.from==='chefe'?4:1)+(rapido?1:0),0,100);
+  S.energia=clamp(S.energia-custoEnergia(),0,100);
+  S.feitas[m.id]=(S.feitas[m.id]||0)+1;S.totalFeitas++;
+  if(m.rec)S.recFeitos[m.rec]++;
+  S.missoes=S.missoes.filter(x=>x.uid!==e.uid);
+  S.hoje.entregas.push(m.title);S.hoje.ganhos+=pay;S.hoje.xp+=xp;
+  S.histor.unshift({dia:S.dia,t:m.title,from:m.from,pay,xp});S.histor=S.histor.slice(0,40);
+  salvar();lastHud='';updateHud();
+  if(podePromover().ok&&S.cargo<5&&S.avisoPromo!==S.dia){S.avisoPromo=S.dia;setTimeout(()=>toast('Você cumpre os requisitos de promoção! Converse com o Seu Ronaldo.','gold'),600);}
+  return {pay,xp,rapido,m};
+}
+
+/* ================= DIÁLOGO ================= */
+let dlgQueue=[],dlgDone=null,typing=null;
+function nomeDe(id){return id==='eu'?S.nome:NPCS[id].nome;}
+function falar(lines,done){dlgQueue=lines.slice();dlgDone=done||null;paused=true;$('#dialog').hidden=false;proxFala();}
+function aplicarFx(fx){if(!fx)return;
+  if(fx.com)S.skills.com+=fx.com;if(fx.negocio)S.skills.negocio+=fx.negocio;if(fx.energia)S.energia=clamp(S.energia+fx.energia,0,100);
+  if(fx.boss)S.chefe=clamp(S.chefe+fx.boss,0,100);if(fx.dinheiro)S.dinheiro+=fx.dinheiro;
+  if(fx.rep)for(const d in fx.rep)S.rep[d]=clamp(S.rep[d]+fx.rep[d],0,100);
+  const parts=[];if(fx.com)parts.push(`+${fx.com} XP Comunicação`);if(fx.negocio)parts.push(`+${fx.negocio} XP Negócio`);if(fx.energia)parts.push(`${fx.energia>0?'+':''}${fx.energia} energia`);if(fx.boss)parts.push(`chefe ${fx.boss>0?'+':''}${fx.boss}`);if(fx.dinheiro)parts.push(`${fx.dinheiro>0?'+':''}${brl(fx.dinheiro)}`);if(fx.rep)for(const d in fx.rep)parts.push(`${d} +${fx.rep[d]}`);
+  if(parts.length)toast(parts.join(' · '));lastHud='';updateHud();}
+function proxFala(){
+  const box=$('#dialog');const ch=$('#dlgChoices');ch.innerHTML='';
+  if(!dlgQueue.length){box.hidden=true;paused=modalAberto();const d=dlgDone;dlgDone=null;salvar();if(d)d();return;}
+  const l=dlgQueue.shift();
+  if(l.q){
+    $('#dlgName').textContent=S.nome;drawPortrait($('#dlgPort'),'eu');$('#dlgText').textContent=l.q;$('#dlgNext').hidden=true;
+    l.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=o.t;b.onclick=()=>{if(o.fn)o.fn();aplicarFx(o.fx);if(o.r)dlgQueue.unshift(...o.r);proxFala();};ch.appendChild(b);if(i===0)setTimeout(()=>b.focus(),30);});
+    return;}
+  const [who,txt,_,fx]=l;
+  $('#dlgName').textContent=who==='eu'?S.nome:`${NPCS[who].nome} · ${NPCS[who].cargo}`;
+  drawPortrait($('#dlgPort'),who);
+  const full=txt.replace(/\{nome\}/g,S.nome);
+  $('#dlgNext').hidden=false;
+  if(fx)aplicarFx(fx);
+  if(reduceMotion){$('#dlgText').textContent=full;typing=null;return;}
+  let i=0;const el=$('#dlgText');el.textContent='';clearInterval(typing);
+  typing=setInterval(()=>{i+=2;el.textContent=full.slice(0,i);if(i>=full.length){clearInterval(typing);typing=null;}},16);
+  el.dataset.full=full;
+}
+function avancar(){if(typing){clearInterval(typing);typing=null;$('#dlgText').textContent=$('#dlgText').dataset.full;return;}if($('#dlgChoices').children.length)return;proxFala();}
+
+/* ================= INTERAÇÕES ================= */
+function interagir(){
+  const a=alvo();if(!a)return;
+  if(a.t==='npc'){const n=npcs[a.id];const inv={up:'down',down:'up',left:'right',right:'left'}[player.dir];if(n&&!(a.id==='chefe'))n.dir=inv;if(a.id==='chefe')return falarChefe();return falarNpc(a.id);}
+  if(a.t==='pc')return abrirPC();
+  if(a.t==='cafe')return cafe();
+  if(a.t==='porta')return porta();
+  if(a.t==='carreira')return abrirCarreira();
+  if(a.t==='obj')return objeto(a.id);
+}
+function falarNpc(id){
+  const primeira=S.falou[id]!==S.dia;
+  const linhas=[];
+  const dept=DEPT_OF[id];
+  if(S.aniversario===id&&primeira)linhas.push([id,'Hoje é meu aniversário! Tem bolo na copa, pode pegar. 🎂']);
+  const pend=S.missoes.map(e=>({e,m:getM(e)})).find(x=>x.m&&x.m.from===id);
+  if(pend){const d=pend.e.due-S.dia;linhas.push([id,d<=0?`E aquele “${pend.m.title}”? O prazo é hoje, hein!`:`Tô esperando o “${pend.m.title}”. Sem pressa… mas com pressa.`]);}
+  else linhas.push([id,FALAS[id][Math.floor(Math.random()*FALAS[id].length)]]);
+  if(primeira){S.falou[id]=S.dia;linhas.push(['eu',`(Bom papo. +8 XP de Comunicação${dept?`, ${dept} +2`:''}.)`,null,{com:8,...(dept?{rep:{[dept]:2}}:{})}]);}
+  if(dept||id==='fabio'||id==='kevin'){
+    linhas.push({q:'Algo mais?',opts:[{t:'Tem alguma demanda para mim?',fn:()=>pedirDemanda(id)},{t:'Só passando. Até mais!'}]});}
+  falar(linhas);
+}
+function pedirDemanda(id){
+  if(S.missoes.length>=6){dlgQueue.unshift([id,'Você já tá com a caixa cheia. Entrega o que tem primeiro!']);return;}
+  const p=poolDisponivel(id).filter(m=>!m._rev);
+  if(!p.length){dlgQueue.unshift([id,'Por enquanto não tenho nada no seu nível. Volta outro dia!']);return;}
+  const m=p[Math.floor(Math.random()*p.length)];addMissao(m);lastHud='';updateHud();
+  dlgQueue.unshift([id,`Tenho sim: “${m.title}”. Mandei no seu e-mail. Prazo de ${m.kind==='quiz'||m.kind==='fill'?'1 dia':'2 dias'}.`]);
+}
+function falarChefe(){
+  const linhas=[];const primeira=S.falou.chefe!==S.dia;
+  linhas.push(['chefe',primeira?FALAS.chefe[Math.floor(Math.random()*FALAS.chefe.length)]:'Pois não?']);
+  if(primeira){S.falou.chefe=S.dia;S.skills.com+=5;}
+  linhas.push({q:'Sobre o que você quer falar?',opts:[
+    {t:'Quero conversar sobre promoção',fn:pedirPromocao},
+    {t:'Quero pedir um aumento',fn:pedirAumento},
+    {t:'Como estou indo?',fn:()=>{const a=avgRep();dlgQueue.unshift(['chefe',S.chefe>=70?'Está indo muito bem. As áreas elogiam seu trabalho.':S.chefe>=45?'Está no caminho. Entregue no prazo e converse mais com as áreas.':'Preciso de mais entregas no prazo. Atraso pega mal com as áreas.'],['chefe',`Reputação média com as áreas: ${a}. Minha confiança em você: ${S.chefe}.`]);}},
+    {t:'Nada não, só passando'}]});
+  falar(linhas);
+}
+function podePromover(){
+  if(S.cargo>=5)return{ok:false,falta:[]};
+  const r=CARREIRA[S.cargo+1].req;const falta=[];
+  const chk=(cond,txt)=>{if(!cond)falta.push(txt);};
+  chk(S.xp>=r.xp,`${r.xp} XP total (você tem ${S.xp})`);
+  chk(S.totalFeitas>=r.missoes,`${r.missoes} entregas (você tem ${S.totalFeitas})`);
+  if(r.sql)chk(lvl(S.skills.sql)>=r.sql,`SQL nível ${r.sql}`);
+  if(r.py)chk(lvl(S.skills.py)>=r.py,`Python nível ${r.py}`);
+  if(r.negocio)chk(lvl(S.skills.negocio)>=r.negocio,`Negócio nível ${r.negocio}`);
+  if(r.com)chk(lvl(S.skills.com)>=r.com,`Comunicação nível ${r.com}`);
+  if(r.rep)chk(avgRep()>=r.rep,`reputação média ${r.rep} com as áreas (hoje ${avgRep()})`);
+  if(r.auto)chk(S.autos.length>=r.auto,`${r.auto} automações rodando`);
+  return{ok:!falta.length,falta};
+}
+function pedirPromocao(){
+  if(S.cargo>=5){dlgQueue.unshift(['chefe','Promoção? Você é Head de Dados. A próxima é a minha cadeira, e ela não está vaga.']);return;}
+  const p=podePromover();
+  if(!p.ok){dlgQueue.unshift(['chefe',`Para ${CARREIRA[S.cargo+1].nome} ainda falta: ${p.falta.slice(0,3).join('; ')}.`],['chefe','O quadro de metas na parede tem tudo. Volte quando estiver pronto(a).']);return;}
+  const novo=S.cargo+1;
+  dlgQueue.unshift(['chefe','Olha… eu estava esperando você vir aqui.'],['chefe',`A partir de hoje você é ${CARREIRA[novo].nome}! Parabéns!`],['chefe',S.cargo===0?'E chega de bancada: você ganhou mesa própria no open space.':novo===3?'Sua nova mesa fica perto da minha sala. Para eu te chamar mais fácil.':novo===4?'Aquela sala de reunião com vidro agora é sua. Não deixe o Kevin cochilar lá.':'Agora você responde direto para a diretoria. Que a força esteja com você.'],
+    ['eu',`Novo salário: ${brl(Math.max(S.salario*1.1,CARREIRA[novo].salario))}. Novo crachá. Nova mesa.`,null]);
+  const done=()=>{S.cargo=novo;S.salario=Math.round(Math.max(S.salario*1.1,CARREIRA[novo].salario)/10)*10;S.chefe=clamp(S.chefe+5,0,100);
+    const d=deskAtual();buildMap();player.x=d.cx;player.y=d.cy;player.px=d.cx*T;player.py=d.cy*T;player.dir='up';lastHud='';updateHud();salvar();toast(`Promoção! Agora você é ${CARREIRA[novo].nome}.`,'gold');confete();};
+  const prev=dlgDone;dlgDone=()=>{done();if(prev)prev();};
+}
+function pedirAumento(){
+  if(S.dia-S.ultimoAumento<6){dlgQueue.unshift(['chefe','Já conversamos sobre isso há pouco tempo. Volte daqui a alguns dias, com resultados.']);return;}
+  S.ultimoAumento=S.dia;
+  const score=S.chefe*.55+avgRep()*.3+lvl(S.skills.com)*4+Math.min(10,S.hoje.entregas.length*3);
+  const chance=clamp((score-38)/40,.05,.92);
+  if(Math.random()<chance){const pct=8+Math.floor(Math.random()*8);const novo=Math.round(S.salario*(1+pct/100)/10)*10;
+    dlgQueue.unshift(['chefe','Hmm. Deixa eu ver seus números…'],['chefe',`Você tem entregado. E o Jorge disse que fecha. Aumento de ${pct}%!`],['eu',`Salário: ${brl(S.salario)} → ${brl(novo)}.`]);
+    S.salario=novo;S.chefe=clamp(S.chefe-3,0,100);}
+  else{const f=[['O orçamento está congelado. Literalmente: o Jorge guardou na geladeira.'],['Que tal um aumento… de responsabilidades? Parabéns! Pronto.'],['Agora não dá. Mas olha: vale-pizza na sexta!']];
+    dlgQueue.unshift(['chefe',f[Math.floor(Math.random()*f.length)][0]],['eu','(Não rolou. Melhore a moral com o chefe e a reputação com as áreas, e tente de novo em alguns dias.)']);S.chefe=clamp(S.chefe-2,0,100);}
+  lastHud='';updateHud();
+}
+function cafe(){
+  const preco=has('cafeteira')?0:has('caneca')?4:8;
+  if(S.energia>=100){falar([['eu','Mais café agora e eu começo a enxergar sons.']]);return;}
+  if(S.dinheiro<preco){falar([['eu','Sem dinheiro nem para o café. Hora de entregar alguma coisa.']]);return;}
+  S.dinheiro-=preco;S.energia=clamp(S.energia+30,0,100);lastHud='';updateHud();
+  const f=['Café passado. +30 de energia.','O café da Neide. Forte o suficiente para compilar sozinho. +30 de energia.','Cafeína: o ETL do corpo humano. +30 de energia.'];
+  toast(f[Math.floor(Math.random()*f.length)]+(preco?` (${brl(preco)})`:''));salvar();
+}
+function objeto(id){
+  const O={
+    geladeira:[['eu','Um iogurte com etiqueta: “NEIDE. NÃO MEXA. TEM CÂMERA.”'],['eu','Não tem câmera. Mas ninguém arrisca.']],
+    pia:[['eu','Pilha de canecas sujas. Uma delas diz “Melhor analista do mundo”. Ninguém assume.']],
+    mesacopa:S.aniversario?[['eu',`Bolo de aniversário de ${NPCS[S.aniversario].nome}! +15 de energia.`,null,{energia:15}]]:[['eu','Um pão de queijo esquecido da última reunião. Respeite o pão de queijo.']],
+    impressora:[['eu','A impressora pisca: “PC LOAD LETTER”. Ninguém sabe o que significa. Nem ela.']],
+    bebedouro:S.falou.bebedouro!==S.dia?[['eu',['Rádio-corredor: dizem que a diretoria quer “um dashboard que responda tudo”. Boa sorte.','Rádio-corredor: o Carlão vendeu um notebook para o próprio cunhado e contou como “cliente novo”.','Rádio-corredor: a TartaLog vai ser renegociada. Dados da Neide, você sabe.','Rádio-corredor: dizem que quem fala com todas as áreas cresce mais rápido aqui.'][S.dia%4],null,{com:5}]]:[['eu','Água. Hidratação também é soft skill.']],
+    rack:[['fabio','NÃO ENCOSTA NO SERVIDOR.'],['eu','Eu só estava olhando.'],['fabio','É assim que começa.']],
+    reuniao:[['eu','A sala de reunião. Aqui, 1 hora vira 2 e uma decisão vira outra reunião.']],
+    bancada:[['kevin','Saudades da gente na bancada?'],['eu','…do ar-condicionado batendo na nuca? Não muito.']],
+    autos:[['eu',`Automações rodando: ${S.autos.map(a=>LOJA.automacoes.find(x=>x.id===a).nome).join(', ')}. Renda passiva: ${brl(rendaAutos())} por dia.`]]
+  };
+  if(id==='bebedouro')S.falou.bebedouro=S.dia;
+  falar(O[id]||[['eu','…']]);
+}
+function porta(){
+  if(S.minuto<17*60){falar([{q:`Ainda são ${horaStr(S.minuto)}. Sair mais cedo? O chefe vai notar.`,opts:[{t:'Sair mesmo assim',fn:()=>{S.chefe=clamp(S.chefe-3,0,100);dlgDone=()=>fimDoDia(false);}},{t:'Voltar ao trabalho'}]}]);return;}
+  falar([{q:'Encerrar o dia e ir para casa?',opts:[{t:'Ir para casa',fn:()=>{dlgDone=()=>fimDoDia(false);}},{t:'Ficar mais um pouco'}]}]);
+}
+function rendaAutos(){return S.autos.reduce((a,id)=>a+LOJA.automacoes.find(x=>x.id===id).renda,0);}
+
+/* ================= DIAS ================= */
+function fimDoDia(forcado){
+  fecharModal(true);$('#dialog').hidden=true;dlgQueue=[];
+  paused=true;
+  const horaExtra=S.minuto>=19*60&&!forcado;if(horaExtra)S.chefe=clamp(S.chefe+2,0,100);
+  // atrasos
+  const venc=S.missoes.filter(e=>e.due<=S.dia);
+  venc.forEach(e=>{const m=getM(e);const dept=DEPT_OF[m.from];if(dept)S.rep[dept]=clamp(S.rep[dept]-(m.rec?4:7),0,100);S.chefe=clamp(S.chefe-(m.from==='chefe'?7:4),0,100);S.hoje.atrasos.push(`${m.title} (${NPCS[m.from].nome})`);});
+  S.missoes=S.missoes.filter(e=>e.due>S.dia);
+  const renda=rendaAutos();
+  if(renda){S.dinheiro+=renda;S.autos.forEach(id=>{const a=LOJA.automacoes.find(x=>x.id===id);if(a.dept)S.rep[a.dept]=clamp(S.rep[a.dept]+1,0,100);});}
+  let pag=null;
+  if(S.dia%4===0){const contas=Math.round(S.salario*.55/10)*10;S.dinheiro+=S.salario-contas;pag={sal:S.salario,contas};}
+  let decimo=null;const ev=eventoHoje();if(ev&&ev.bonus&&ev.bonus.decimo){S.dinheiro+=S.salario;decimo=S.salario;}
+  const h=S.hoje;
+  const body=`
+    <div class="sum">
+      <p class="sum-lead">${forcado?'21:00. O segurança apagou as luzes e te mandou para casa.':h.entregas.length?`Você entregou ${h.entregas.length} demanda${h.entregas.length>1?'s':''} hoje.`:'Nenhuma entrega hoje. Amanhã é outro dia.'}</p>
+      <table class="ledger">
+        ${h.entregas.map(t=>`<tr><td>Entregue</td><td>${t}</td></tr>`).join('')}
+        ${h.atrasos.map(t=>`<tr class="bad"><td>Atrasou</td><td>${t}: a área ficou chateada</td></tr>`).join('')}
+        ${horaExtra?'<tr class="good"><td>Hora extra</td><td>o chefe notou (+2 de moral)</td></tr>':''}
+        <tr><td>Ganhos com missões</td><td class="num">${brl(h.ganhos)}</td></tr>
+        <tr><td>XP do dia</td><td class="num">+${h.xp}</td></tr>
+        ${renda?`<tr><td>Automações</td><td class="num">${brl(renda)}</td></tr>`:''}
+        ${pag?`<tr class="good"><td>Salário</td><td class="num">${brl(pag.sal)}</td></tr><tr class="bad"><td>Boletos do mês (aluguel, mercado, internet)</td><td class="num">−${brl(pag.contas)}</td></tr>`:`<tr><td>Próximo salário</td><td>em ${4-S.dia%4} dia${4-S.dia%4>1?'s':''}</td></tr>`}
+        ${decimo?`<tr class="good"><td>13º salário 🎄</td><td class="num">${brl(decimo)}</td></tr>`:''}
+        <tr class="total"><td>Saldo</td><td class="num">${brl(S.dinheiro)}</td></tr>
+      </table>
+      ${S.chefe<20?'<p class="warn">Seu Ronaldo marcou uma “conversa rápida” para amanhã. Isso nunca é bom: entregue no prazo.</p>':''}
+    </div>`;
+  S.dia++;S.minuto=540;S.aviso18=false;S.energia=clamp(100+(has('planta')?10:0),0,110);S.hoje={entregas:[],ganhos:0,xp:0,atrasos:[]};
+  const d=deskAtual();player.x=11;player.y=14;player.px=11*T;player.py=14*T;player.dir='up';player.moving=false;
+  for(const k in npcs){const n=npcs[k];n.x=n.home.x;n.y=n.home.y;n.px=n.x*T;n.py=n.y*T;n.moving=false;n.dir='down';}
+  salvar();lastHud='';updateHud();
+  abrirModal(`Fim do dia ${S.dia-1}`,body,[{t:`Começar o dia ${S.dia}`,primary:true,fn:()=>{fecharModal(true);comecarDia();}}],{noClose:true});
+}
+function comecarDia(){
+  S.aniversario=ANIVERSARIOS[semana(S.dia)]||null;
+  gerarMissoesDoDia();
+  const cenas=[];
+  const ev=eventoHoje();
+  if(S.dia===1){cenas.push(['chefe','Bem-vindo(a) à Tabelão S.A., {nome}! Eu sou o Seu Ronaldo, gerente de BI.'],['chefe','Sua mesa é a bancada ali embaixo, à esquerda, do lado do Kevin. Não toque no teclado dele.'],['chefe','As demandas das áreas chegam no seu computador. Cada uma tem prazo: atrasou, a área fica chateada. E eu também.'],['chefe','Salário cai a cada 4 dias. Café fica na copa. Aumento e promoção, na minha sala… quando você merecer.'],['kevin','Oi! Eu sou o Kevin. Se o servidor cair, não fui eu.'],['eu','(Ande com as setas ou WASD. Aperte E ou Espaço perto das coisas e das pessoas para interagir.)']);}
+  else{
+    if(ev){if(ev.bonus){if(ev.bonus.energia)S.energia=clamp(S.energia+ev.bonus.energia,0,120);if(ev.bonus.dinheiro)S.dinheiro+=ev.bonus.dinheiro;}if(ev.cena)cenas.push(...ev.cena);}
+    if(S.aniversario){cenas.push(['kevin',`Hoje é aniversário de ${NPCS[S.aniversario].nome}! Tem bolo na copa!`]);}
+    if(S.chefe<20){cenas.push(['chefe','Precisamos conversar. As áreas reclamaram de atrasos.'],['chefe','Não vou te mandar embora, mas preciso ver entregas no prazo. Combinado?'],['eu','Combinado. (Moral com o chefe recuperada para 30.)']);S.chefe=30;}
+    else if(!ev&&Math.random()<.5){const pend=CENAS_ALEATORIAS.filter(c=>!S.cenasVistas.includes(c));const pool=pend.length?pend:CENAS_ALEATORIAS;const c=pool[Math.floor(Math.random()*pool.length)];if(!pend.length)S.cenasVistas=[];S.cenasVistas.push(c);cenas.push(...CENAS[c]);}
+  }
+  lastHud='';updateHud();salvar();
+  const fim=()=>{paused=false;toast(`${S.missoes.length} demanda${S.missoes.length!==1?'s':''} na sua caixa de entrada. Vá até o seu computador.`);};
+  if(cenas.length)falar(cenas,fim);else fim();
+}
+
+/* ================= MODAL ================= */
+function modalAberto(){return !$('#modal').hidden;}
+function abrirModal(title,html,actions,opts){
+  opts=opts||{};paused=true;
+  $('#modalTitle').textContent=title;$('#modalBody').innerHTML=html;
+  const a=$('#modalActions');a.innerHTML='';(actions||[]).forEach(x=>{const b=document.createElement('button');b.className='btn'+(x.primary?' primary':'');b.textContent=x.t;b.onclick=x.fn;a.appendChild(b);});
+  a.hidden=!(actions&&actions.length);
+  $('#modalClose').hidden=!!opts.noClose;$('#modal').dataset.noclose=opts.noClose?'1':'';
+  $('#modal').className='modal'+(opts.wide?' wide':'')+(opts.pc?' pc':'');
+  $('#modal').hidden=false;
+  setTimeout(()=>{const f=$('#modal').querySelector('[autofocus]')||$('#modalActions button')||$('#modalClose');if(f&&!opts.noFocus)f.focus();},30);
+}
+function fecharModal(force){
+  if(!force&&$('#modal').dataset.noclose==='1')return;
+  if(inPC)salvarRascunho();
+  $('#modal').hidden=true;inPC=false;paused=!$('#dialog').hidden;lastHud='';if(S)updateHud();
+}
+function confete(){if(reduceMotion)return;const c=$('#confete');c.innerHTML='';for(let i=0;i<40;i++){const s=document.createElement('i');s.style.left=Math.random()*100+'%';s.style.background=['#ffd23f','#2b59c3','#2f9e5b','#e85d9a','#d6453d'][i%5];s.style.animationDelay=Math.random()*.4+'s';c.appendChild(s);}setTimeout(()=>c.innerHTML='',2600);}
+
+/* ================= COMPUTADOR ================= */
+let pcTab='inbox',pcUid=null;
+const KIND={fill:'Lacunas',sql:'SQL',py:'Python',quiz:'Pergunta'};
+function abrirPC(tab){
+  inPC=true;pcTab=tab||'inbox';pcUid=null;
+  abrirModal('Intranet da Tabelão S.A.','<div class="pc-wrap"><nav class="pc-nav" id="pcNav"></nav><div class="pc-main" id="pcMain"></div></div>',[], {wide:true,pc:true,noFocus:true});
+  inPC=true;paused=true;renderPC();
+}
+function renderPC(){
+  const nav=$('#pcNav');if(!nav)return;
+  const tabs=[['inbox','Caixa de entrada',S.missoes.length],['dados','Dicionário de dados'],['hist','Entregues']];
+  nav.innerHTML=tabs.map(([k,n,c])=>`<button class="${pcTab===k&&!pcUid?'on':''}" data-tab="${k}">${n}${c!=null?` <b>${c}</b>`:''}</button>`).join('')+`<div class="pc-energy">Energia <strong>${Math.round(S.energia)}</strong></div>`;
+  nav.querySelectorAll('button').forEach(b=>b.onclick=()=>{salvarRascunho();pcTab=b.dataset.tab;pcUid=null;renderPC();});
+  const main=$('#pcMain');
+  if(pcUid){const e=S.missoes.find(x=>x.uid===pcUid);if(e)return renderMissao(main,e);pcUid=null;}
+  if(pcTab==='inbox')return renderInbox(main);
+  if(pcTab==='dados')return renderDados(main);
+  if(pcTab==='hist')return renderHist(main);
+}
+function renderInbox(main){
+  const ms=S.missoes.map(e=>({e,m:getM(e)})).filter(x=>x.m).sort((a,b)=>a.e.due-b.e.due);
+  if(!ms.length){main.innerHTML=`<div class="empty-state"><p>Caixa de entrada zerada.</p><p class="muted">Converse com as áreas para pedir novas demandas, ou volte amanhã. Aproveite para estudar o dicionário de dados.</p></div>`;return;}
+  main.innerHTML=`<ul class="inbox">${ms.map(({e,m})=>{const rw=rewardOf(m,e);return `<li><button data-uid="${e.uid}">
+    <canvas width="28" height="28" data-port="${m.from}"></canvas>
+    <span class="ib-from">${NPCS[m.from].nome}<small>${NPCS[m.from].cargo}</small></span>
+    <span class="ib-title">${m.title}${e.revisao?' <em>(revisão)</em>':''}${m.rec?' <em>(recorrente)</em>':''}</span>
+    <span class="tag t-${m.kind}">${KIND[m.kind]}</span>
+    <span class="ib-due ${dueCls(e)}">${dueTxt(e)}</span>
+    <span class="ib-rw">${brl(rw.pay)} · ${rw.xp} XP</span></button></li>`;}).join('')}</ul>`;
+  main.querySelectorAll('canvas[data-port]').forEach(c=>drawPortrait(c,c.dataset.port));
+  main.querySelectorAll('button[data-uid]').forEach(b=>b.onclick=()=>{pcUid=+b.dataset.uid;renderPC();});
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function renderMissao(main,e){
+  const m=getM(e);const rw=rewardOf(m,e);
+  const head=`<button class="back" id="pcBack">‹ Caixa de entrada</button>
+   <header class="mail-h"><canvas width="44" height="44" id="mailPort"></canvas><div><div class="mail-from">${NPCS[m.from].nome} <span>${NPCS[m.from].cargo}</span></div>
+   <h3>${m.title}</h3><div class="mail-meta"><span class="ib-due ${dueCls(e)}">Prazo: ${dueTxt(e).toLowerCase()}</span><span>${brl(rw.pay)} + ${rw.xp} XP${e.start===S.dia&&!e.revisao?' (+20% se entregar hoje)':''}</span><span class="tag t-${m.kind}">${KIND[m.kind]}</span></div></div></header>
+   <p class="brief">${esc(m.brief)}</p>`;
+  let work='';
+  if(m.kind==='quiz'){
+    const order=m.options.map((_,i)=>i);for(let i=order.length-1;i>0;i--){const j=(e.uid*7+i*13)%(i+1);[order[i],order[j]]=[order[j],order[i]];}
+    work=`<div class="quiz">${order.map(i=>`<button class="opt" data-i="${i}" ${e.tried&&e.tried.includes(i)?'disabled':''}>${esc(m.options[i])}</button>`).join('')}</div><div id="out" class="out"></div>`;
+  }else{
+    const lang=m.lang==='sql'?'SQL':'Python (pandas)';
+    let editor;
+    if(m.kind==='fill'){
+      let k=0;const parts=m.template.split('___');const vals=e.draft||[];
+      editor=`<pre class="code fill">${parts.map((p,i)=>esc(p)+(i<parts.length-1?`<input class="blank" data-b="${i}" value="${esc(vals[i]||'')}" size="${Math.max(3,m.answers[i].length+1)}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Lacuna ${i+1}">`:'')).join('')}</pre>`;
+    }else{
+      editor=`<textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Editor de código ${lang}">${esc(e.draft!=null?e.draft:(m.starter||''))}</textarea>`;
+    }
+    work=`<div class="ed-head"><span>${lang}</span><span class="muted">${m.kind==='fill'?'Preencha as lacunas':'Ctrl + Enter executa'}</span></div>${editor}
+      ${m.kind!=='fill'?tabelasHelper(m.lang):''}
+      <div class="ed-actions"><button class="btn" id="btnRun">Executar</button><button class="btn primary" id="btnSend">Entregar</button><span class="sp"></span>
+      <button class="btn ghost" id="btnHint">${has('pato')&&S.pato!==S.dia?'Perguntar ao pato (grátis)':'Pedir dica (R$ 20)'}</button><button class="btn ghost" id="btnGab">Ver gabarito</button></div>
+      <div id="hint" class="hint" hidden></div><div id="out" class="out"></div>`;
+  }
+  main.innerHTML=head+work;
+  drawPortrait($('#mailPort'),m.from);
+  $('#pcBack').onclick=()=>{salvarRascunho();pcUid=null;renderPC();};
+  if(m.kind==='quiz'){
+    main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.i;
+      if(S.energia<custoEnergia())return outErro('Sem energia para pensar. Vá até a copa tomar um café.');
+      if(i===m.answer){mostrarSucesso(concluir(e));}
+      else{e.wrong++;e.tried=(e.tried||[]).concat(i);S.energia=clamp(S.energia-3,0,100);b.disabled=true;b.classList.add('no');outErro('Não é bem isso. Pense no impacto para o negócio e tente de novo (a recompensa diminui um pouco).');lastHud='';updateHud();}
+    });
+    return;}
+  const ta=$('#code');
+  if(ta){ta.addEventListener('keydown',ev=>{
+      if(ev.key==='Tab'){ev.preventDefault();const s=ta.selectionStart;ta.setRangeText('    ',s,ta.selectionEnd,'end');}
+      if(ev.key==='Enter'&&(ev.ctrlKey||ev.metaKey)){ev.preventDefault();executar(m,e);}
+      ev.stopPropagation();});
+    setTimeout(()=>{ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);},40);}
+  main.querySelectorAll('.blank').forEach((inp,i,all)=>{inp.addEventListener('keydown',ev=>{ev.stopPropagation();if(ev.key==='Enter'){ev.preventDefault();if(all[i+1])all[i+1].focus();else executar(m,e);}});if(i===0)setTimeout(()=>inp.focus(),40);});
+  main.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(!ta)return;const s=ta.selectionStart;ta.setRangeText(c.dataset.ins,s,ta.selectionEnd,'end');ta.focus();});
+  $('#btnRun').onclick=()=>executar(m,e);
+  $('#btnSend').onclick=()=>entregar(m,e);
+  $('#btnHint').onclick=()=>{
+    const h=$('#hint');if(!h.hidden)return;
+    if(has('pato')&&S.pato!==S.dia){S.pato=S.dia;h.innerHTML=`<b>O pato olha para você.</b> Você explica o problema em voz alta e… ${esc(m.hint)}`;}
+    else{if(S.dinheiro<20)return outErro('Sem dinheiro para a dica.');S.dinheiro-=20;h.innerHTML=`<b>Dica do Fábio:</b> ${esc(m.hint)}`;}
+    h.hidden=false;lastHud='';updateHud();$('#btnHint').disabled=true;};
+  $('#btnGab').onclick=()=>{
+    if(!e.gab){abrirConfirm('Ver o gabarito? A entrega passa a valer só 30% da recompensa.',()=>{e.gab=true;aplicarGabarito(m);});}
+    else aplicarGabarito(m);};
+}
+function abrirConfirm(msg,ok){const out=$('#out');out.innerHTML=`<div class="confirm"><p>${msg}</p><button class="btn primary" id="cfOk">Ver gabarito</button><button class="btn ghost" id="cfNo">Cancelar</button></div>`;$('#cfOk').onclick=()=>{out.innerHTML='';ok();};$('#cfNo').onclick=()=>out.innerHTML='';}
+function aplicarGabarito(m){
+  if(m.kind==='fill'){document.querySelectorAll('.blank').forEach((inp,i)=>inp.value=m.answers[i]);}
+  else{$('#code').value=m.solution;}
+  $('#hint').hidden=false;$('#hint').innerHTML='<b>Gabarito aplicado.</b> Execute, entenda cada parte e entregue. Na próxima, tente sem!';
+}
+function tabelasHelper(lang){
+  const q=lang==='sql';
+  return `<details class="tbls"><summary>Tabelas e colunas (clique para inserir)</summary>${Object.keys(SCHEMAS).map(t=>`<div class="tb"><button class="chip tname" data-ins="${t}">${t}</button>${Object.keys(SCHEMAS[t].cols).map(c=>`<button class="chip" data-ins="${q?c:`'${c}'`}" title="${esc(SCHEMAS[t].cols[c])}">${c}</button>`).join('')}</div>`).join('')}</details>`;
+}
+function codigoAtual(m){
+  if(m.kind==='fill'){const vals=[...document.querySelectorAll('.blank')].map(i=>i.value.trim());let i=0;return {code:m.template.replace(/___/g,()=>vals[i++]||'___'),vals};}
+  return {code:$('#code').value};
+}
+function salvarRascunho(){
+  if(!pcUid)return;const e=S.missoes.find(x=>x.uid===pcUid);if(!e)return;const m=getM(e);if(!m||m.kind==='quiz')return;
+  if(m.kind==='fill'){const b=document.querySelectorAll('.blank');if(b.length)e.draft=[...b].map(i=>i.value);}
+  else{const ta=$('#code');if(ta)e.draft=ta.value;}
+}
+function outErro(msg){const o=$('#out');if(o)o.innerHTML=`<div class="err">${esc(msg)}</div>`;}
+function rodar(m){
+  const {code,vals}=codigoAtual(m);
+  if(m.kind==='fill'&&vals.some(v=>!v)){outErro('Preencha todas as lacunas.');return null;}
+  try{return runCode(m.lang,code);}catch(err){outErro(err.message||String(err));return null;}
+}
+function executar(m,e){salvarRascunho();const r=rodar(m);if(!r)return;$('#out').innerHTML=renderSaida(r);}
+function entregar(m,e){
+  salvarRascunho();
+  if(S.energia<custoEnergia()){outErro(`Sem energia (precisa de ${custoEnergia()}). Vá até a copa tomar um café.`);return;}
+  const r=rodar(m);if(!r)return;
+  if(!r.hasResult){outErro('Seu código não devolveu resultado. Deixe a expressão final na última linha (sem atribuir a uma variável) ou use print().');return;}
+  let exp;try{exp=expected(m);}catch(err){outErro('Erro interno ao conferir. Tente executar de novo.');return;}
+  const c=compareResults(r.result,exp,m.ordered);
+  if(!c.ok){e.wrong++;S.energia=clamp(S.energia-3,0,100);lastHud='';updateHud();
+    $('#out').innerHTML=`<div class="err"><b>${NPCS[m.from].nome} devolveu:</b> “Não é isso que eu pedi.” ${esc(c.msg)}</div>`+renderSaida(r);return;}
+  mostrarSucesso(concluir(e));
+}
+function mostrarSucesso(res){
+  const {pay,xp,rapido,m}=res;
+  const reac={bia:'Amei!!! Vai direto pro slide ✨',carlao:'É disso que eu tô falando! Valeu!',neide:'Conferi no caderninho: bate. Muito bem.',jorge:'Isso fecha. Obrigado.',chefe:'Excelente. Vou apresentar como se fosse meu. Brincadeira. Talvez.',fabio:'Limpo e sem gambiarra. Respeito.',kevin:'Uau. Me ensina depois?'}[m.from];
+  $('#pcMain').innerHTML=`<div class="done"><canvas width="56" height="56" id="donePort"></canvas>
+    <div><p class="done-q">“${reac}”</p><p class="done-who">${NPCS[m.from].nome}</p></div>
+    <div class="done-rw"><span class="money">+${brl(pay)}</span><span>+${xp} XP</span>${rapido?'<span class="fast">Entrega no mesmo dia +20%</span>':''}</div>
+    <div class="insight"><h4>O que esse número significa para o negócio</h4><p>${esc(m.insight)}</p></div>
+    <button class="btn primary" id="doneBack">Voltar à caixa de entrada</button></div>`;
+  drawPortrait($('#donePort'),m.from);
+  $('#doneBack').onclick=()=>{pcUid=null;pcTab='inbox';renderPC();};$('#doneBack').focus();
+  pcUid=null;const nav=$('#pcNav');if(nav){nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));const b=nav.querySelector('[data-tab="inbox"] b');if(b)b.textContent=S.missoes.length;}
+  toast(`Entregue: ${m.title}. +${brl(pay)}`,'good');
+}
+function fmtCell(v){if(v===null||v===undefined||(typeof v==='number'&&isNaN(v)))return'<span class="nan">NaN</span>';if(typeof v==='number')return Number.isInteger(v)?v.toLocaleString('pt-BR'):(Math.round(v*100)/100).toLocaleString('pt-BR');if(typeof v==='boolean')return v?'True':'False';return esc(v);}
+function tabelaHTML(cols,rows,idx){
+  const max=25;const shown=rows.slice(0,max);
+  return `<div class="tbl-wrap"><table class="res"><thead><tr>${idx?`<th class="ix">${esc(idx.name||'')}</th>`:''}${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${shown.map((r,i)=>`<tr>${idx?`<td class="ix">${fmtCell(idx.vals[i])}</td>`:''}${cols.map(c=>`<td>${fmtCell(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${rows.length>max?`<p class="muted small">… mais ${rows.length-max} linhas</p>`:''}<p class="muted small">${rows.length} linha${rows.length!==1?'s':''} × ${cols.length} coluna${cols.length!==1?'s':''}</p>`;
+}
+function renderValor(v){
+  if(v instanceof DF)return tabelaHTML(v.cols,v.rows,null);
+  if(v instanceof Series){const nm=v.name==null?'':String(v.name);
+    return tabelaHTML([nm||'valor'],v.values.map(x=>({[nm||'valor']:x})),{name:v.indexName||'',vals:v.index});}
+  if(v instanceof GroupBy)return `<div class="val">&lt;DataFrameGroupBy&gt; <span class="muted">Falta agregar: use .sum(), .mean(), .count()…</span></div>`;
+  if(v instanceof Bound)return `<div class="val">&lt;método ${esc(v.name)}&gt; <span class="muted">Faltou abrir e fechar parênteses: ${esc(v.name)}()</span></div>`;
+  return `<div class="val">${esc(fmtScalar(v))}</div>`;
+}
+function renderSaida(r){
+  let h='';(r.prints||[]).forEach(p=>{if(p!==r.result)h+=renderValor(p);});
+  if(r.hasResult)h+=renderValor(r.result);else if(!h)h='<div class="val muted">(sem saída)</div>';
+  return `<div class="out-label">Resultado</div>`+h;
+}
+function renderDados(main){
+  main.innerHTML=`<p class="muted">Estas são as tabelas da Tabelão S.A. Em SQL use o nome direto (FROM vendas). Em Python elas já estão carregadas como DataFrames: vendas, clientes, campanhas, entregas.</p>`+
+  Object.keys(SCHEMAS).map(t=>{const df=new DF(Object.keys(DATA[t][0]),DATA[t].slice(0,6));return `<section class="dict"><h4>${t} <span class="muted">${DATA[t].length} linhas</span></h4><p>${SCHEMAS[t].desc}</p>
+    <dl>${Object.entries(SCHEMAS[t].cols).map(([c,d])=>`<div><dt>${c}</dt><dd>${esc(d)}</dd></div>`).join('')}</dl>
+    <details><summary>Ver as primeiras linhas</summary>${tabelaHTML(df.cols,df.rows,null)}</details></section>`;}).join('');
+}
+function renderHist(main){
+  if(!S.histor.length){main.innerHTML='<div class="empty-state"><p>Nada entregue ainda.</p><p class="muted">Suas entregas aparecem aqui.</p></div>';return;}
+  main.innerHTML=`<table class="ledger hist">${S.histor.map(h=>`<tr><td>Dia ${h.dia}</td><td>${esc(h.t)}<small>${NPCS[h.from].nome}</small></td><td class="num">${brl(h.pay)}</td><td class="num">${h.xp} XP</td></tr>`).join('')}</table>`;
+}
+
+/* ================= LOJA ================= */
+let lojaTab='roupas';
+function abrirLoja(tab){lojaTab=tab||lojaTab;abrirModal('Loja do celular','<div class="shop"><nav class="shop-nav" id="shopNav"></nav><div id="shopList" class="shop-list"></div></div>',[],{wide:true});renderLoja();}
+function reqAuto(a){const r=a.req;const f=[];if(r.py&&lvl(S.skills.py)<r.py)f.push(`Python nv ${r.py}`);if(r.sql&&lvl(S.skills.sql)<r.sql)f.push(`SQL nv ${r.sql}`);if(r.negocio&&lvl(S.skills.negocio)<r.negocio)f.push(`Negócio nv ${r.negocio}`);if(r.feitos&&S.recFeitos[a.rec]<r.feitos)f.push(`${r.feitos} entregas do ${RECORRENTES[a.rec].nome.toLowerCase()} (${S.recFeitos[a.rec]}/${r.feitos})`);return f;}
+function renderLoja(){
+  if(!$('#shopNav'))return;
+  const tabs=[['roupas','Roupas'],['acessorios','Acessórios'],['mesa','Mesa'],['cursos','Cursos'],['automacoes','Automações']];
+  $('#shopNav').innerHTML=tabs.map(([k,n])=>`<button class="${lojaTab===k?'on':''}" data-k="${k}">${n}</button>`).join('')+`<span class="shop-money">${brl(S.dinheiro)}</span>`;
+  $('#shopNav').querySelectorAll('button').forEach(b=>b.onclick=()=>{lojaTab=b.dataset.k;renderLoja();});
+  const items=LOJA[lojaTab];
+  $('#shopList').innerHTML=(lojaTab==='automacoes'?'<p class="muted">Automações trabalham por você todos os dias: geram renda, melhoram a reputação da área e eliminam relatórios recorrentes da sua caixa.</p>':lojaTab==='cursos'?'<p class="muted">Cursos dão XP direto na habilidade. Alguns exigem cargo mínimo.</p>':'')+
+  items.map(it=>{
+    let btn='',st='',extra='';
+    if(lojaTab==='roupas'){if(S.roupa===it.id){btn='Vestindo';st='disabled';}else if(has(it.id))btn='Vestir';else btn=`Comprar ${brl(it.preco)}`;}
+    else if(lojaTab==='acessorios'){if(has(it.id))btn=S.acess.includes(it.id)?'Tirar':'Usar';else btn=`Comprar ${brl(it.preco)}`;}
+    else if(lojaTab==='mesa'){if(has(it.id)){btn='Na sua mesa';st='disabled';}else btn=`Comprar ${brl(it.preco)}`;}
+    else if(lojaTab==='cursos'){if(S.cursos.includes(it.id)){btn='Concluído';st='disabled';}else if(it.min&&S.cargo<it.min){btn=`Exige ${CARREIRA[it.min].nome}`;st='disabled';}else btn=`Matricular ${brl(it.preco)}`;}
+    else{if(S.autos.includes(it.id)){btn=`Rodando · ${brl(it.renda)}/dia`;st='disabled';}else{const f=reqAuto(it);if(f.length){btn='Bloqueada';st='disabled';extra=`<p class="req">Precisa de: ${f.join(', ')}</p>`;}else btn=`Implantar ${brl(it.preco)}`;}}
+    const pobre=btn.startsWith('Comprar')||btn.startsWith('Matricular')||btn.startsWith('Implantar');
+    if(pobre&&S.dinheiro<it.preco){st='disabled';}
+    return `<div class="item">${lojaTab==='roupas'?`<canvas width="28" height="28" data-roupa="${it.id}"></canvas>`:''}<div class="item-t"><b>${it.nome}</b><p>${it.desc}${lojaTab==='automacoes'?` Renda: ${brl(it.renda)} por dia.`:''}</p>${extra}</div><button class="btn${pobre?' primary':''}" data-id="${it.id}" ${st}>${btn}</button></div>`;}).join('');
+  $('#shopList').querySelectorAll('canvas[data-roupa]').forEach(c=>{const it=LOJA.roupas.find(x=>x.id===c.dataset.roupa);const cc=c.getContext('2d');cc.imageSmoothingEnabled=false;const L={...lookOf('eu'),shirt:it.shirt,jacket:it.jacket,tie:it.tie,collar:it.collar,hood:it.hood,print:it.print};drawChar(cc,2,2,L,'down',0,2);});
+  $('#shopList').querySelectorAll('button[data-id]').forEach(b=>b.onclick=()=>comprar(lojaTab,b.dataset.id));
+}
+function comprar(tab,id){
+  const it=LOJA[tab].find(x=>x.id===id);
+  if(tab==='roupas'&&has(id)){S.roupa=id;toast(`Vestindo: ${it.nome}.`);}
+  else if(tab==='acessorios'&&has(id)){S.acess=S.acess.includes(id)?S.acess.filter(x=>x!==id):[...S.acess,id];}
+  else{
+    if(S.dinheiro<it.preco)return;S.dinheiro-=it.preco;
+    if(tab==='cursos'){S.cursos.push(id);S.skills[it.skill]+=it.xp;if(it.extra)for(const k in it.extra)S.skills[k]+=it.extra[k];toast(`Curso concluído: ${it.nome}. +${it.xp} XP.`,'good');}
+    else if(tab==='automacoes'){S.autos.push(id);if(it.rec)S.missoes=S.missoes.filter(e=>!e.ref.startsWith('rec:'+it.rec));buildMap();toast(`${it.nome} implantada! Renda de ${brl(it.renda)} por dia.`,'gold');confete();}
+    else{S.owned.push(id);if(tab==='roupas')S.roupa=id;if(tab==='acessorios')S.acess.push(id);toast(`Comprado: ${it.nome}.`,'good');}
+  }
+  salvar();lastHud='';updateHud();renderLoja();
+}
+
+/* ================= CARREIRA ================= */
+function abrirCarreira(){
+  const p=podePromover();const prox=CARREIRA[S.cargo+1];
+  const reqRows=prox?(()=>{const r=prox.req;const rows=[];
+    const add=(n,cur,need,txt)=>rows.push(`<li class="${cur>=need?'ok':''}"><span>${n}</span><div class="bar"><i style="width:${Math.min(100,cur/need*100)}%"></i></div><span class="num">${txt||`${cur}/${need}`}</span></li>`);
+    add('XP total',S.xp,r.xp);add('Entregas',S.totalFeitas,r.missoes);
+    if(r.sql)add('SQL',lvl(S.skills.sql),r.sql,`nv ${lvl(S.skills.sql)}/${r.sql}`);if(r.py)add('Python',lvl(S.skills.py),r.py,`nv ${lvl(S.skills.py)}/${r.py}`);
+    if(r.negocio)add('Negócio',lvl(S.skills.negocio),r.negocio,`nv ${lvl(S.skills.negocio)}/${r.negocio}`);if(r.com)add('Comunicação',lvl(S.skills.com),r.com,`nv ${lvl(S.skills.com)}/${r.com}`);
+    if(r.rep)add('Reputação média',avgRep(),r.rep);if(r.auto)add('Automações',S.autos.length,r.auto);return rows.join('');})():'';
+  const body=`<div class="career">
+    <ol class="ladder">${CARREIRA.map((c,i)=>`<li class="${i<S.cargo?'past':i===S.cargo?'now':''}"><b>${c.nome}</b><span>${brl(c.salario)}</span></li>`).join('')}</ol>
+    <div class="career-r">
+      ${prox?`<h4>Para virar ${prox.nome}</h4><ul class="reqs">${reqRows}</ul><p class="muted">${p.ok?'Tudo pronto. Vá até a sala do Seu Ronaldo e peça a promoção.':'Quando tudo estiver completo, peça a promoção ao chefe.'}</p>`:'<h4>Topo da carreira!</h4><p>Você é Head de Dados. Agora o desafio é manter as áreas felizes e as automações rodando.</p>'}
+      <h4>Reputação com as áreas</h4><ul class="reqs">${DEPTS.map(d=>`<li class="${S.rep[d]>=60?'ok':''}"><span>${d}</span><div class="bar"><i style="width:${S.rep[d]}%"></i></div><span class="num">${S.rep[d]}</span></li>`).join('')}
+      <li><span>Moral com o chefe</span><div class="bar"><i style="width:${S.chefe}%"></i></div><span class="num">${S.chefe}</span></li></ul>
+      <p class="muted small">Reputação sobe com entregas e conversas; cai com atrasos. Aumento de salário depende da moral com o chefe e da reputação.</p>
+    </div></div>`;
+  abrirModal('Plano de carreira',body,[],{wide:true});
+}
+
+/* ================= AJUDA ================= */
+function abrirAjuda(){
+  abrirModal('Como jogar',`<div class="help">
+   <p>Você começa como estagiário(a) na Tabelão S.A. As áreas (Marketing, Vendas, Operações e Financeiro) mandam demandas para o seu computador. Resolva com SQL, pandas e raciocínio de negócio, cumpra os prazos e suba na carreira.</p>
+   <dl>
+    <div><dt>Andar</dt><dd>Setas ou WASD. No celular, use o direcional.</dd></div>
+    <div><dt>Interagir</dt><dd>E, Espaço ou Enter de frente para algo. No celular, o botão A.</dd></div>
+    <div><dt>Missões</dt><dd>No seu computador. Começam com lacunas e evoluem para código de verdade, executado aqui mesmo no navegador.</dd></div>
+    <div><dt>Prazos</dt><dd>Atrasou, a área e o chefe ficam chateados. Entregar no mesmo dia dá +20%.</dd></div>
+    <div><dt>Energia</dt><dd>Cada entrega gasta energia. Café na copa recupera.</dd></div>
+    <div><dt>Dinheiro</dt><dd>Salário a cada 4 dias, menos os boletos. Gaste em roupas, mesa, cursos e automações.</dd></div>
+    <div><dt>Crescer</dt><dd>Converse com as áreas, peça demandas, peça aumento e promoção na sala do chefe.</dd></div>
+    <div><dt>Calendário</dt><dd>Cada dia do jogo é uma semana do ano: Carnaval, Festa Junina, Black Friday e Natal acontecem no escritório.</dd></div>
+   </dl>
+   <p class="muted small">O Python aqui é um simulador do pandas que roda no seu navegador: cobre filtros, groupby, agg, merge, pivot_table, value_counts, sort_values e mais. O SQL roda num banco em memória (AlaSQL).</p>
+  </div>`,[{t:'Recomeçar do zero',fn:()=>{if(confirm('Apagar todo o progresso e começar de novo?')){try{localStorage.removeItem(SAVE_KEY);}catch(e){}location.reload();}}},{t:'Voltar ao jogo',primary:true,fn:()=>fecharModal()}],{});
+}
+
+/* ================= TELA INICIAL ================= */
+const SKINS=['#f2d0b0','#e0ac7e','#b97a50','#8a5534','#5c3a24'];
+const HAIRS=['#2b1d14','#5a3a1e','#c9932f','#9a2f1e','#d8d8d8','#4b6fd6'];
+const STYLES=[['curto','Curto'],['longo','Longo'],['careca','Careca']];
+function telaInicial(sv){
+  const tmp={skin:SKINS[1],hair:HAIRS[0],style:'curto'};
+  const body=`<div class="start">
+    <div class="start-hero"><h1>SELECT * FROM carreira</h1><p>Do estagiário ao Head de Dados. Resolva demandas reais de Marketing, Vendas, Operações e Financeiro com SQL e pandas, cumpra prazos e sobreviva ao escritório.</p></div>
+    ${sv?`<div class="cont"><p>Você tem um jogo salvo: <b>${esc(sv.nome)}</b>, ${CARREIRA[sv.cargo].nome}, dia ${sv.dia}.</p><button class="btn primary" id="stCont" autofocus>Continuar</button></div><h4>Ou comece de novo</h4>`:''}
+    <div class="creator">
+      <canvas id="stPrev" width="56" height="84"></canvas>
+      <div class="cr-f">
+        <label for="stNome">Seu nome no crachá</label><input id="stNome" maxlength="16" value="" placeholder="Ex.: Ana" autocomplete="off" ${sv?'':'autofocus'}>
+        <span class="lbl">Tom de pele</span><div class="sw" id="swSkin">${SKINS.map((c,i)=>`<button style="background:${c}" data-v="${c}" aria-label="Tom ${i+1}" class="${c===tmp.skin?'on':''}"></button>`).join('')}</div>
+        <span class="lbl">Cabelo</span><div class="sw" id="swHair">${HAIRS.map((c,i)=>`<button style="background:${c}" data-v="${c}" aria-label="Cor ${i+1}" class="${c===tmp.hair?'on':''}"></button>`).join('')}</div>
+        <div class="seg" id="swStyle">${STYLES.map(([k,n])=>`<button data-v="${k}" class="${k===tmp.style?'on':''}">${n}</button>`).join('')}</div>
+      </div>
+    </div></div>`;
+  abrirModal('Tabelão S.A.',body,[{t:'Começar o primeiro dia',primary:!sv,fn:()=>{const nome=($('#stNome').value||'').trim()||'Analista';if(sv&&!confirm('Começar de novo apaga o jogo salvo. Continuar?'))return;fecharModal(true);entrar(novoEstado(nome,tmp),true);}}],{noClose:true,wide:true});
+  const prev=()=>{const c=$('#stPrev'),x=c.getContext('2d');x.imageSmoothingEnabled=false;x.clearRect(0,0,c.width,c.height);drawChar(x,4,6,{skin:tmp.skin,hair:tmp.hair,style:tmp.style,shirt:'#5aa0d8',pants:'#2b3550'},'down',0,4);};
+  const bind=(id,key)=>$('#'+id).querySelectorAll('button').forEach(b=>b.onclick=()=>{tmp[key]=b.dataset.v;$('#'+id).querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));prev();});
+  bind('swSkin','skin');bind('swHair','hair');bind('swStyle','style');prev();
+  $('#stNome').addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')$('#modalActions button').click();});
+  if(sv)$('#stCont').onclick=()=>{fecharModal(true);entrar(sv,false);};
+}
+function entrar(st,novo){
+  S=st;S.hoje=S.hoje||{entregas:[],ganhos:0,xp:0,atrasos:[]};
+  player={id:'player',x:S.pos.x,y:S.pos.y,px:S.pos.x*T,py:S.pos.y*T,dir:S.dir||'up',moving:false};
+  buildMap();
+  if(blocked(player.x,player.y,'player')){player.x=11;player.y=14;player.px=11*T;player.py=14*T;}
+  lastHud='';updateHud();
+  if(novo)comecarDia();else{paused=false;toast(`Bem-vindo(a) de volta, ${S.nome}. Dia ${S.dia}, ${horaStr(S.minuto)}.`);}
+}
+
+/* ================= CONTROLES ================= */
+window.addEventListener('keydown',e=>{
+  if(!S)return;
+  const tag=(e.target.tagName||'').toLowerCase();const typing=tag==='input'||tag==='textarea';
+  if(!$('#dialog').hidden&&!typing){
+    if(['KeyE','Space','Enter'].includes(e.code)){if(document.activeElement&&document.activeElement.classList.contains('choice'))return;e.preventDefault();avancar();}
+    return;}
+  if(modalAberto()){if(e.key==='Escape')fecharModal();return;}
+  if(typing)return;
+  keys[e.code]=true;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
+  if(['KeyE','Space','Enter'].includes(e.code)&&!e.repeat)interagir();
+});
+window.addEventListener('keyup',e=>{keys[e.code]=false;});
+window.addEventListener('blur',()=>{keys={};});
+document.querySelectorAll('.dpad [data-d]').forEach(b=>{
+  const k='d'+b.dataset.d;
+  const on=ev=>{ev.preventDefault();keys[k]=true;b.classList.add('on');try{b.setPointerCapture(ev.pointerId);}catch(_){}};
+  const off=()=>{keys[k]=false;b.classList.remove('on');};
+  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('lostpointercapture',off);
+});
+$('#btnA').addEventListener('click',()=>{if(!S)return;if(!$('#dialog').hidden)return avancar();if(!modalAberto())interagir();});
+$('#dialog').addEventListener('click',e=>{if(e.target.closest('.choice'))return;avancar();});
+$('#modalClose').onclick=()=>fecharModal();
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')fecharModal();});
+$('#btnLoja').onclick=()=>{if(S&&$('#dialog').hidden)abrirLoja();};
+$('#btnCarreira').onclick=()=>{if(S&&$('#dialog').hidden)abrirCarreira();};
+$('#btnAjuda').onclick=()=>{if(S&&$('#dialog').hidden)abrirAjuda();};
+$('#btnPC').onclick=()=>{if(S&&$('#dialog').hidden)toast('Vá até o seu computador para trabalhar nas demandas (a mesa com o monitor azul).');};
+setInterval(()=>{if(S&&!paused)salvar();},8000);
+window.addEventListener('pagehide',()=>salvar());
+document.fonts&&document.fonts.ready.then(()=>{lastHud='';});
+telaInicial(carregar());
+requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>
