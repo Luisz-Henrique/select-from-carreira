@@ -49,56 +49,124 @@ class DF{constructor(cols,rows,index){this.cols=cols;this.rows=rows;this.index=i
 class Series{constructor(name,index,values,indexName,isDefault){this.name=name;this.index=index;this.values=values;this.indexName=indexName||null;this.isDefault=!!isDefault;}}
 class GroupBy{constructor(df,keys,sel,asIndex){this.df=df;this.keys=keys;this.sel=sel;this.asIndex=asIndex!==false;}}
 class Tuple{constructor(items){this.items=items;}}
-class PyDict{constructor(entries){this.entries=entries;}get(k){const e=this.entries.find(x=>x[0]===k);return e?e[1]:undefined;}}
+class PyDict{constructor(entries){this.entries=entries;}get(k){const e=this.entries.find(x=>x[0]===k);return e?e[1]:undefined;}set(k,v){const e=this.entries.find(x=>x[0]===k);if(e)e[1]=v;else this.entries.push([k,v]);}}
 class Bound{constructor(self,name){this.self=self;this.name=name;}}
 class StrAcc{constructor(s){this.s=s;}}
 class LocAcc{constructor(df){this.df=df;}}
-const PD={__pd:true};
+const PD={__pd:true};const NP={__np:true};
+class PyFunc{constructor(name,params,body,closure,isLambda){this.name=name;this.params=params;this.body=body;this.closure=closure;this.isLambda=isLambda;}}
 
 function tokenize(src){
-  const toks=[];let i=0,depth=0;
+  src=src.replace(/\r\n?/g,'\n').replace(/\t/g,'    ');
+  const toks=[];let i=0,depth=0,atStart=true;const stack=[0];
   while(i<src.length){
+    if(atStart&&depth===0){
+      let j=i,col=0;while(src[j]===' '){col++;j++;}
+      if(j>=src.length||src[j]==='\n'||src[j]==='#'){while(j<src.length&&src[j]!=='\n')j++;i=j+1;continue;}
+      if(col>stack[stack.length-1]){stack.push(col);toks.push({t:'indent'});}
+      else{while(col<stack[stack.length-1]){stack.pop();toks.push({t:'dedent'});}if(col!==stack[stack.length-1])throw perr('IndentationError: o recuo desta linha não bate com as linhas anteriores.');}
+      i=j;atStart=false;continue;
+    }
     const c=src[i];
     if(c==='#'){while(i<src.length&&src[i]!=='\n')i++;continue;}
-    if(c==='\n'||c===';'){if(depth===0)toks.push({t:'nl'});i++;continue;}
-    if(/\s/.test(c)){i++;continue;}
+    if(c==='\n'){if(depth===0){toks.push({t:'nl'});atStart=true;}i++;continue;}
+    if(c===';'){if(depth===0)toks.push({t:'nl'});i++;continue;}
+    if(c===' '||c==='\r'){i++;continue;}
     if(c==='\\'&&src[i+1]==='\n'){i+=2;continue;}
     if(/[0-9]/.test(c)||(c==='.'&&/[0-9]/.test(src[i+1]||''))){let j=i;while(j<src.length&&/[0-9._]/.test(src[j]))j++;if(/[eE]/.test(src[j]||'')){j++;if(/[+-]/.test(src[j]))j++;while(/[0-9]/.test(src[j]||''))j++;}toks.push({t:'num',v:parseFloat(src.slice(i,j).replace(/_/g,''))});i=j;continue;}
-    if(c==='"'||c==="'"){let j=i+1,s='';while(j<src.length&&src[j]!==c){if(src[j]==='\n')throw perr('SyntaxError: texto sem fechar aspas');if(src[j]==='\\'){s+=src[j+1];j+=2;}else s+=src[j++];}if(j>=src.length)throw perr('SyntaxError: texto sem fechar aspas');toks.push({t:'str',v:s});i=j+1;continue;}
     if(/[A-Za-z_\u00C0-\u00FF]/.test(c)){let j=i;while(j<src.length&&/[A-Za-z0-9_\u00C0-\u00FF]/.test(src[j]))j++;const w=src.slice(i,j);
-      if((w==='f'||w==='r')&&(src[j]==='"'||src[j]==="'")){if(w==='f')throw perr('f-strings não são suportadas no simulador. Use print(valor) direto.');i=j;continue;}
+      if(/^[fFrRbB]$/.test(w)&&(src[j]==='"'||src[j]==="'")){const r=readStr(src,j);i=r.end;if(w==='f'||w==='F')toks.push({t:'fstr',v:r.s});else toks.push({t:'str',v:r.s});continue;}
       toks.push({t:'name',v:w});i=j;continue;}
+    if(c==='"'||c==="'"){const r=readStr(src,i);toks.push({t:'str',v:r.s});i=r.end;continue;}
     const two=src.slice(i,i+2);
-    if(['==','!=','>=','<=','**','//'].includes(two)){toks.push({t:'op',v:two});i+=2;continue;}
+    if(['==','!=','>=','<=','**','//','+=','-=','*=','/='].includes(two)){toks.push({t:'op',v:two});i+=2;continue;}
     if('([{'.includes(c)){depth++;toks.push({t:'op',v:c});i++;continue;}
     if(')]}'.includes(c)){depth=Math.max(0,depth-1);toks.push({t:'op',v:c});i++;continue;}
     if('+-*/<>=,.:&|~%'.includes(c)){toks.push({t:'op',v:c});i++;continue;}
     throw perr(`SyntaxError: caractere inesperado “${c}”`);
   }
-  toks.push({t:'nl'});toks.push({t:'eof'});return toks;
+  toks.push({t:'nl'});while(stack.length>1){stack.pop();toks.push({t:'dedent'});}
+  toks.push({t:'eof'});return toks;
+}
+function readStr(src,i){
+  const q=src[i];
+  if(src.slice(i,i+3)===q.repeat(3)){const e=src.indexOf(q.repeat(3),i+3);if(e<0)throw perr('SyntaxError: texto com aspas triplas sem fechar');return {s:src.slice(i+3,e),end:e+3};}
+  let j=i+1,s='';
+  while(j<src.length&&src[j]!==q){if(src[j]==='\n')throw perr('SyntaxError: texto sem fechar aspas');if(src[j]==='\\'){const n=src[j+1];s+=n==='n'?'\n':n==='t'?'\t':n;j+=2;}else s+=src[j++];}
+  if(j>=src.length)throw perr('SyntaxError: texto sem fechar aspas');
+  return {s,end:j+1};
 }
 function parse(src){
   const T=tokenize(src);let p=0;
   const peek=(o=0)=>T[p+o];
   const isOp=(v,o=0)=>T[p+o].t==='op'&&T[p+o].v===v;
   const isName=(v,o=0)=>T[p+o].t==='name'&&T[p+o].v===v;
-  const expect=v=>{if(!isOp(v))throw perr(`SyntaxError: esperava “${v}”`+(T[p].t!=='eof'&&T[p].t!=='nl'?` perto de “${T[p].v}”`:''));p++;};
-  const stmts=[];
-  while(peek().t!=='eof'){
-    if(peek().t==='nl'){p++;continue;}
-    if(isName('import')||isName('from')){while(peek().t!=='nl')p++;continue;}
-    const e=expr();
-    if(isOp('=')){p++;const v=expr();stmts.push({k:'assign',target:e,value:v});}
-    else stmts.push({k:'expr',e});
-    if(peek().t!=='nl'&&peek().t!=='eof')throw perr(`SyntaxError: sobrou “${peek().v}” no fim da linha`);
+  const near=()=>T[p].t!=='eof'&&T[p].t!=='nl'&&T[p].v!==undefined?` perto de “${T[p].v}”`:'';
+  const expect=v=>{if(!isOp(v))throw perr(`SyntaxError: esperava “${v}”`+near());p++;};
+  const expectName=v=>{if(!isName(v))throw perr(`SyntaxError: esperava “${v}”`+near());p++;};
+  const KW=['for','if','elif','else','while','def','return','break','continue','pass','in','not','and','or','is','lambda','import','from'];
+  const prog=stmtsUntil(null);
+  return prog;
+  function stmtsUntil(end){
+    const out=[];
+    while(peek().t!=='eof'&&!(end&&peek().t===end)){
+      if(peek().t==='nl'){p++;continue;}
+      if(peek().t==='indent')throw perr('IndentationError: recuo inesperado. Só recue linhas dentro de for, if, def ou while.');
+      out.push(stmt());
+    }
+    return out;
   }
-  return stmts;
-  function expr(){return orE();}
+  function block(){
+    expect(':');
+    if(peek().t!=='nl'){const s=simple();return [s];}
+    while(peek().t==='nl')p++;
+    if(peek().t!=='indent')throw perr('IndentationError: depois de “:” a próxima linha precisa estar recuada (4 espaços).');
+    p++;const b=stmtsUntil('dedent');if(peek().t==='dedent')p++;return b;
+  }
+  function stmt(){
+    if(isName('import')||isName('from')){while(peek().t!=='nl'&&peek().t!=='eof')p++;return {k:'pass'};}
+    if(isName('for')){p++;const names=[];do{if(isOp(','))p++;if(isOp('(')){p++;}if(peek().t!=='name')throw perr('SyntaxError: esperava o nome da variável do for');names.push(T[p++].v);if(isOp(')'))p++;}while(isOp(','));
+      expectName('in');const it=expr();const body=block();return {k:'for',names,it,body};}
+    if(isName('while')){p++;const cond=expr();const body=block();return {k:'while',cond,body};}
+    if(isName('if')){p++;const branches=[];const cond=expr();branches.push([cond,block()]);let els=null;
+      for(;;){while(peek().t==='nl'&&(isName('elif',1)||isName('else',1)))p++;
+        if(isName('elif')){p++;const c=expr();branches.push([c,block()]);continue;}
+        if(isName('else')){p++;els=block();}break;}
+      return {k:'if',branches,els};}
+    if(isName('def')){p++;if(peek().t!=='name')throw perr('SyntaxError: esperava o nome da função');const name=T[p++].v;expect('(');const params=[];
+      while(!isOp(')')){if(peek().t!=='name')throw perr('SyntaxError: parâmetro inválido');const pn=T[p++].v;let def;if(isOp('=')){p++;def=expr();}params.push({n:pn,def});if(isOp(','))p++;else break;}
+      expect(')');const body=block();return {k:'def',name,params,body};}
+    return simple();
+  }
+  function simple(){
+    if(isName('return')){p++;const e=(peek().t==='nl'||peek().t==='eof'||peek().t==='dedent')?null:exprList();return {k:'return',e};}
+    if(isName('break')){p++;return {k:'break'};}
+    if(isName('continue')){p++;return {k:'continue'};}
+    if(isName('pass')){p++;return {k:'pass'};}
+    const e=exprList();
+    let s;
+    if(isOp('=')){p++;const v=exprList();s={k:'assign',target:e,value:v};}
+    else if(peek().t==='op'&&['+=','-=','*=','/='].includes(peek().v)){const op=T[p++].v[0];const v=expr();s={k:'assign',target:e,value:{k:'bin',op,a:e,b:v}};}
+    else s={k:'expr',e};
+    if(peek().t!=='nl'&&peek().t!=='eof'&&peek().t!=='dedent')throw perr(`SyntaxError: sobrou “${peek().v}” no fim da linha`);
+    return s;
+  }
+  function exprList(){const e=expr();if(isOp(',')&&!isOp('=',1)){const items=[e];while(isOp(',')){p++;if(peek().t==='nl'||isOp('='))break;items.push(expr());}return {k:'tuple',items};}return e;}
+  function expr(){
+    if(isName('lambda')){p++;const params=[];while(!isOp(':')){if(peek().t!=='name')throw perr('SyntaxError: lambda inválida');params.push({n:T[p++].v});if(isOp(','))p++;}p++;const body=expr();return {k:'lambda',params,body};}
+    const a=orE();
+    if(isName('if')&&!isOp(':',1)){const save=p;p++;const cond=orE();if(isName('else')){p++;const b=expr();return {k:'ternary',cond,a,b};}p=save;}
+    return a;}
   function orE(){let a=andE();while(isName('or')){p++;a={k:'bool',op:'or',a,b:andE()};}return a;}
   function andE(){let a=notE();while(isName('and')){p++;a={k:'bool',op:'and',a,b:notE()};}return a;}
   function notE(){if(isName('not')){p++;return{k:'un',op:'not',a:notE()};}return cmp();}
   function cmp(){let a=bor();
-    while(peek().t==='op'&&['==','!=','>','<','>=','<='].includes(peek().v)||isName('in')){const op=peek().v;p++;a={k:'bin',op,a,b:bor()};}
+    for(;;){
+      if(peek().t==='op'&&['==','!=','>','<','>=','<='].includes(peek().v)){const op=peek().v;p++;a={k:'bin',op,a,b:bor()};continue;}
+      if(isName('in')){p++;a={k:'bin',op:'in',a,b:bor()};continue;}
+      if(isName('not')&&isName('in',1)){p+=2;a={k:'un',op:'not',a:{k:'bin',op:'in',a,b:bor()}};continue;}
+      if(isName('is')){p++;let neg=false;if(isName('not')){p++;neg=true;}const b=bor();a={k:'bin',op:neg?'isnot':'is',a,b};continue;}
+      break;}
     return a;}
   function bor(){let a=band();while(isOp('|')){p++;a={k:'bin',op:'|',a,b:band()};}return a;}
   function band(){let a=add();while(isOp('&')){p++;a={k:'bin',op:'&',a,b:add()};}return a;}
@@ -108,9 +176,9 @@ function parse(src){
   function pow(){let a=post();if(isOp('**')){p++;return{k:'bin',op:'**',a,b:un()};}return a;}
   function post(){let a=prim();
     for(;;){
-      if(isOp('[')){p++;const items=[];let slice=null;
+      if(isOp('[')){p++;
         if(isOp(':')||(peek(1).t==='op'&&peek(1).v===':')){let s=null,e=null;if(!isOp(':'))s=expr();expect(':');if(!isOp(']'))e=expr();expect(']');a={k:'slice',obj:a,s,e};continue;}
-        items.push(expr());while(isOp(',')){p++;if(isOp(']'))break;items.push(expr());}expect(']');
+        const items=[expr()];while(isOp(',')){p++;if(isOp(']'))break;items.push(expr());}expect(']');
         a={k:'idx',obj:a,key:items.length===1?items[0]:{k:'tuple',items}};}
       else if(isOp('.')){p++;if(peek().t!=='name')throw perr('SyntaxError: esperava um nome depois do ponto');a={k:'attr',obj:a,name:T[p++].v};}
       else if(isOp('(')){p++;const args=[],kwargs={};
@@ -123,13 +191,40 @@ function parse(src){
     return a;}
   function prim(){const t=peek();
     if(t.t==='num'){p++;return{k:'lit',v:t.v};}
-    if(t.t==='str'){p++;let v=t.v;while(peek().t==='str'){v+=T[p++].v;}return{k:'lit',v};}
-    if(t.t==='name'){p++;if(t.v==='True')return{k:'lit',v:true};if(t.v==='False')return{k:'lit',v:false};if(t.v==='None')return{k:'lit',v:null};return{k:'name',v:t.v};}
+    if(t.t==='str'||t.t==='fstr'){
+      const parts=[];
+      while(peek().t==='str'||peek().t==='fstr'){const tk=T[p++];if(tk.t==='str')parts.push({lit:tk.v});else parts.push(...parseF(tk.v));}
+      if(parts.every(x=>x.lit!==undefined))return {k:'lit',v:parts.map(x=>x.lit).join('')};
+      return {k:'fstr',parts};}
+    if(t.t==='name'){
+      if(t.v==='True'){p++;return{k:'lit',v:true};}if(t.v==='False'){p++;return{k:'lit',v:false};}if(t.v==='None'){p++;return{k:'lit',v:null};}
+      if(KW.includes(t.v))throw perr(`SyntaxError: “${t.v}” não pode aparecer aqui`);
+      p++;return{k:'name',v:t.v};}
     if(isOp('(')){p++;if(isOp(')')){p++;return{k:'tuple',items:[]};}const e=expr();if(isOp(',')){const items=[e];while(isOp(',')){p++;if(isOp(')'))break;items.push(expr());}expect(')');return{k:'tuple',items};}expect(')');return e;}
-    if(isOp('[')){p++;const items=[];while(!isOp(']')){items.push(expr());if(isOp(','))p++;else break;}expect(']');return{k:'list',items};}
+    if(isOp('[')){p++;const items=[];
+      if(!isOp(']')){const first=expr();
+        if(isName('for')){p++;const names=[];do{if(isOp(','))p++;names.push(T[p++].v);}while(isOp(','));expectName('in');const it=orE();let cond=null;if(isName('if')){p++;cond=orE();}expect(']');return {k:'listcomp',elt:first,names,it,cond};}
+        items.push(first);if(isOp(','))p++;
+        while(!isOp(']')){items.push(expr());if(isOp(','))p++;else break;}}
+      expect(']');return{k:'list',items};}
     if(isOp('{')){p++;const pairs=[];while(!isOp('}')){const k=expr();expect(':');pairs.push([k,expr()]);if(isOp(','))p++;else break;}expect('}');return{k:'dict',pairs};}
     if(t.t==='nl'||t.t==='eof')throw perr('SyntaxError: a linha terminou antes da hora (falta fechar algo?)');
+    if(t.t==='indent'||t.t==='dedent')throw perr('IndentationError: confira o recuo das linhas.');
     throw perr(`SyntaxError: não esperava “${t.v}” aqui`);}
+  function parseF(s){
+    const parts=[];let i=0,lit='';
+    while(i<s.length){
+      if(s[i]==='{'&&s[i+1]==='{'){lit+='{';i+=2;continue;}
+      if(s[i]==='}'&&s[i+1]==='}'){lit+='}';i+=2;continue;}
+      if(s[i]==='{'){let j=i+1,d=0,q=null;while(j<s.length){const c=s[j];if(q){if(c===q)q=null;}else if(c==='"'||c==="'")q=c;else if('([{'.includes(c))d++;else if(')]}'.includes(c)){if(c==='}'&&d===0)break;d--;}j++;}
+        if(j>=s.length)throw perr('SyntaxError: f-string com { sem fechar }');
+        let inner=s.slice(i+1,j),fmt='';
+        let dd=0,qq=null;for(let k=0;k<inner.length;k++){const c=inner[k];if(qq){if(c===qq)qq=null;continue;}if(c==='"'||c==="'"){qq=c;continue;}if('([{'.includes(c))dd++;else if(')]}'.includes(c))dd--;else if(c===':'&&dd===0){fmt=inner.slice(k+1);inner=inner.slice(0,k);break;}}
+        if(lit){parts.push({lit});lit='';}
+        const sub=parse(inner);if(sub.length!==1||sub[0].k!=='expr')throw perr('SyntaxError: expressão inválida dentro da f-string');
+        parts.push({e:sub[0].e,fmt});i=j+1;continue;}
+      lit+=s[i++];}
+    if(lit)parts.push({lit});return parts;}
 }
 const isNum=v=>typeof v==='number'&&isFinite(v);
 const isNull=v=>v===null||v===undefined||(typeof v==='number'&&isNaN(v));
@@ -180,6 +275,7 @@ function getItem(o,key){
   if(o instanceof PyDict){const v=o.get(key);if(v===undefined)throw perr(`KeyError: ${key}`);return v;}
   if(Array.isArray(o)){if(typeof key!=='number')throw perr('Listas usam índice numérico.');const v=o[key<0?o.length+key:key];if(v===undefined)throw perr('IndexError: posição fora da lista.');return v;}
   if(o instanceof Tuple)return o.items[key<0?o.items.length+key:key];
+  if(typeof o==='string'){if(typeof key!=='number')throw perr('Texto usa índice numérico.');const c=o[key<0?o.length+key:key];if(c===undefined)throw perr('IndexError: posição fora do texto.');return c;}
   throw perr(`TypeError: ${typeName(o)} não aceita colchetes.`);
 }
 const DF_METHODS=['head','tail','sort_values','groupby','merge','drop_duplicates','dropna','fillna','isnull','isna','notnull','sum','mean','count','max','min','median','nunique','rename','reset_index','copy','drop','pivot_table','describe','info','plot','query','apply','to_csv'];
@@ -207,8 +303,10 @@ function getAttr(o,n){
     throw perr(`AttributeError: Series não tem “${n}”.`);}
   if(o instanceof GroupBy){if(G_METHODS.includes(n))return new Bound(o,n);if(o.df.cols.includes(n))return new GroupBy(o.df,o.keys,n,o.asIndex);throw perr(`AttributeError: groupby não tem “${n}”. Depois do groupby use sum(), mean(), count(), size() ou agg().`);}
   if(o instanceof StrAcc){if(['contains','upper','lower','strip','startswith','endswith','len','replace'].includes(n))return new Bound(o,n);throw perr(`.str.${n} não é suportado.`);}
-  if(Array.isArray(o)&&['append','count','index'].includes(n))return new Bound(o,n);
-  if(typeof o==='string'&&['upper','lower','strip','replace','startswith'].includes(n))return new Bound(o,n);
+  if(o===NP){if(n==='nan')return null;if(['where','round','mean','sum','max','min','abs','sqrt'].includes(n))return new Bound(NP,n);throw perr(`AttributeError: np.${n} não existe no simulador.`);}
+  if(Array.isArray(o)&&['append','count','index','pop','extend','sort','reverse','insert','copy','remove'].includes(n))return new Bound(o,n);
+  if(typeof o==='string'&&['upper','lower','strip','replace','startswith','endswith','split','join','title','capitalize','count','find','zfill','isdigit','lstrip','rstrip'].includes(n))return new Bound(o,n);
+  if(o instanceof PyDict&&['get','keys','values','items','update','pop','copy'].includes(n))return new Bound(o,n);
   throw perr(`AttributeError: ${typeName(o)} não tem “${n}”.`);
 }
 function elementwise(a,b,f){
@@ -238,7 +336,12 @@ function binop(op,a,b){
   if(op==='&'||op==='|'){
     const chk=v=>{if(v instanceof Series&&v.values.some(x=>typeof x!=='boolean'))throw perr('Para combinar condições, coloque cada uma entre parênteses: (df["a"] > 1) & (df["b"] == "X")');};
     chk(a);chk(b);return elementwise(a,b,(x,y)=>op==='&'?(!!x&&!!y):(!!x||!!y));}
-  if(op==='in'){const l=toList(b);return l.includes(a);}
+  if(op==='in'){if(typeof b==='string')return b.includes(a);if(b instanceof PyDict)return b.entries.some(e=>e[0]===a);if(b instanceof Series)return b.index.includes(a);const l=toList(b);return l.some(x=>x===a);}
+  if(op==='is')return a===b||(isNull(a)&&isNull(b));
+  if(op==='isnot')return !(a===b||(isNull(a)&&isNull(b)));
+  if(op==='*'&&typeof a==='string'&&typeof b==='number')return a.repeat(Math.max(0,b));
+  if(op==='*'&&Array.isArray(a)&&typeof b==='number'){let r=[];for(let i=0;i<b;i++)r=r.concat(a);return r;}
+  if(op==='%'&&typeof a==='string')throw perr('Formatação com % não é suportada. Use f-strings: f"Total: {valor}"');
   if(['==','!=','>','<','>=','<='].includes(op))return elementwise(a,b,(x,y)=>compare(op,x,y));
   if(Array.isArray(a)&&Array.isArray(b)&&op==='+')return a.concat(b);
   return elementwise(a,b,(x,y)=>arith(op,x,y));
@@ -365,6 +468,8 @@ function callBound(b,args,kwargs,ctx){
       case 'reset_index':{const nm=kwargs.name||s.name||0;const ic=s.indexName||'index';if(s.isDefault||kwargs.drop)return new Series(s.name,s.values.map((_,i)=>i),s.values.slice(),null,true);return new DF([ic,String(nm)],s.index.map((k,i)=>({[ic]:k,[String(nm)]:s.values[i]})));}
       case 'to_frame':{const nm=s.name||0;if(s.isDefault)return new DF([String(nm)],s.values.map(v=>({[String(nm)]:v})),s.index.slice());const ic=s.indexName||'index';return new DF([ic,String(nm)],s.index.map((k,i)=>({[ic]:k,[String(nm)]:s.values[i]})));}
       case 'plot':throw perr('Gráficos ficam para o Power BI da firma 😉 Aqui, entregue os números.');
+      case 'map':{const m=args[0];if(m instanceof PyDict)return elementwise(s,0,v=>{const r=m.get(v);return r===undefined?null:r;});return elementwise(s,0,v=>chamar(m,[v],ctx));}
+      case 'apply':return elementwise(s,0,v=>chamar(args[0],[v],ctx));
       default:throw perr(`${n}() não é suportado no simulador.`);}
   }
   if(s instanceof GroupBy){
@@ -373,60 +478,159 @@ function callBound(b,args,kwargs,ctx){
   if(s instanceof StrAcc){
     const v=s.s;const f={contains:x=>typeof x==='string'&&(kwargs.case===false?x.toLowerCase().includes(String(args[0]).toLowerCase()):x.includes(args[0])),upper:x=>typeof x==='string'?x.toUpperCase():x,lower:x=>typeof x==='string'?x.toLowerCase():x,strip:x=>typeof x==='string'?x.trim():x,startswith:x=>typeof x==='string'&&x.startsWith(args[0]),endswith:x=>typeof x==='string'&&x.endsWith(args[0]),len:x=>typeof x==='string'?x.length:null,replace:x=>typeof x==='string'?x.split(args[0]).join(args[1]):x}[n];
     return elementwise(v,0,x=>f(x));}
-  if(Array.isArray(s)){if(n==='append'){s.push(args[0]);return null;}if(n==='count')return s.filter(x=>x===args[0]).length;if(n==='index')return s.indexOf(args[0]);}
-  if(typeof s==='string'){if(n==='upper')return s.toUpperCase();if(n==='lower')return s.toLowerCase();if(n==='strip')return s.trim();if(n==='replace')return s.split(args[0]).join(args[1]);if(n==='startswith')return s.startsWith(args[0]);}
+  if(s===NP){
+    if(n==='where'){const [c,a,b]=args;if(c instanceof Series){return new Series(null,c.index.slice(),c.values.map((v,i)=>{const pick=x=>x instanceof Series?x.values[i]:x;return v?pick(a):pick(b);}),c.indexName,c.isDefault);}return c?a:b;}
+    const f={round:(x,d)=>Math.round(x*10**(d||0))/10**(d||0),abs:Math.abs,sqrt:Math.sqrt}[n];
+    if(f){const x=args[0];if(x instanceof Series)return elementwise(x,0,v=>isNull(v)?v:f(v,args[1]));return f(x,args[1]);}
+    if(['mean','sum','max','min'].includes(n))return aggFn(n,toList(args[0]));}
+  if(Array.isArray(s)){
+    switch(n){case 'append':s.push(args[0]);return null;case 'count':return s.filter(x=>x===args[0]).length;case 'index':{const i=s.indexOf(args[0]);if(i<0)throw perr('ValueError: valor não está na lista');return i;}
+      case 'pop':{if(!s.length)throw perr('IndexError: lista vazia');const i=args.length?args[0]:s.length-1;return s.splice(i<0?s.length+i:i,1)[0];}
+      case 'extend':s.push(...iterar(args[0]));return null;case 'insert':s.splice(args[0],0,args[1]);return null;case 'remove':{const i=s.indexOf(args[0]);if(i<0)throw perr('ValueError: valor não está na lista');s.splice(i,1);return null;}
+      case 'sort':{const key=kwargs.key;s.sort((a,b)=>key?cmpVals(chamar(key,[a],ctx),chamar(key,[b],ctx)):cmpVals(a,b));if(kwargs.reverse)s.reverse();return null;}
+      case 'reverse':s.reverse();return null;case 'copy':return s.slice();}}
+  if(typeof s==='string'){
+    switch(n){case 'upper':return s.toUpperCase();case 'lower':return s.toLowerCase();case 'strip':return s.trim();case 'lstrip':return s.replace(/^\s+/,'');case 'rstrip':return s.replace(/\s+$/,'');
+      case 'replace':return s.split(args[0]).join(args[1]);case 'startswith':return s.startsWith(args[0]);case 'endswith':return s.endsWith(args[0]);
+      case 'split':return args.length&&args[0]!=null?s.split(args[0]):s.trim().split(/\s+/).filter(Boolean);
+      case 'join':return iterar(args[0]).map(x=>{if(typeof x!=='string')throw perr('TypeError: join só junta textos. Use str() nos números.');return x;}).join(s);
+      case 'title':return s.toLowerCase().replace(/(^|\s)\S/g,m=>m.toUpperCase());case 'capitalize':return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
+      case 'count':return s.split(args[0]).length-1;case 'find':return s.indexOf(args[0]);case 'zfill':return s.padStart(args[0],'0');case 'isdigit':return /^\d+$/.test(s);}}
+  if(s instanceof PyDict){
+    switch(n){case 'get':{const v=s.get(args[0]);return v===undefined?(args.length>1?args[1]:null):v;}
+      case 'keys':return s.entries.map(e=>e[0]);case 'values':return s.entries.map(e=>e[1]);case 'items':return s.entries.map(e=>new Tuple([e[0],e[1]]));
+      case 'update':args[0].entries.forEach(([k,v])=>s.set(k,v));return null;case 'pop':{const i=s.entries.findIndex(e=>e[0]===args[0]);if(i<0){if(args.length>1)return args[1];throw perr(`KeyError: ${fmtScalar(args[0])}`);}return s.entries.splice(i,1)[0][1];}
+      case 'copy':return new PyDict(s.entries.map(e=>[e[0],e[1]]));}}
   throw perr(`${n}() não suportado.`);
 }
+function fmtScalar(v){if(v===null||v===undefined)return'None';if(v===true)return'True';if(v===false)return'False';if(typeof v==='number'){if(!isFinite(v))return isNaN(v)?'nan':(v>0?'inf':'-inf');return Number.isInteger(v)?String(v):String(Math.round(v*10000)/10000);}if(Array.isArray(v))return'['+v.map(x=>typeof x==='string'?`'${x}'`:fmtScalar(x)).join(', ')+']';if(v instanceof Tuple)return'('+v.items.map(x=>typeof x==='string'?`'${x}'`:fmtScalar(x)).join(', ')+')';if(v instanceof PyDict)return strPy(v);return String(v);}
+function iterar(v){
+  if(Array.isArray(v))return v.slice();if(v instanceof Tuple)return v.items.slice();if(typeof v==='string')return [...v];
+  if(v instanceof PyDict)return v.entries.map(e=>e[0]);if(v instanceof Series)return v.values.slice();if(v instanceof DF)return v.cols.slice();
+  throw perr(`TypeError: não dá para percorrer ${typeName(v)} com for.`);
+}
+function verdade(v){if(v instanceof Series)throw perr('ValueError: uma Series não é verdadeira nem falsa sozinha. Para filtrar use df[condição]; para testar tudo use .all() ou .any().');if(v instanceof DF)throw perr('ValueError: um DataFrame não é verdadeiro nem falso sozinho.');if(Array.isArray(v))return v.length>0;if(v instanceof PyDict)return v.entries.length>0;if(v instanceof Tuple)return v.items.length>0;if(isNull(v))return false;return !!v;}
+function strPy(v){if(typeof v==='string')return v;if(v instanceof PyDict)return '{'+v.entries.map(([k,x])=>reprPy(k)+': '+reprPy(x)).join(', ')+'}';if(Array.isArray(v))return '['+v.map(reprPy).join(', ')+']';if(v instanceof Tuple)return '('+v.items.map(reprPy).join(', ')+(v.items.length===1?',':'')+')';if(v instanceof PyFunc)return `<function ${v.name}>`;if(v instanceof DF||v instanceof Series)return v;return fmtScalar(v);}
+function reprPy(v){return typeof v==='string'?`'${v}'`:strPy(v);}
+function formatar(v,fmt){
+  if(!fmt)return strPy(v);
+  if(isNull(v))return 'nan';
+  let m=fmt.match(/^([<>^])?(\d+)?(,)?(?:\.(\d+))?([fd%e])?$/);
+  if(!m)throw perr(`Formato “${fmt}” não suportado. Use, por exemplo, {valor:.2f} ou {valor:,.2f}.`);
+  const [,al,w,sep,prec,tp]=m;
+  let s;
+  if(typeof v!=='number'){s=String(v);}
+  else{
+    let x=v;if(tp==='%')x=v*100;
+    const p=prec!=null?+prec:(tp==='f'||tp==='%'?6:(tp==='d'?0:null));
+    s=p!=null?x.toFixed(p):fmtScalar(x);
+    if(sep){const [i,d]=s.split('.');s=i.replace(/\B(?=(\d{3})+(?!\d))/g,',')+(d!==undefined?'.'+d:'');}
+    if(tp==='%')s+='%';
+  }
+  if(w){const n=+w;if(s.length<n){const pad=' '.repeat(n-s.length);s=al==='<'?s+pad:al==='^'?pad.slice(0,pad.length>>1)+s+pad.slice(pad.length>>1):(typeof v==='number'||al==='>'?pad+s:s+pad);}}
+  return s;
+}
 const BUILTINS={
-  len:a=>{const x=a[0];if(x instanceof DF)return x.rows.length;if(x instanceof Series)return x.values.length;if(Array.isArray(x)||typeof x==='string')return x.length;if(x instanceof Tuple)return x.items.length;throw perr('len() não funciona aqui.');},
-  round:a=>{const d=a[1]||0;if(a[0] instanceof Series)return callBound(new Bound(a[0],'round'),[d],{});if(isNull(a[0]))return a[0];return Math.round(a[0]*10**d)/10**d;},
-  sum:a=>toList(a[0]).reduce((x,y)=>x+y,0),
-  max:a=>{const l=a.length>1?a:toList(a[0]);return l.reduce((x,y)=>cmpVals(x,y)>=0?x:y);},
-  min:a=>{const l=a.length>1?a:toList(a[0]);return l.reduce((x,y)=>cmpVals(x,y)<=0?x:y);},
-  abs:a=>Math.abs(a[0]),int:a=>Math.trunc(Number(a[0])),float:a=>Number(a[0]),str:a=>fmtScalar(a[0]),
-  list:a=>a[0] instanceof Series?a[0].values.slice():toList(a[0]).slice(),
-  sorted:a=>[...toList(a[0])].sort(cmpVals),
-  type:a=>`<class '${typeName(a[0])}'>`
+  len:a=>{const x=a[0];if(x instanceof DF)return x.rows.length;if(x instanceof Series)return x.values.length;if(Array.isArray(x)||typeof x==='string')return x.length;if(x instanceof Tuple)return x.items.length;if(x instanceof PyDict)return x.entries.length;throw perr('TypeError: len() não funciona com '+typeName(x)+'.');},
+  round:a=>{const d=a[1]||0;if(a[0] instanceof Series)return callBound(new Bound(a[0],'round'),[d],{});if(isNull(a[0]))return a[0];const r=Math.round(a[0]*10**d)/10**d;return r;},
+  sum:a=>iterar(a[0]).reduce((x,y)=>x+(isNull(y)?0:y),a[1]||0),
+  max:a=>{const l=a.length>1?a:iterar(a[0]);if(!l.length)throw perr('ValueError: max() de lista vazia');return l.reduce((x,y)=>cmpVals(x,y)>=0?x:y);},
+  min:a=>{const l=a.length>1?a:iterar(a[0]);if(!l.length)throw perr('ValueError: min() de lista vazia');return l.reduce((x,y)=>cmpVals(x,y)<=0?x:y);},
+  abs:a=>Math.abs(a[0]),
+  int:a=>{const v=a[0];if(typeof v==='string'){if(!/^\s*-?\d+\s*$/.test(v))throw perr(`ValueError: não dá para converter “${v}” em inteiro.`);return parseInt(v,10);}return Math.trunc(Number(v));},
+  float:a=>{const v=Number(a[0]);if(isNaN(v))throw perr(`ValueError: não dá para converter “${a[0]}” em número.`);return v;},
+  str:a=>strPy(a[0]),bool:a=>verdade(a[0]),
+  list:a=>a.length?iterar(a[0]):[],
+  tuple:a=>new Tuple(a.length?iterar(a[0]):[]),
+  dict:(a,kw)=>{const d=new PyDict([]);if(a.length)iterar(a[0]).forEach(p=>{const it=iterar(p);d.set(it[0],it[1]);});Object.entries(kw||{}).forEach(([k,v])=>d.set(k,v));return d;},
+  set:a=>[...new Set(a.length?iterar(a[0]):[])],
+  sorted:(a,kw,ctx)=>{const l=iterar(a[0]);const key=kw&&kw.key;l.sort((x,y)=>key?cmpVals(chamar(key,[x],ctx),chamar(key,[y],ctx)):cmpVals(x,y));if(kw&&kw.reverse)l.reverse();return l;},
+  range:a=>{let [s,e,st]=a.length===1?[0,a[0],1]:[a[0],a[1],a[2]||1];if(st===0)throw perr('ValueError: passo zero em range()');const r=[];for(let i=s;st>0?i<e:i>e;i+=st){r.push(i);if(r.length>100000)throw perr('range grande demais para o simulador.');}return r;},
+  enumerate:(a,kw)=>{const st=a[1]!=null?a[1]:(kw&&kw.start)||0;return iterar(a[0]).map((v,i)=>new Tuple([i+st,v]));},
+  zip:a=>{const ls=a.map(iterar);const n=Math.min(...ls.map(l=>l.length));const r=[];for(let i=0;i<n;i++)r.push(new Tuple(ls.map(l=>l[i])));return r;},
+  type:a=>`<class '${typeName(a[0])}'>`,
+  isinstance:a=>{const t=a[1];return typeName(a[0])===t;},
+  input:()=>{throw perr('input() não funciona aqui: não tem teclado do outro lado. Coloque o valor direto numa variável.');}
 };
-function fmtScalar(v){if(v===null||v===undefined)return'None';if(v===true)return'True';if(v===false)return'False';if(typeof v==='number'){if(!isFinite(v))return v>0?'inf':'nan';return Number.isInteger(v)?String(v):String(Math.round(v*10000)/10000);}if(Array.isArray(v))return'['+v.map(x=>typeof x==='string'?`'${x}'`:fmtScalar(x)).join(', ')+']';if(v instanceof Tuple)return'('+v.items.map(fmtScalar).join(', ')+')';return String(v);}
+class Sinal{constructor(t,v){this.t=t;this.v=v;}}
+function chamar(f,args,ctx,kwargs){
+  if(f instanceof Bound)return callBound(f,args,kwargs||{},ctx);
+  if(f&&f.builtin==='print'){const sep=kwargs&&kwargs.sep!=null?kwargs.sep:' ';const end=kwargs&&kwargs.end!=null?kwargs.end:'\n';
+    if(args.length===1&&(args[0] instanceof DF||args[0] instanceof Series)){ctx.out.push(args[0]);ctx.lastPrint=args[0];return null;}
+    const txt=args.map(strPy).join(sep);ctx.out.push({txt:txt+end});ctx.lastPrint=args.length===1?args[0]:txt;return null;}
+  if(f&&f.builtin)return BUILTINS[f.builtin](args,kwargs||{},ctx);
+  if(f instanceof PyFunc){
+    if(++ctx.depth>200)throw perr('RecursionError: chamadas demais (a função chama ela mesma sem parar?).');
+    const env=Object.create(f.closure);
+    f.params.forEach((p,i)=>{let v;if(i<args.length)v=args[i];else if(kwargs&&p.n in kwargs)v=kwargs[p.n];else if(p.def!==undefined)v=p.defVal;else throw perr(`TypeError: ${f.name}() precisa do argumento “${p.n}”.`);env[p.n]=v;});
+    if(args.length>f.params.length)throw perr(`TypeError: ${f.name}() recebeu argumentos demais.`);
+    let r=null;
+    if(f.isLambda)r=evalNode(f.body,env,ctx);
+    else{const s=execBlock(f.body,env,ctx);if(s&&s.t==='return')r=s.v;else if(s)throw perr(`SyntaxError: ${s.t} fora de um loop.`);}
+    ctx.depth--;return r;}
+  throw perr(`TypeError: ${typeName(f)} não é uma função.`);
+}
+function atribuir(target,v,env,ctx){
+  if(target.k==='name'){env[target.v]=v;return;}
+  if(target.k==='tuple'){const vals=iterar(v);if(vals.length!==target.items.length)throw perr(`ValueError: esperava ${target.items.length} valores para desempacotar, veio ${vals.length}.`);target.items.forEach((t,i)=>atribuir(t,vals[i],env,ctx));return;}
+  if(target.k==='idx'){const o=evalNode(target.obj,env,ctx);const key=evalNode(target.key,env,ctx);
+    if(o instanceof DF&&typeof key==='string'){const vals=v instanceof Series?v.values:o.rows.map(()=>v);if(vals.length!==o.rows.length)throw perr('A nova coluna precisa ter o mesmo tamanho da tabela.');o.rows=o.rows.map((r,i)=>({...r,[key]:vals[i]}));if(!o.cols.includes(key))o.cols.push(key);return;}
+    if(o instanceof PyDict){o.set(key,v);return;}
+    if(Array.isArray(o)){const i=key<0?o.length+key:key;if(i<0||i>=o.length)throw perr('IndexError: posição fora da lista.');o[i]=v;return;}
+    throw perr('Atribuição com colchetes não suportada para '+typeName(o)+'.');}
+  throw perr('Não dá para atribuir valor a essa expressão.');
+}
+function execBlock(stmts,env,ctx){
+  for(const s of stmts){
+    if(++ctx.passos>300000)throw perr('O código rodou tempo demais (loop infinito?). Confira a condição do while.');
+    switch(s.k){
+      case 'pass':break;
+      case 'expr':{const v=evalNode(s.e,env,ctx);ctx.last=v;ctx.lastIsExpr=!(s.e.k==='call'&&s.e.fn.k==='name'&&s.e.fn.v==='print');break;}
+      case 'assign':{const v=evalNode(s.value,env,ctx);atribuir(s.target,v,env,ctx);ctx.lastIsExpr=false;break;}
+      case 'def':{const f=new PyFunc(s.name,s.params.map(p=>({...p,defVal:p.def!==undefined?evalNode(p.def,env,ctx):undefined})),s.body,env,false);env[s.name]=f;ctx.lastIsExpr=false;break;}
+      case 'return':return new Sinal('return',s.e?evalNode(s.e,env,ctx):null);
+      case 'break':return new Sinal('break');
+      case 'continue':return new Sinal('continue');
+      case 'if':{let done=false;for(const [c,b] of s.branches){if(verdade(evalNode(c,env,ctx))){const r=execBlock(b,env,ctx);if(r)return r;done=true;break;}}
+        if(!done&&s.els){const r=execBlock(s.els,env,ctx);if(r)return r;}ctx.lastIsExpr=false;break;}
+      case 'for':{const it=iterar(evalNode(s.it,env,ctx));
+        for(const v of it){if(s.names.length===1)env[s.names[0]]=v;else atribuir({k:'tuple',items:s.names.map(n=>({k:'name',v:n}))},v,env,ctx);
+          const r=execBlock(s.body,env,ctx);if(r){if(r.t==='break')break;if(r.t==='continue')continue;return r;}}
+        ctx.lastIsExpr=false;break;}
+      case 'while':{while(verdade(evalNode(s.cond,env,ctx))){if(++ctx.passos>300000)throw perr('O código rodou tempo demais (loop infinito?). Confira a condição do while.');const r=execBlock(s.body,env,ctx);if(r){if(r.t==='break')break;if(r.t==='continue')continue;return r;}}ctx.lastIsExpr=false;break;}
+    }
+  }
+  return null;
+}
 function evalNode(n,env,ctx){
   switch(n.k){
     case 'lit':return n.v;
-    case 'name':if(Object.prototype.hasOwnProperty.call(env,n.v))return env[n.v];if(BUILTINS[n.v]||n.v==='print')return{builtin:n.v};throw perr(`NameError: “${n.v}” não foi definido. Tabelas disponíveis: vendas, clientes, campanhas, entregas.`);
+    case 'name':if(n.v in env)return env[n.v];if(BUILTINS[n.v]||n.v==='print')return{builtin:n.v};throw perr(`NameError: “${n.v}” não foi definido. Tabelas disponíveis: vendas, clientes, campanhas, entregas.`);
     case 'list':return n.items.map(x=>evalNode(x,env,ctx));
+    case 'listcomp':{const out=[];const loc=Object.create(env);for(const v of iterar(evalNode(n.it,env,ctx))){if(n.names.length===1)loc[n.names[0]]=v;else atribuir({k:'tuple',items:n.names.map(x=>({k:'name',v:x}))},v,loc,ctx);if(n.cond&&!verdade(evalNode(n.cond,loc,ctx)))continue;out.push(evalNode(n.elt,loc,ctx));}return out;}
     case 'tuple':return new Tuple(n.items.map(x=>evalNode(x,env,ctx)));
     case 'dict':return new PyDict(n.pairs.map(([k,v])=>[evalNode(k,env,ctx),evalNode(v,env,ctx)]));
-    case 'bool':{const a=evalNode(n.a,env,ctx);if(a instanceof Series)throw perr('Com Series use & (e) e | (ou), com parênteses em cada condição, em vez de and/or.');if(n.op==='and')return a?evalNode(n.b,env,ctx):a;return a?a:evalNode(n.b,env,ctx);}
+    case 'fstr':return n.parts.map(p=>p.lit!==undefined?p.lit:formatar(evalNode(p.e,env,ctx),p.fmt)).join('');
+    case 'lambda':return new PyFunc('<lambda>',n.params,n.body,env,true);
+    case 'ternary':return verdade(evalNode(n.cond,env,ctx))?evalNode(n.a,env,ctx):evalNode(n.b,env,ctx);
+    case 'bool':{const a=evalNode(n.a,env,ctx);if(a instanceof Series)throw perr('Com Series use & (e) e | (ou), com parênteses em cada condição, em vez de and/or.');if(n.op==='and')return verdade(a)?evalNode(n.b,env,ctx):a;return verdade(a)?a:evalNode(n.b,env,ctx);}
     case 'bin':return binop(n.op,evalNode(n.a,env,ctx),evalNode(n.b,env,ctx));
-    case 'un':{const a=evalNode(n.a,env,ctx);if(n.op==='-')return elementwise(a,0,v=>isNull(v)?v:-v);if(n.op==='+')return a;if(n.op==='~'){if(a instanceof Series)return elementwise(a,0,v=>!v);return ~a;}if(n.op==='not'){if(a instanceof Series)throw perr('Para negar um filtro use ~ (til).');return !a;}}
+    case 'un':{const a=evalNode(n.a,env,ctx);if(n.op==='-')return elementwise(a,0,v=>isNull(v)?v:-v);if(n.op==='+')return a;if(n.op==='~'){if(a instanceof Series)return elementwise(a,0,v=>!v);return ~a;}if(n.op==='not'){if(a instanceof Series)throw perr('Para negar um filtro use ~ (til).');return !verdade(a);}}
     case 'idx':return getItem(evalNode(n.obj,env,ctx),evalNode(n.key,env,ctx));
     case 'slice':{const o=evalNode(n.obj,env,ctx);const s=n.s?evalNode(n.s,env,ctx):0;const e=n.e?evalNode(n.e,env,ctx):undefined;if(o instanceof DF)return new DF(o.cols.slice(),o.rows.slice(s,e),o.index.slice(s,e));if(o instanceof Series)return new Series(o.name,o.index.slice(s,e),o.values.slice(s,e),o.indexName,o.isDefault);if(Array.isArray(o)||typeof o==='string')return o.slice(s,e);throw perr('Fatiamento não suportado aqui.');}
     case 'attr':return getAttr(evalNode(n.obj,env,ctx),n.name);
-    case 'call':{const f=evalNode(n.fn,env,ctx);const args=n.args.map(x=>evalNode(x,env,ctx));const kwargs={};for(const k in n.kwargs)kwargs[k]=evalNode(n.kwargs[k],env,ctx);
-      if(f instanceof Bound)return callBound(f,args,kwargs,ctx);
-      if(f&&f.builtin==='print'){ctx.out.push(args.length===1?args[0]:args.map(fmtScalar).join(' '));ctx.lastPrint=args.length===1?args[0]:undefined;return null;}
-      if(f&&f.builtin)return BUILTINS[f.builtin](args,kwargs);
-      throw perr(`TypeError: ${typeName(f)} não é uma função.`);}
+    case 'call':{const f=evalNode(n.fn,env,ctx);const args=n.args.map(x=>evalNode(x,env,ctx));const kwargs={};for(const k in n.kwargs)kwargs[k]=evalNode(n.kwargs[k],env,ctx);return chamar(f,args,ctx,kwargs);}
   }
   throw perr('Expressão não suportada.');
 }
-function cloneTables(){const env={pd:PD};for(const t in DATA){const rows=DATA[t].map(r=>({...r}));env[t]=new DF(Object.keys(DATA[t][0]),rows);}return env;}
+function cloneTables(){const env={pd:PD,np:NP};for(const t in DATA){const rows=DATA[t].map(r=>({...r}));env[t]=new DF(Object.keys(DATA[t][0]),rows);}return env;}
 function runPython(code){
-  const env=cloneTables();const ctx={out:[],lastPrint:undefined};
-  const stmts=parse(code);let last;let hasValue=false;
-  for(const s of stmts){
-    if(s.k==='assign'){
-      const v=evalNode(s.value,env,ctx);
-      if(s.target.k==='name')env[s.target.v]=v;
-      else if(s.target.k==='idx'){const o=evalNode(s.target.obj,env,ctx);const key=evalNode(s.target.key,env,ctx);
-        if(o instanceof DF&&typeof key==='string'){const vals=v instanceof Series?v.values:o.rows.map(()=>v);if(vals.length!==o.rows.length)throw perr('A nova coluna precisa ter o mesmo tamanho da tabela.');o.rows=o.rows.map((r,i)=>({...r,[key]:vals[i]}));if(!o.cols.includes(key))o.cols.push(key);}
-        else throw perr('Só dá para atribuir colunas assim: df["nova"] = ...');}
-      else throw perr('Atribuição não suportada.');
-      last=undefined;hasValue=false;
-    }else{last=evalNode(s.e,env,ctx);hasValue=!(s.e.k==='call'&&s.e.fn.k==='name'&&s.e.fn.v==='print');}
-  }
-  let result=hasValue?last:ctx.lastPrint;
-  return {result,prints:ctx.out,hasResult:result!==undefined};
+  const env=cloneTables();const ctx={out:[],lastPrint:undefined,last:undefined,lastIsExpr:false,passos:0,depth:0};
+  const stmts=parse(code);
+  const r=execBlock(stmts,env,ctx);
+  if(r)throw perr(`SyntaxError: “${r.t}” fora de função ou loop.`);
+  const result=ctx.lastIsExpr?ctx.last:ctx.lastPrint;
+  return {result,prints:ctx.out,fromPrint:!ctx.lastIsExpr,hasResult:result!==undefined&&!(ctx.lastIsExpr&&ctx.last===null&&!ctx.out.length)};
 }
 
 /* ============ SQL (alasql) ============ */

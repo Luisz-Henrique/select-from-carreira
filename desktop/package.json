@@ -1,7 +1,7 @@
 {
   "name": "select-from-carreira",
   "productName": "SELECT FROM carreira",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Jogo em pixel art para aprender SQL e pandas resolvendo demandas de uma empresa.",
   "main": "main.js",
   "scripts": {

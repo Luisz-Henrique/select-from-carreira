@@ -6,7 +6,7 @@ from pathlib import Path
 
 raiz = Path(__file__).parent
 src = raiz / "src"
-ordem = ["core.js", "content.js", "game.js", "game2.js"]
+ordem = ["core.js", "content.js", "aulas.js", "cursos.js", "som.js", "ide.js", "game.js", "game2.js"]
 
 shell = (src / "shell.html").read_text(encoding="utf-8")
 js = "\n".join((src / nome).read_text(encoding="utf-8") for nome in ordem)

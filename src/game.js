@@ -10,7 +10,8 @@ function novoEstado(nome,look){
     skills:{sql:0,py:0,negocio:0,com:0},energia:100,rep:{Marketing:50,Vendas:50,'Operações':50,Financeiro:50},chefe:50,
     missoes:[],feitas:{},totalFeitas:0,recFeitos:{rel_vendas:0,rel_mkt:0,rel_ops:0},
     roupa:'basica',owned:['basica'],acess:[],cursos:[],autos:[],ultimoAumento:-99,falou:{},pato:0,
-    pos:{x:11,y:14},dir:'up',hoje:{entregas:[],ganhos:0,xp:0,atrasos:[]},cenasVistas:[],uid:1,aviso18:false,histor:[]};
+    pos:{x:11,y:14},dir:'up',hoje:{entregas:[],ganhos:0,xp:0,atrasos:[]},cenasVistas:[],uid:1,aviso18:false,histor:[],
+    tereza:{idx:0,dia:0,feitas:[],desafios:[],apresentada:false},cursoProg:{}};
 }
 function salvar(){if(!S)return;if(typeof player!=='undefined'&&player)S.pos={x:player.x,y:player.y};try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}}
 function carregar(){try{const s=localStorage.getItem(SAVE_KEY);return s?JSON.parse(s):null;}catch(e){return null;}}
@@ -59,6 +60,7 @@ function buildMap(){
   // áreas
   const areaDesk=(x,y,npc,dept)=>{F('deskNpc',x,y,2,1,{npc});S_(x,y,2);I_(x,y,2,1,{t:'npc',id:npc,label:`Falar com ${NPCS[npc].nome} (${NPCS[npc].cargo})`});F('cadeira',x,y-1,1,1,{cor:'#3b4254',behind:true});};
   areaDesk(7,3,'bia');areaDesk(10,3,'carlao');areaDesk(13,3,'jorge');areaDesk(7,8,'neide');areaDesk(13,8,'fabio');
+  F('mesaMentora',13,11,2);S_(13,11,2);I_(13,11,2,1,{t:'npc',id:'tereza',label:'Falar com Tereza (Cientista de Dados Sênior)'});F('cadeira',13,10,1,1,{cor:'#2a6f68',behind:true});
   F('rack',15,8);S_(15,8);I_(15,8,1,1,{t:'obj',id:'rack',label:'Servidor'});
   F('quadro',11,1,2);I_(11,1,2,1,{t:'carreira',label:'Quadro de metas (plano de carreira)'});
   // sala do chefe
@@ -87,7 +89,7 @@ function buildMap(){
   // NPCs
   npcs={
     bia:mkNpc('bia',7,2),carlao:mkNpc('carlao',10,2),jorge:mkNpc('jorge',13,2),neide:mkNpc('neide',7,7),fabio:mkNpc('fabio',13,7),
-    chefe:mkNpc('chefe',19,3),kevin:mkNpc('kevin',2,13,true)};
+    chefe:mkNpc('chefe',19,3),kevin:mkNpc('kevin',2,13,true),tereza:mkNpc('tereza',13,10)};
 }
 function mkNpc(id,x,y,wander){return {id,x,y,px:x*T,py:y*T,dir:'down',moving:false,wander:!!wander,timer:2+Math.random()*3,frame:0,home:{x,y}};}
 function blocked(x,y,who){
@@ -144,6 +146,9 @@ function drawFurn(f){
       break;}
     case 'cadeira':{const c=f.cor;if(f.grande){R(px+3,py-6,10,12,c);R(px+3,py-6,10,2,'#7a3a3a');}else{R(px+4,py-3,8,8,c);R(px+4,py-3,8,2,'#4d5468');}R(px+7,py+5,2,4,'#2a2d35');R(px+4,py+9,8,2,'#2a2d35');break;}
     case 'cadeiraPlayer':{const ergo=has('cadeira');const c=ergo?'#1f6f8b':'#3b4254';R(px+4,py+2,8,6,c);R(px+3,py+8,10,3,c);if(ergo){R(px+4,py+1,8,2,'#2a9fc7');R(px+2,py+6,1,4,'#2a2d35');R(px+13,py+6,1,4,'#2a2d35');}R(px+7,py+11,2,3,'#2a2d35');R(px+4,py+14,8,1,'#2a2d35');break;}
+    case 'mesaMentora':{R(px,py-4,T*2,8,'#8a5a36');R(px,py-4,T*2,2,'#a8744a');R(px,py+4,T*2,9,'#6b4426');R(px+2,py+4,2,10,'#4a2e19');R(px+T*2-4,py+4,2,10,'#4a2e19');
+      R(px+3,py-9,10,6,'#c9d0db');R(px+4,py-8,8,4,'#2a9d8f');R(px+3,py-3,10,1,'#9aa4b5');
+      R(px+18,py-7,7,2,'#c0392b');R(px+19,py-9,6,2,'#2b59c3');R(px+18,py-11,7,2,'#ffd23f');R(px+27,py-6,3,3,'#f6f7f9');break;}
     case 'rack':{R(px+2,py-10,12,24,'#1f232c');for(let k=0;k<5;k++){R(px+4,py-8+k*4,8,2,'#2f3542');R(px+10,py-8+k*4,1,1,((t/300+k)|0)%2?'#2ecc71':'#0f5132');}break;}
     case 'servidores':{R(px+3,py-8,10,20,'#20242e');const n=S.autos.length;for(let k=0;k<5;k++){R(px+5,py-6+k*4,6,2,'#2f3542');if(k<n)R(px+9,py-6+k*4,1,1,((t/250+k)|0)%2?'#4fc3f7':'#0d3c55');}
       R(px+4,py-12,8,4,'#9aa4b5');R(px+5,py-11,2,1,'#4fc3f7');R(px+9,py-11,2,1,'#4fc3f7');break;}
@@ -231,7 +236,8 @@ function drawPortrait(canvas,id){
 }
 function drawShadow(px,py){ctx.fillStyle='rgba(20,25,40,.28)';ctx.fillRect(px+3,py+13,10,2);ctx.fillRect(px+4,py+12,8,1);}
 function bubble(px,py,txt,col){ctx.fillStyle=col||'#fff';ctx.fillRect(px+4,py-15,9,8);ctx.fillRect(px+6,py-7,2,2);ctx.fillStyle='#1b2233';
-  if(txt==='!'){ctx.fillRect(px+8,py-14,1,4);ctx.fillRect(px+8,py-9,1,1);}else{ctx.fillRect(px+6,py-11,1,1);ctx.fillRect(px+8,py-11,1,1);ctx.fillRect(px+10,py-11,1,1);}}
+  if(txt==='!'){ctx.fillRect(px+8,py-14,1,4);ctx.fillRect(px+8,py-9,1,1);}
+  else if(txt==='book'){ctx.fillStyle='#2b59c3';ctx.fillRect(px+5,py-14,3,5);ctx.fillRect(px+9,py-14,3,5);ctx.fillStyle='#ffffff';ctx.fillRect(px+6,py-13,1,3);ctx.fillRect(px+10,py-13,1,3);}else{ctx.fillRect(px+6,py-11,1,1);ctx.fillRect(px+8,py-11,1,1);ctx.fillRect(px+10,py-11,1,1);}}
 
 /* ================= LOOP ================= */
 let keys={},lastT=0,paused=true,inPC=false,frameN=0;
@@ -247,7 +253,8 @@ function render(){
     const L=ch===player?lookOf('eu'):lookOf(ch.id);
     drawChar(ctx,ch.px+2,ch.py-6,L,ch.dir,ch.moving?1+(((ch.anim||0)*6)|0)%2:0,1);
     if(ch!==player){
-      if(npcHasDueToday(ch.id))bubble(ch.px,ch.py,'!','#ffd23f');
+      if(ch.id==='tereza'&&S.tereza&&terezaDisponivel()){bubble(ch.px,ch.py,'book','#bfe6ff');}
+      else if(npcHasDueToday(ch.id))bubble(ch.px,ch.py,'!','#ffd23f');
       else if(S.falou[ch.id]!==S.dia&&!paused)bubble(ch.px,ch.py,'…','#ffffff');
     }}}));
   items.sort((a,b)=>a.z-b.z).forEach(i=>i.fn());
@@ -285,6 +292,7 @@ function update(dt){
       stepChar(n,dt,3);}
     const vel=inPC?1.1:2.2;
     S.minuto+=dt*vel;
+    somNoite(S.minuto>=1080);
     if(S.minuto>=1080&&!S.aviso18){S.aviso18=true;toast('18:00. Expediente encerrado: saia pela porta quando quiser. Hora extra conta pontos com o chefe, mas cansa.');}
     if(S.minuto>=1260){S.minuto=1260;fimDoDia(true);}
     updateHud();
@@ -398,7 +406,8 @@ function concluir(e,extra){
 /* ================= DIÁLOGO ================= */
 let dlgQueue=[],dlgDone=null,typing=null;
 function nomeDe(id){return id==='eu'?S.nome:NPCS[id].nome;}
-function falar(lines,done){dlgQueue=lines.slice();dlgDone=done||null;paused=true;$('#dialog').hidden=false;proxFala();}
+function falar(lines,done){dlgQueue=lines.slice();dlgDone=done||null;paused=true;$('#dialog').hidden=false;
+  const quem=lines.find(l=>Array.isArray(l)&&l[0]!=='eu'&&NPCS[l[0]]);somTocar(quem?quem[0]:musicaAmbiente());proxFala();}
 function aplicarFx(fx){if(!fx)return;
   if(fx.com)S.skills.com+=fx.com;if(fx.negocio)S.skills.negocio+=fx.negocio;if(fx.energia)S.energia=clamp(S.energia+fx.energia,0,100);
   if(fx.boss)S.chefe=clamp(S.chefe+fx.boss,0,100);if(fx.dinheiro)S.dinheiro+=fx.dinheiro;
@@ -407,7 +416,7 @@ function aplicarFx(fx){if(!fx)return;
   if(parts.length)toast(parts.join(' · '));lastHud='';updateHud();}
 function proxFala(){
   const box=$('#dialog');const ch=$('#dlgChoices');ch.innerHTML='';
-  if(!dlgQueue.length){box.hidden=true;paused=modalAberto();const d=dlgDone;dlgDone=null;salvar();if(d)d();return;}
+  if(!dlgQueue.length){box.hidden=true;paused=modalAberto();const d=dlgDone;dlgDone=null;salvar();somTocar(musicaAmbiente());if(d)d();return;}
   const l=dlgQueue.shift();
   if(l.q){
     $('#dlgName').textContent=S.nome;drawPortrait($('#dlgPort'),'eu');$('#dlgText').textContent=l.q;$('#dlgNext').hidden=true;
@@ -421,7 +430,7 @@ function proxFala(){
   if(fx)aplicarFx(fx);
   if(reduceMotion){$('#dlgText').textContent=full;typing=null;return;}
   let i=0;const el=$('#dlgText');el.textContent='';clearInterval(typing);
-  typing=setInterval(()=>{i+=2;el.textContent=full.slice(0,i);if(i>=full.length){clearInterval(typing);typing=null;}},16);
+  typing=setInterval(()=>{i+=2;el.textContent=full.slice(0,i);if(/\S/.test(full.charAt(i-1)))somBlip(who);if(i>=full.length){clearInterval(typing);typing=null;}},16);
   el.dataset.full=full;
 }
 function avancar(){if(typing){clearInterval(typing);typing=null;$('#dlgText').textContent=$('#dlgText').dataset.full;return;}if($('#dlgChoices').children.length)return;proxFala();}
@@ -429,7 +438,7 @@ function avancar(){if(typing){clearInterval(typing);typing=null;$('#dlgText').te
 /* ================= INTERAÇÕES ================= */
 function interagir(){
   const a=alvo();if(!a)return;
-  if(a.t==='npc'){const n=npcs[a.id];const inv={up:'down',down:'up',left:'right',right:'left'}[player.dir];if(n&&!(a.id==='chefe'))n.dir=inv;if(a.id==='chefe')return falarChefe();return falarNpc(a.id);}
+  if(a.t==='npc'){const n=npcs[a.id];const inv={up:'down',down:'up',left:'right',right:'left'}[player.dir];if(n&&!(a.id==='chefe'))n.dir=inv;if(a.id==='chefe')return falarChefe();if(a.id==='tereza')return falarTereza();return falarNpc(a.id);}
   if(a.t==='pc')return abrirPC();
   if(a.t==='cafe')return cafe();
   if(a.t==='porta')return porta();
@@ -449,6 +458,20 @@ function falarNpc(id){
     linhas.push({q:'Algo mais?',opts:[{t:'Tem alguma demanda para mim?',fn:()=>pedirDemanda(id)},{t:'Só passando. Até mais!'}]});}
   falar(linhas);
 }
+function falarTereza(){
+  const linhas=[];const primeira=S.falou.tereza!==S.dia;
+  if(primeira){S.falou.tereza=S.dia;}
+  if(terezaDisponivel()){const a=aulaDeHoje();linhas.push(['tereza',S.tereza.idx>=TEREZA.length?`Você já viu todas as minhas aulas! Hoje vamos revisar: “${a.titulo}”.`:`Bom dia, ${S.nome}! A aula de hoje é: “${a.titulo}”. Leva uns minutinhos.`]);
+    linhas.push({q:'Vamos?',opts:[{t:'Bora, quero a aula de hoje',fn:()=>{dlgDone=()=>abrirAulaTereza(a,true);}},{t:'Rever aulas anteriores',fn:()=>{dlgDone=()=>abrirPC('caderno');}},{t:'Agora não, depois eu volto'}]});}
+  else{linhas.push(['tereza',FALAS.tereza[Math.floor(Math.random()*FALAS.tereza.length)]]);linhas.push(['tereza','A aula de hoje já foi. Amanhã tem outra! As anteriores ficam no seu computador, em “Aulas da Tereza”.']);
+    linhas.push({q:'Algo mais?',opts:[{t:'Abrir minhas aulas anteriores',fn:()=>{dlgDone=()=>abrirPC('caderno');}},{t:'Só passando'}]});}
+  falar(linhas);
+}
+function apresentarTereza(){
+  S.tereza.apresentada=true;
+  falar([['chefe','Atenção, pessoal! Esta é a Tereza, nossa nova cientista de dados sênior.'],['tereza','Oi! Vou ficar naquela mesa perto do TI.'],['tereza','Todo dia eu preparo uma aula curta de código, de SQL e de Python. Passa lá quando aparecer o livrinho em cima da minha cabeça.'],['kevin','Tem prova?'],['tereza','Tem desafio. E vale XP.'],['eu','(Os cursos da loja também ganharam aulas de verdade, com exemplos para executar. Ficam no computador, na aba Cursos.)']]);
+}
+function musicaAmbiente(){const ev=eventoHoje();return ev&&ev.deco&&ev.deco!=='halloween'?'festa':'escritorio';}
 function pedirDemanda(id){
   if(S.missoes.length>=6){dlgQueue.unshift([id,'Você já tá com a caixa cheia. Entrega o que tem primeiro!']);return;}
   const p=poolDisponivel(id).filter(m=>!m._rev);
@@ -489,7 +512,7 @@ function pedirPromocao(){
   dlgQueue.unshift(['chefe','Olha… eu estava esperando você vir aqui.'],['chefe',`A partir de hoje você é ${CARREIRA[novo].nome}! Parabéns!`],['chefe',S.cargo===0?'E chega de bancada: você ganhou mesa própria no open space.':novo===3?'Sua nova mesa fica perto da minha sala. Para eu te chamar mais fácil.':novo===4?'Aquela sala de reunião com vidro agora é sua. Não deixe o Kevin cochilar lá.':'Agora você responde direto para a diretoria. Que a força esteja com você.'],
     ['eu',`Novo salário: ${brl(Math.max(S.salario*1.1,CARREIRA[novo].salario))}. Novo crachá. Nova mesa.`,null]);
   const done=()=>{S.cargo=novo;S.salario=Math.round(Math.max(S.salario*1.1,CARREIRA[novo].salario)/10)*10;S.chefe=clamp(S.chefe+5,0,100);
-    const d=deskAtual();buildMap();player.x=d.cx;player.y=d.cy;player.px=d.cx*T;player.py=d.cy*T;player.dir='up';lastHud='';updateHud();salvar();toast(`Promoção! Agora você é ${CARREIRA[novo].nome}.`,'gold');confete();};
+    const d=deskAtual();buildMap();player.x=d.cx;player.y=d.cy;player.px=d.cx*T;player.py=d.cy*T;player.dir='up';lastHud='';updateHud();salvar();toast(`Promoção! Agora você é ${CARREIRA[novo].nome}.`,'gold');somEfeito('promocao');confete();};
   const prev=dlgDone;dlgDone=()=>{done();if(prev)prev();};
 }
 function pedirAumento(){
@@ -508,7 +531,7 @@ function cafe(){
   const preco=has('cafeteira')?0:has('caneca')?4:8;
   if(S.energia>=100){falar([['eu','Mais café agora e eu começo a enxergar sons.']]);return;}
   if(S.dinheiro<preco){falar([['eu','Sem dinheiro nem para o café. Hora de entregar alguma coisa.']]);return;}
-  S.dinheiro-=preco;S.energia=clamp(S.energia+30,0,100);lastHud='';updateHud();
+  S.dinheiro-=preco;S.energia=clamp(S.energia+30,0,100);lastHud='';updateHud();somEfeito('cafe');
   const f=['Café passado. +30 de energia.','O café da Neide. Forte o suficiente para compilar sozinho. +30 de energia.','Cafeína: o ETL do corpo humano. +30 de energia.'];
   toast(f[Math.floor(Math.random()*f.length)]+(preco?` (${brl(preco)})`:''));salvar();
 }
@@ -535,7 +558,7 @@ function rendaAutos(){return S.autos.reduce((a,id)=>a+LOJA.automacoes.find(x=>x.
 
 /* ================= DIAS ================= */
 function fimDoDia(forcado){
-  fecharModal(true);$('#dialog').hidden=true;dlgQueue=[];
+  somEfeito('porta');fecharModal(true);$('#dialog').hidden=true;dlgQueue=[];
   paused=true;
   const horaExtra=S.minuto>=19*60&&!forcado;if(horaExtra)S.chefe=clamp(S.chefe+2,0,100);
   // atrasos
@@ -575,14 +598,15 @@ function comecarDia(){
   gerarMissoesDoDia();
   const cenas=[];
   const ev=eventoHoje();
-  if(S.dia===1){cenas.push(['chefe','Bem-vindo(a) à Tabelão S.A., {nome}! Eu sou o Seu Ronaldo, gerente de BI.'],['chefe','Sua mesa é a bancada ali embaixo, à esquerda, do lado do Kevin. Não toque no teclado dele.'],['chefe','As demandas das áreas chegam no seu computador. Cada uma tem prazo: atrasou, a área fica chateada. E eu também.'],['chefe','Salário cai a cada 4 dias. Café fica na copa. Aumento e promoção, na minha sala… quando você merecer.'],['kevin','Oi! Eu sou o Kevin. Se o servidor cair, não fui eu.'],['eu','(Ande com as setas ou WASD. Aperte E ou Espaço perto das coisas e das pessoas para interagir.)']);}
+  if(S.dia===1){cenas.push(['chefe','Bem-vindo(a) à Tabelão S.A., {nome}! Eu sou o Seu Ronaldo, gerente de BI.'],['chefe','Sua mesa é a bancada ali embaixo, à esquerda, do lado do Kevin. Não toque no teclado dele.'],['chefe','As demandas das áreas chegam no seu computador. Cada uma tem prazo: atrasou, a área fica chateada. E eu também.'],['chefe','Salário cai a cada 4 dias. Café fica na copa. Aumento e promoção, na minha sala… quando você merecer.'],['kevin','Oi! Eu sou o Kevin. Se o servidor cair, não fui eu.'],['tereza','E eu sou a Tereza, cientista de dados. Todo dia tenho uma aula curta de código na minha mesa, perto do TI. Passa lá quando aparecer o livrinho!'],['eu','(Ande com as setas ou WASD. Aperte E ou Espaço perto das coisas e das pessoas para interagir.)']);}
   else{
     if(ev){if(ev.bonus){if(ev.bonus.energia)S.energia=clamp(S.energia+ev.bonus.energia,0,120);if(ev.bonus.dinheiro)S.dinheiro+=ev.bonus.dinheiro;}if(ev.cena)cenas.push(...ev.cena);}
     if(S.aniversario){cenas.push(['kevin',`Hoje é aniversário de ${NPCS[S.aniversario].nome}! Tem bolo na copa!`]);}
     if(S.chefe<20){cenas.push(['chefe','Precisamos conversar. As áreas reclamaram de atrasos.'],['chefe','Não vou te mandar embora, mas preciso ver entregas no prazo. Combinado?'],['eu','Combinado. (Moral com o chefe recuperada para 30.)']);S.chefe=30;}
     else if(!ev&&Math.random()<.5){const pend=CENAS_ALEATORIAS.filter(c=>!S.cenasVistas.includes(c));const pool=pend.length?pend:CENAS_ALEATORIAS;const c=pool[Math.floor(Math.random()*pool.length)];if(!pend.length)S.cenasVistas=[];S.cenasVistas.push(c);cenas.push(...CENAS[c]);}
   }
-  lastHud='';updateHud();salvar();
+  if(S.dia===1&&S.tereza)S.tereza.apresentada=true;
+  lastHud='';updateHud();salvar();somTocar(musicaAmbiente());
   const fim=()=>{paused=false;toast(`${S.missoes.length} demanda${S.missoes.length!==1?'s':''} na sua caixa de entrada. Vá até o seu computador.`);};
   if(cenas.length)falar(cenas,fim);else fim();
 }

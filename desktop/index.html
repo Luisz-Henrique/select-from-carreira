@@ -570,6 +570,172 @@ table.hist small{display:block;color:var(--muted)}
   .creator{grid-template-columns:1fr}#stPrev{width:84px;height:126px}
   .help dl div{grid-template-columns:1fr;gap:0}
 }
+
+/* ===== v1.1: som, IDE, aulas, cursos ===== */
+.hud-som{background:#10141f;border:2px solid #4a5574;color:var(--hi);font:14px/1 var(--sans);width:32px;height:28px;padding:0}
+.hud-som.off{color:#8a93a8}
+.som-cfg{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:6px 0 12px}.som-cfg label{display:flex;gap:6px;align-items:center;font-size:14px}.som-cfg .vol input{width:140px}
+/* contexto de dados */
+.mctx{border:2px solid var(--edge);background:var(--surface2);padding:8px 12px;margin:0 0 10px}
+.mctx summary{cursor:pointer;font-weight:700;font-size:14px}
+.mctx-t{margin-top:10px}.mctx-h{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline;font-size:13px;margin-bottom:4px}
+.mini-wrap{overflow-x:auto;border:1px solid var(--edge);background:var(--surface)}
+table.mini{border-collapse:collapse;font:12px var(--mono);width:max-content;min-width:100%}
+table.mini th{text-align:left;padding:4px 8px;border-bottom:1px solid var(--edge);white-space:nowrap;background:var(--surface2)}
+table.mini th small{display:block;font-weight:400;color:var(--muted);font-size:10px}
+table.mini td{padding:3px 8px;white-space:nowrap;border-bottom:1px solid color-mix(in srgb,var(--edge) 15%,transparent)}
+table.mini .use{background:color-mix(in srgb,var(--hi) 30%,var(--surface));}
+table.mini th.use{background:color-mix(in srgb,var(--hi) 55%,var(--surface2));color:var(--hi-ink)}
+.esperado{display:flex;gap:10px;align-items:flex-start;border-left:4px solid var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--surface));padding:8px 12px;margin:0 0 12px;font-size:14px}
+.esperado code{font:13px var(--mono);background:var(--surface2);padding:0 4px}
+/* ferramentas */
+.tool{border:2px solid var(--edge);box-shadow:3px 3px 0 var(--drop);margin-bottom:10px}
+.tool-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 8px;background:#2b2f3a;border-bottom:1px solid #151820}
+.tool-bar .sp{flex:1}
+.tool-logo{color:#e8ecf2;font-weight:700;font-size:13px;margin-right:6px}
+.conn{display:flex;align-items:center;gap:6px;color:#c9d0db;font:12px var(--mono);background:#1e222b;padding:3px 8px;border:1px solid #3a404d;margin-right:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#3fbf6a;display:inline-block}
+.tb-btn{border:1px solid #4a5263;background:#3a404d;color:#eef1f5;font:600 13px var(--sans);padding:5px 10px}
+.tb-btn:not(.send):not(.run):hover:not(:disabled){background:#4a5263}
+.tb-btn.run{background:#2f7d4f;border-color:#3b9a62}.tb-btn.run:hover{background:#38925c}
+.tb-btn.send{background:#2b59c3;border-color:#3a6ad6}.tb-btn.send:hover{background:#3466d6}
+.tb-btn.ghost{background:transparent;border-color:transparent;color:#c9d0db}
+.tb-btn:disabled{opacity:.5}
+.tool-main{display:grid;grid-template-columns:200px minmax(0,1fr);background:#1e1f24}
+.dbnav{background:#25272d;border-right:1px solid #151820;color:#c9d0db;font-size:13px;max-height:340px;overflow-y:auto;overflow-x:hidden;min-width:0}
+.dbnav-h{padding:6px 10px;font-weight:700;color:#e8ecf2;border-bottom:1px solid #151820;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.tree{padding:6px 4px 10px}.tr-db,.tr-f{padding:2px 6px;white-space:nowrap}.tr-f{padding-left:16px}
+.tr-t summary{cursor:pointer;padding:2px 6px 2px 28px;list-style:none;white-space:nowrap}.tr-t summary::-webkit-details-marker{display:none}
+.tr-t summary::before{content:'▸ ';color:#8a93a8}.tr-t[open] summary::before{content:'▾ '}
+.tr-t .ico{color:#6fb3ff;margin-right:4px}
+.tree,.tr-t{max-width:100%;min-width:0;overflow:hidden}
+.tr-c{display:flex;justify-content:space-between;gap:6px;width:100%;max-width:100%;box-sizing:border-box;border:0;background:none;color:#c9d0db;font:12px var(--mono);padding:1px 6px 1px 46px;text-align:left}
+.tr-c:hover{background:#30343d}.tr-c small{color:#8a93a8}
+.tool-ed{min-width:0;display:flex;flex-direction:column}
+.ed-tabs{display:flex;background:#1a1b20;border-bottom:1px solid #151820}
+.ed-tab{padding:5px 12px;font:12px var(--mono);color:#9aa1ad;border-right:1px solid #151820;cursor:default}
+.ed-tab.on{background:#1e1f24;color:#e8ecf2;border-top:2px solid #e8a33d}
+.res-tabs .ed-tab{cursor:pointer;font-family:var(--sans)}
+.tool-res{border-top:2px solid #151820;background:var(--surface)}
+.tool-res .ed-tabs{background:var(--surface2);border-bottom:1px solid var(--edge)}
+.tool-res .ed-tab{color:var(--muted);border-right:1px solid color-mix(in srgb,var(--edge) 30%,transparent)}
+.tool-res .ed-tab.on{background:var(--surface);color:var(--ink);border-top-color:var(--blue)}
+.tool-res .out{margin:0;min-height:80px}
+.res-vazio{color:var(--muted);font-size:13px;padding:14px;margin:0}
+/* editor */
+.ed{display:grid;grid-template-columns:auto minmax(0,1fr);background:#1e1f24;color:#d4d4d4;font:14px/21px var(--mono);position:relative}
+.ed-gut{padding:10px 8px 10px 10px;text-align:right;color:#5d6371;user-select:none;background:#1e1f24;border-right:1px solid #2a2c33;min-width:38px}
+.ed-gut span{display:block}
+.ed-area{position:relative;overflow:hidden;min-width:0}
+.ed-hl,.ed-ta{margin:0;padding:10px 12px;font:inherit;white-space:pre;tab-size:4;letter-spacing:0;border:0}
+.ed-hl{position:absolute;inset:0 auto auto 0;pointer-events:none;min-width:100%;color:#d4d4d4}
+.ed-hl.static{position:static;pointer-events:auto;white-space:pre-wrap;word-break:break-word}
+.ed-ta{position:relative;display:block;width:100%;background:transparent;color:transparent;caret-color:#fff;resize:none;outline:none;overflow-x:auto;overflow-y:hidden;min-height:140px}
+.ed-ta::selection{background:rgba(80,140,255,.35);color:transparent}
+.ed.mini .ed-ta{min-height:60px}
+.ed:focus-within{outline:2px solid #e8a33d;outline-offset:-2px}
+.t-kw{color:#569cd6;font-weight:600}.t-fn{color:#dcdcaa}.t-bi{color:#4ec9b0}.t-str{color:#ce9178}.t-num{color:#b5cea8}.t-com{color:#6a9955;font-style:italic}.t-tb{color:#9cdcfe}.t-id{color:#d4d4d4}
+.ed .blank{font:inherit;background:#2d3a63;color:#ffd23f;border:0;border-bottom:2px solid #ffd23f;padding:0 4px;margin:0 2px}
+/* grade SQL */
+.grid-wrap{overflow:auto;max-height:300px}
+table.grid{border-collapse:collapse;font:12.5px var(--mono);width:max-content;min-width:100%}
+table.grid th{position:sticky;top:0;background:var(--surface2);text-align:left;padding:5px 10px;border:1px solid color-mix(in srgb,var(--edge) 25%,transparent);font-weight:600;white-space:nowrap}
+table.grid th .ct{font-size:9px;color:var(--muted);margin-right:6px;font-weight:400}
+table.grid td{padding:3px 10px;border:1px solid color-mix(in srgb,var(--edge) 15%,transparent);white-space:nowrap}
+table.grid td.n,table.grid th.n{text-align:right}
+table.grid .rn{color:var(--muted);background:var(--surface2);text-align:right;width:1%}
+table.grid tbody tr:nth-child(even) td:not(.rn){background:color-mix(in srgb,var(--surface2) 45%,var(--surface))}
+.grid-status{font-size:12px;color:var(--muted);padding:5px 10px;border-top:1px solid color-mix(in srgb,var(--edge) 25%,transparent)}.grid-status .ok{color:var(--money)}
+pre.msg{margin:0;padding:12px;font:13px var(--mono);white-space:pre-wrap}pre.err-msg{color:var(--alert)}
+.devolveu{background:color-mix(in srgb,var(--alert) 12%,var(--surface));border-left:4px solid var(--alert);padding:8px 12px;font-size:14px}
+/* notebook */
+.nb{background:#fff;color:#1f1f1f}
+.nb-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid #e0e0e0;font-size:13px}
+.nb-logo{font:700 18px/1 var(--sans);color:#f37726;letter-spacing:-.02em}
+.nb-file{font-weight:600}.nb-saved{color:#888;font-size:12px}.nb-kernel{margin-left:auto;color:#555;font-size:12px;display:flex;align-items:center;gap:6px}
+.nb .nb-bar{background:#f5f5f5;border-bottom:1px solid #e0e0e0}
+.nb .tb-btn{background:#fff;border-color:#cfcfcf;color:#333}.nb .tb-btn:not(.send):hover:not(:disabled){background:#eee}.nb .tb-btn.send:hover{background:#3466d6}
+.nb .tb-btn.run{background:#fff;color:#1a7f37;border-color:#cfcfcf}.nb .tb-btn.send{background:#2b59c3;color:#fff;border-color:#2b59c3}
+.nb .tb-btn.ghost{background:transparent;border-color:transparent;color:#555}
+.nb-vars{border-bottom:1px solid #e0e0e0;padding:6px 12px;font-size:13px}.nb-vars summary{cursor:pointer;color:#555;font-weight:600}
+.vars{display:flex;flex-direction:column;gap:6px;margin-top:6px}.var{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.var-cols{display:flex;flex-wrap:wrap;gap:4px;width:100%;padding-left:8px}
+.nb .chip{border:1px solid #cfcfcf;background:#f7f7f7;color:#333}.nb .chip.tname{background:#fff3c4;border-color:#e2c35a}
+.nb-body{padding:10px 12px 14px}
+.cell{display:grid;grid-template-columns:72px minmax(0,1fr);gap:6px;margin-bottom:6px}
+.cell .prompt,.out-row .prompt{font:12px/21px var(--mono);color:#303f9f;text-align:right;padding-top:10px}
+.cell.md .md-txt{font-size:14px;padding:6px 10px;color:#333}
+.cell.cc .cell-in{border:1px solid #cfcfcf;border-left:3px solid #42a5f5;background:#f7f7f7}
+.nb .ed{background:#f7f7f7;color:#1f1f1f}.nb .ed-gut{background:#f7f7f7;border-right-color:#e0e0e0;color:#aaa}
+.nb .ed-ta{caret-color:#111}.nb .ed-ta::selection{background:rgba(66,165,245,.3)}
+.nb .ed-hl{color:#1f1f1f}.nb .t-kw{color:#008000}.nb .t-fn{color:#795e26}.nb .t-bi{color:#008000}.nb .t-str{color:#ba2121}.nb .t-num{color:#080}.nb .t-com{color:#408080}.nb .t-tb{color:#0055aa}.nb .t-id{color:#1f1f1f}
+.nb .ed:focus-within{outline-color:#42a5f5}
+.nb .ed .blank{background:#fff3c4;color:#1f1f1f;border-bottom-color:#e2a400}
+.cell-out{margin-top:4px}
+.out-row{display:grid;grid-template-columns:72px minmax(0,1fr);gap:6px}
+.out-row .prompt.out{color:#d84315}
+.out-body{min-width:0;padding:6px 0}
+pre.stdout,pre.pdseries{margin:0;font:13px/1.5 var(--mono);white-space:pre-wrap;color:#1f1f1f}
+pre.pdseries .dica{color:#888}
+.pdwrap{overflow-x:auto;max-height:340px;overflow-y:auto}
+table.pdtable{border-collapse:collapse;font:12.5px var(--mono);color:#1f1f1f}
+table.pdtable th,table.pdtable td{padding:4px 10px;text-align:right;white-space:nowrap;border:0}
+table.pdtable thead th{border-bottom:1px solid #999;font-weight:700}
+table.pdtable tbody th{font-weight:700}
+table.pdtable tbody tr:nth-child(odd){background:#f5f5f5}
+table.pdtable tbody tr:hover{background:#e1f0ff}
+.pdshape{font:12px var(--mono);color:#555;margin:4px 0 0}
+pre.nb-err{margin:0 0 0 78px;background:#fdecea;color:#7f1d1d;border-left:3px solid #e53935;padding:10px 12px;font:13px/1.5 var(--mono);white-space:pre-wrap}
+.nb .devolveu{margin-left:78px;margin-bottom:6px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nb{filter:none}}
+/* aulas e exemplos */
+.aula-top{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;margin-bottom:8px}
+.aula-top canvas{width:44px;height:44px;image-rendering:pixelated;background:var(--surface2);border:2px solid var(--edge)}
+.aula h3,.curso-c h3{margin:4px 0;font-size:20px}
+.aula p,.curso-c p{max-width:72ch}
+.aula code,.curso-c code,.tip code,.desafio code{font:13px var(--mono);background:var(--surface2);padding:0 4px;border:1px solid color-mix(in srgb,var(--edge) 20%,transparent)}
+.tip{border-left:4px solid var(--hi);background:color-mix(in srgb,var(--hi) 14%,var(--surface));padding:8px 12px;margin:10px 0;font-size:14px;max-width:76ch}
+.tip b{margin-right:4px}
+.aula-l{margin:8px 0;padding-left:20px;max-width:72ch}.aula-l li{margin:4px 0}
+.ex{border:2px solid var(--edge);margin:10px 0;background:#1e1f24}
+.ex-h{display:flex;justify-content:space-between;align-items:center;background:#2b2f3a;color:#e8ecf2;font-size:12px;padding:4px 8px;font-weight:600}
+.ex-run{border:1px solid #3b9a62;background:#2f7d4f;color:#fff;font:600 12px var(--sans);padding:3px 10px}
+.ex-txt{margin:0;padding:10px 12px;color:#d4d4d4;font:13px/1.5 var(--mono);white-space:pre-wrap;overflow-x:auto}
+.ex-out{background:var(--surface)}
+.ex-out:empty{display:none}
+.ex-out .pdwrap,.ex-out pre.stdout,.ex-out pre.pdseries{padding:8px 10px;background:#fff}
+.ex-out .pdshape{padding:0 10px 8px;background:#fff;margin:0}
+.ex-err{margin:0;padding:8px 12px;background:#fdecea;color:#7f1d1d;font:13px var(--mono);white-space:pre-wrap}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.cmp .ex{margin:0}.cmp-col{min-width:0}
+.cmp-leg{grid-column:1/-1;margin:0;font-size:14px;color:var(--muted)}
+.desafio{border:2px dashed var(--blue);padding:10px 14px;margin-top:16px;background:color-mix(in srgb,var(--blue) 6%,var(--surface))}
+.desafio h4{margin:0 0 4px;color:var(--blue)}
+.desafio-acoes{display:flex;gap:12px;align-items:center}
+.good{color:var(--money);font-weight:600}.bad{color:var(--alert);font-weight:600}
+/* caderno e cursos */
+.aulas-lista{list-style:none;margin:10px 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.aulas-lista button{width:100%;display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;align-items:center;text-align:left;border:2px solid var(--edge);background:var(--surface);padding:8px 10px}
+.aulas-lista .num{font:10px var(--pixel);color:var(--muted)}
+.ok-mark{color:var(--money);font-size:12px;font-weight:600}
+.ead-h{display:flex;flex-direction:column;gap:2px;margin-bottom:12px}.ead-h b{font-size:18px}
+.ead-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.ead-card{border:2px solid var(--edge);background:var(--surface);padding:10px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:2px 2px 0 var(--drop)}
+.ead-card.lock{opacity:.75}.ead-card p{margin:0}.ead-card .btn{margin-top:auto;align-self:flex-start;font-size:13px}
+.ead-card-h{display:flex;justify-content:space-between;align-items:center}
+.curso-l{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px}
+.curso-nav{border-right:2px solid var(--edge);padding-right:12px}.curso-nav ol{list-style:none;margin:8px 0 0;padding:0}
+.curso-nav button{width:100%;text-align:left;border:0;background:none;padding:6px 8px;font-size:14px}
+.curso-nav button.on{background:var(--hi);color:var(--hi-ink);font-weight:600}
+.curso-c{min-width:0}.curso-nav-b{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.pq{border:2px solid var(--edge);margin:10px 0;padding:8px 12px}.pq legend{font-weight:600;padding:0 4px;white-space:pre-wrap}
+.pq label{display:flex;gap:8px;align-items:flex-start;padding:4px 0;font-size:14px}
+.pq.certo{border-color:var(--money)}.pq.errado{border-color:var(--alert)}.pq-exp{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.dict .tp{font:10px var(--mono);background:var(--surface2);padding:0 4px;margin-right:4px}
+@media (max-width:900px){
+  .tool-main{grid-template-columns:1fr}.dbnav{max-height:160px;border-right:0;border-bottom:1px solid #151820}
+  .cmp{grid-template-columns:1fr}.curso-l{grid-template-columns:1fr}.curso-nav{border-right:0;border-bottom:2px solid var(--edge);padding:0 0 8px}
+  .cell,.out-row{grid-template-columns:44px minmax(0,1fr)}pre.nb-err,.nb .devolveu{margin-left:0}
+}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -577,7 +743,7 @@ table.hist small{display:block;color:var(--muted)}
 <div id="app">
   <header class="hud">
     <div class="brand">SELECT * FROM carreira</div>
-    <div class="hud-stats"><span id="hDay">Dia 1</span><span id="hClock">09:00</span><span id="hMoney">R$ 0</span></div>
+    <div class="hud-stats"><span id="hDay">Dia 1</span><span id="hClock">09:00</span><span id="hMoney">R$ 0</span><button id="btnSom" class="hud-som" aria-label="Desligar música">♪</button></div>
   </header>
   <div class="layout">
     <div class="stage">
@@ -665,56 +831,124 @@ class DF{constructor(cols,rows,index){this.cols=cols;this.rows=rows;this.index=i
 class Series{constructor(name,index,values,indexName,isDefault){this.name=name;this.index=index;this.values=values;this.indexName=indexName||null;this.isDefault=!!isDefault;}}
 class GroupBy{constructor(df,keys,sel,asIndex){this.df=df;this.keys=keys;this.sel=sel;this.asIndex=asIndex!==false;}}
 class Tuple{constructor(items){this.items=items;}}
-class PyDict{constructor(entries){this.entries=entries;}get(k){const e=this.entries.find(x=>x[0]===k);return e?e[1]:undefined;}}
+class PyDict{constructor(entries){this.entries=entries;}get(k){const e=this.entries.find(x=>x[0]===k);return e?e[1]:undefined;}set(k,v){const e=this.entries.find(x=>x[0]===k);if(e)e[1]=v;else this.entries.push([k,v]);}}
 class Bound{constructor(self,name){this.self=self;this.name=name;}}
 class StrAcc{constructor(s){this.s=s;}}
 class LocAcc{constructor(df){this.df=df;}}
-const PD={__pd:true};
+const PD={__pd:true};const NP={__np:true};
+class PyFunc{constructor(name,params,body,closure,isLambda){this.name=name;this.params=params;this.body=body;this.closure=closure;this.isLambda=isLambda;}}
 
 function tokenize(src){
-  const toks=[];let i=0,depth=0;
+  src=src.replace(/\r\n?/g,'\n').replace(/\t/g,'    ');
+  const toks=[];let i=0,depth=0,atStart=true;const stack=[0];
   while(i<src.length){
+    if(atStart&&depth===0){
+      let j=i,col=0;while(src[j]===' '){col++;j++;}
+      if(j>=src.length||src[j]==='\n'||src[j]==='#'){while(j<src.length&&src[j]!=='\n')j++;i=j+1;continue;}
+      if(col>stack[stack.length-1]){stack.push(col);toks.push({t:'indent'});}
+      else{while(col<stack[stack.length-1]){stack.pop();toks.push({t:'dedent'});}if(col!==stack[stack.length-1])throw perr('IndentationError: o recuo desta linha não bate com as linhas anteriores.');}
+      i=j;atStart=false;continue;
+    }
     const c=src[i];
     if(c==='#'){while(i<src.length&&src[i]!=='\n')i++;continue;}
-    if(c==='\n'||c===';'){if(depth===0)toks.push({t:'nl'});i++;continue;}
-    if(/\s/.test(c)){i++;continue;}
+    if(c==='\n'){if(depth===0){toks.push({t:'nl'});atStart=true;}i++;continue;}
+    if(c===';'){if(depth===0)toks.push({t:'nl'});i++;continue;}
+    if(c===' '||c==='\r'){i++;continue;}
     if(c==='\\'&&src[i+1]==='\n'){i+=2;continue;}
     if(/[0-9]/.test(c)||(c==='.'&&/[0-9]/.test(src[i+1]||''))){let j=i;while(j<src.length&&/[0-9._]/.test(src[j]))j++;if(/[eE]/.test(src[j]||'')){j++;if(/[+-]/.test(src[j]))j++;while(/[0-9]/.test(src[j]||''))j++;}toks.push({t:'num',v:parseFloat(src.slice(i,j).replace(/_/g,''))});i=j;continue;}
-    if(c==='"'||c==="'"){let j=i+1,s='';while(j<src.length&&src[j]!==c){if(src[j]==='\n')throw perr('SyntaxError: texto sem fechar aspas');if(src[j]==='\\'){s+=src[j+1];j+=2;}else s+=src[j++];}if(j>=src.length)throw perr('SyntaxError: texto sem fechar aspas');toks.push({t:'str',v:s});i=j+1;continue;}
     if(/[A-Za-z_\u00C0-\u00FF]/.test(c)){let j=i;while(j<src.length&&/[A-Za-z0-9_\u00C0-\u00FF]/.test(src[j]))j++;const w=src.slice(i,j);
-      if((w==='f'||w==='r')&&(src[j]==='"'||src[j]==="'")){if(w==='f')throw perr('f-strings não são suportadas no simulador. Use print(valor) direto.');i=j;continue;}
+      if(/^[fFrRbB]$/.test(w)&&(src[j]==='"'||src[j]==="'")){const r=readStr(src,j);i=r.end;if(w==='f'||w==='F')toks.push({t:'fstr',v:r.s});else toks.push({t:'str',v:r.s});continue;}
       toks.push({t:'name',v:w});i=j;continue;}
+    if(c==='"'||c==="'"){const r=readStr(src,i);toks.push({t:'str',v:r.s});i=r.end;continue;}
     const two=src.slice(i,i+2);
-    if(['==','!=','>=','<=','**','//'].includes(two)){toks.push({t:'op',v:two});i+=2;continue;}
+    if(['==','!=','>=','<=','**','//','+=','-=','*=','/='].includes(two)){toks.push({t:'op',v:two});i+=2;continue;}
     if('([{'.includes(c)){depth++;toks.push({t:'op',v:c});i++;continue;}
     if(')]}'.includes(c)){depth=Math.max(0,depth-1);toks.push({t:'op',v:c});i++;continue;}
     if('+-*/<>=,.:&|~%'.includes(c)){toks.push({t:'op',v:c});i++;continue;}
     throw perr(`SyntaxError: caractere inesperado “${c}”`);
   }
-  toks.push({t:'nl'});toks.push({t:'eof'});return toks;
+  toks.push({t:'nl'});while(stack.length>1){stack.pop();toks.push({t:'dedent'});}
+  toks.push({t:'eof'});return toks;
+}
+function readStr(src,i){
+  const q=src[i];
+  if(src.slice(i,i+3)===q.repeat(3)){const e=src.indexOf(q.repeat(3),i+3);if(e<0)throw perr('SyntaxError: texto com aspas triplas sem fechar');return {s:src.slice(i+3,e),end:e+3};}
+  let j=i+1,s='';
+  while(j<src.length&&src[j]!==q){if(src[j]==='\n')throw perr('SyntaxError: texto sem fechar aspas');if(src[j]==='\\'){const n=src[j+1];s+=n==='n'?'\n':n==='t'?'\t':n;j+=2;}else s+=src[j++];}
+  if(j>=src.length)throw perr('SyntaxError: texto sem fechar aspas');
+  return {s,end:j+1};
 }
 function parse(src){
   const T=tokenize(src);let p=0;
   const peek=(o=0)=>T[p+o];
   const isOp=(v,o=0)=>T[p+o].t==='op'&&T[p+o].v===v;
   const isName=(v,o=0)=>T[p+o].t==='name'&&T[p+o].v===v;
-  const expect=v=>{if(!isOp(v))throw perr(`SyntaxError: esperava “${v}”`+(T[p].t!=='eof'&&T[p].t!=='nl'?` perto de “${T[p].v}”`:''));p++;};
-  const stmts=[];
-  while(peek().t!=='eof'){
-    if(peek().t==='nl'){p++;continue;}
-    if(isName('import')||isName('from')){while(peek().t!=='nl')p++;continue;}
-    const e=expr();
-    if(isOp('=')){p++;const v=expr();stmts.push({k:'assign',target:e,value:v});}
-    else stmts.push({k:'expr',e});
-    if(peek().t!=='nl'&&peek().t!=='eof')throw perr(`SyntaxError: sobrou “${peek().v}” no fim da linha`);
+  const near=()=>T[p].t!=='eof'&&T[p].t!=='nl'&&T[p].v!==undefined?` perto de “${T[p].v}”`:'';
+  const expect=v=>{if(!isOp(v))throw perr(`SyntaxError: esperava “${v}”`+near());p++;};
+  const expectName=v=>{if(!isName(v))throw perr(`SyntaxError: esperava “${v}”`+near());p++;};
+  const KW=['for','if','elif','else','while','def','return','break','continue','pass','in','not','and','or','is','lambda','import','from'];
+  const prog=stmtsUntil(null);
+  return prog;
+  function stmtsUntil(end){
+    const out=[];
+    while(peek().t!=='eof'&&!(end&&peek().t===end)){
+      if(peek().t==='nl'){p++;continue;}
+      if(peek().t==='indent')throw perr('IndentationError: recuo inesperado. Só recue linhas dentro de for, if, def ou while.');
+      out.push(stmt());
+    }
+    return out;
   }
-  return stmts;
-  function expr(){return orE();}
+  function block(){
+    expect(':');
+    if(peek().t!=='nl'){const s=simple();return [s];}
+    while(peek().t==='nl')p++;
+    if(peek().t!=='indent')throw perr('IndentationError: depois de “:” a próxima linha precisa estar recuada (4 espaços).');
+    p++;const b=stmtsUntil('dedent');if(peek().t==='dedent')p++;return b;
+  }
+  function stmt(){
+    if(isName('import')||isName('from')){while(peek().t!=='nl'&&peek().t!=='eof')p++;return {k:'pass'};}
+    if(isName('for')){p++;const names=[];do{if(isOp(','))p++;if(isOp('(')){p++;}if(peek().t!=='name')throw perr('SyntaxError: esperava o nome da variável do for');names.push(T[p++].v);if(isOp(')'))p++;}while(isOp(','));
+      expectName('in');const it=expr();const body=block();return {k:'for',names,it,body};}
+    if(isName('while')){p++;const cond=expr();const body=block();return {k:'while',cond,body};}
+    if(isName('if')){p++;const branches=[];const cond=expr();branches.push([cond,block()]);let els=null;
+      for(;;){while(peek().t==='nl'&&(isName('elif',1)||isName('else',1)))p++;
+        if(isName('elif')){p++;const c=expr();branches.push([c,block()]);continue;}
+        if(isName('else')){p++;els=block();}break;}
+      return {k:'if',branches,els};}
+    if(isName('def')){p++;if(peek().t!=='name')throw perr('SyntaxError: esperava o nome da função');const name=T[p++].v;expect('(');const params=[];
+      while(!isOp(')')){if(peek().t!=='name')throw perr('SyntaxError: parâmetro inválido');const pn=T[p++].v;let def;if(isOp('=')){p++;def=expr();}params.push({n:pn,def});if(isOp(','))p++;else break;}
+      expect(')');const body=block();return {k:'def',name,params,body};}
+    return simple();
+  }
+  function simple(){
+    if(isName('return')){p++;const e=(peek().t==='nl'||peek().t==='eof'||peek().t==='dedent')?null:exprList();return {k:'return',e};}
+    if(isName('break')){p++;return {k:'break'};}
+    if(isName('continue')){p++;return {k:'continue'};}
+    if(isName('pass')){p++;return {k:'pass'};}
+    const e=exprList();
+    let s;
+    if(isOp('=')){p++;const v=exprList();s={k:'assign',target:e,value:v};}
+    else if(peek().t==='op'&&['+=','-=','*=','/='].includes(peek().v)){const op=T[p++].v[0];const v=expr();s={k:'assign',target:e,value:{k:'bin',op,a:e,b:v}};}
+    else s={k:'expr',e};
+    if(peek().t!=='nl'&&peek().t!=='eof'&&peek().t!=='dedent')throw perr(`SyntaxError: sobrou “${peek().v}” no fim da linha`);
+    return s;
+  }
+  function exprList(){const e=expr();if(isOp(',')&&!isOp('=',1)){const items=[e];while(isOp(',')){p++;if(peek().t==='nl'||isOp('='))break;items.push(expr());}return {k:'tuple',items};}return e;}
+  function expr(){
+    if(isName('lambda')){p++;const params=[];while(!isOp(':')){if(peek().t!=='name')throw perr('SyntaxError: lambda inválida');params.push({n:T[p++].v});if(isOp(','))p++;}p++;const body=expr();return {k:'lambda',params,body};}
+    const a=orE();
+    if(isName('if')&&!isOp(':',1)){const save=p;p++;const cond=orE();if(isName('else')){p++;const b=expr();return {k:'ternary',cond,a,b};}p=save;}
+    return a;}
   function orE(){let a=andE();while(isName('or')){p++;a={k:'bool',op:'or',a,b:andE()};}return a;}
   function andE(){let a=notE();while(isName('and')){p++;a={k:'bool',op:'and',a,b:notE()};}return a;}
   function notE(){if(isName('not')){p++;return{k:'un',op:'not',a:notE()};}return cmp();}
   function cmp(){let a=bor();
-    while(peek().t==='op'&&['==','!=','>','<','>=','<='].includes(peek().v)||isName('in')){const op=peek().v;p++;a={k:'bin',op,a,b:bor()};}
+    for(;;){
+      if(peek().t==='op'&&['==','!=','>','<','>=','<='].includes(peek().v)){const op=peek().v;p++;a={k:'bin',op,a,b:bor()};continue;}
+      if(isName('in')){p++;a={k:'bin',op:'in',a,b:bor()};continue;}
+      if(isName('not')&&isName('in',1)){p+=2;a={k:'un',op:'not',a:{k:'bin',op:'in',a,b:bor()}};continue;}
+      if(isName('is')){p++;let neg=false;if(isName('not')){p++;neg=true;}const b=bor();a={k:'bin',op:neg?'isnot':'is',a,b};continue;}
+      break;}
     return a;}
   function bor(){let a=band();while(isOp('|')){p++;a={k:'bin',op:'|',a,b:band()};}return a;}
   function band(){let a=add();while(isOp('&')){p++;a={k:'bin',op:'&',a,b:add()};}return a;}
@@ -724,9 +958,9 @@ function parse(src){
   function pow(){let a=post();if(isOp('**')){p++;return{k:'bin',op:'**',a,b:un()};}return a;}
   function post(){let a=prim();
     for(;;){
-      if(isOp('[')){p++;const items=[];let slice=null;
+      if(isOp('[')){p++;
         if(isOp(':')||(peek(1).t==='op'&&peek(1).v===':')){let s=null,e=null;if(!isOp(':'))s=expr();expect(':');if(!isOp(']'))e=expr();expect(']');a={k:'slice',obj:a,s,e};continue;}
-        items.push(expr());while(isOp(',')){p++;if(isOp(']'))break;items.push(expr());}expect(']');
+        const items=[expr()];while(isOp(',')){p++;if(isOp(']'))break;items.push(expr());}expect(']');
         a={k:'idx',obj:a,key:items.length===1?items[0]:{k:'tuple',items}};}
       else if(isOp('.')){p++;if(peek().t!=='name')throw perr('SyntaxError: esperava um nome depois do ponto');a={k:'attr',obj:a,name:T[p++].v};}
       else if(isOp('(')){p++;const args=[],kwargs={};
@@ -739,13 +973,40 @@ function parse(src){
     return a;}
   function prim(){const t=peek();
     if(t.t==='num'){p++;return{k:'lit',v:t.v};}
-    if(t.t==='str'){p++;let v=t.v;while(peek().t==='str'){v+=T[p++].v;}return{k:'lit',v};}
-    if(t.t==='name'){p++;if(t.v==='True')return{k:'lit',v:true};if(t.v==='False')return{k:'lit',v:false};if(t.v==='None')return{k:'lit',v:null};return{k:'name',v:t.v};}
+    if(t.t==='str'||t.t==='fstr'){
+      const parts=[];
+      while(peek().t==='str'||peek().t==='fstr'){const tk=T[p++];if(tk.t==='str')parts.push({lit:tk.v});else parts.push(...parseF(tk.v));}
+      if(parts.every(x=>x.lit!==undefined))return {k:'lit',v:parts.map(x=>x.lit).join('')};
+      return {k:'fstr',parts};}
+    if(t.t==='name'){
+      if(t.v==='True'){p++;return{k:'lit',v:true};}if(t.v==='False'){p++;return{k:'lit',v:false};}if(t.v==='None'){p++;return{k:'lit',v:null};}
+      if(KW.includes(t.v))throw perr(`SyntaxError: “${t.v}” não pode aparecer aqui`);
+      p++;return{k:'name',v:t.v};}
     if(isOp('(')){p++;if(isOp(')')){p++;return{k:'tuple',items:[]};}const e=expr();if(isOp(',')){const items=[e];while(isOp(',')){p++;if(isOp(')'))break;items.push(expr());}expect(')');return{k:'tuple',items};}expect(')');return e;}
-    if(isOp('[')){p++;const items=[];while(!isOp(']')){items.push(expr());if(isOp(','))p++;else break;}expect(']');return{k:'list',items};}
+    if(isOp('[')){p++;const items=[];
+      if(!isOp(']')){const first=expr();
+        if(isName('for')){p++;const names=[];do{if(isOp(','))p++;names.push(T[p++].v);}while(isOp(','));expectName('in');const it=orE();let cond=null;if(isName('if')){p++;cond=orE();}expect(']');return {k:'listcomp',elt:first,names,it,cond};}
+        items.push(first);if(isOp(','))p++;
+        while(!isOp(']')){items.push(expr());if(isOp(','))p++;else break;}}
+      expect(']');return{k:'list',items};}
     if(isOp('{')){p++;const pairs=[];while(!isOp('}')){const k=expr();expect(':');pairs.push([k,expr()]);if(isOp(','))p++;else break;}expect('}');return{k:'dict',pairs};}
     if(t.t==='nl'||t.t==='eof')throw perr('SyntaxError: a linha terminou antes da hora (falta fechar algo?)');
+    if(t.t==='indent'||t.t==='dedent')throw perr('IndentationError: confira o recuo das linhas.');
     throw perr(`SyntaxError: não esperava “${t.v}” aqui`);}
+  function parseF(s){
+    const parts=[];let i=0,lit='';
+    while(i<s.length){
+      if(s[i]==='{'&&s[i+1]==='{'){lit+='{';i+=2;continue;}
+      if(s[i]==='}'&&s[i+1]==='}'){lit+='}';i+=2;continue;}
+      if(s[i]==='{'){let j=i+1,d=0,q=null;while(j<s.length){const c=s[j];if(q){if(c===q)q=null;}else if(c==='"'||c==="'")q=c;else if('([{'.includes(c))d++;else if(')]}'.includes(c)){if(c==='}'&&d===0)break;d--;}j++;}
+        if(j>=s.length)throw perr('SyntaxError: f-string com { sem fechar }');
+        let inner=s.slice(i+1,j),fmt='';
+        let dd=0,qq=null;for(let k=0;k<inner.length;k++){const c=inner[k];if(qq){if(c===qq)qq=null;continue;}if(c==='"'||c==="'"){qq=c;continue;}if('([{'.includes(c))dd++;else if(')]}'.includes(c))dd--;else if(c===':'&&dd===0){fmt=inner.slice(k+1);inner=inner.slice(0,k);break;}}
+        if(lit){parts.push({lit});lit='';}
+        const sub=parse(inner);if(sub.length!==1||sub[0].k!=='expr')throw perr('SyntaxError: expressão inválida dentro da f-string');
+        parts.push({e:sub[0].e,fmt});i=j+1;continue;}
+      lit+=s[i++];}
+    if(lit)parts.push({lit});return parts;}
 }
 const isNum=v=>typeof v==='number'&&isFinite(v);
 const isNull=v=>v===null||v===undefined||(typeof v==='number'&&isNaN(v));
@@ -796,6 +1057,7 @@ function getItem(o,key){
   if(o instanceof PyDict){const v=o.get(key);if(v===undefined)throw perr(`KeyError: ${key}`);return v;}
   if(Array.isArray(o)){if(typeof key!=='number')throw perr('Listas usam índice numérico.');const v=o[key<0?o.length+key:key];if(v===undefined)throw perr('IndexError: posição fora da lista.');return v;}
   if(o instanceof Tuple)return o.items[key<0?o.items.length+key:key];
+  if(typeof o==='string'){if(typeof key!=='number')throw perr('Texto usa índice numérico.');const c=o[key<0?o.length+key:key];if(c===undefined)throw perr('IndexError: posição fora do texto.');return c;}
   throw perr(`TypeError: ${typeName(o)} não aceita colchetes.`);
 }
 const DF_METHODS=['head','tail','sort_values','groupby','merge','drop_duplicates','dropna','fillna','isnull','isna','notnull','sum','mean','count','max','min','median','nunique','rename','reset_index','copy','drop','pivot_table','describe','info','plot','query','apply','to_csv'];
@@ -823,8 +1085,10 @@ function getAttr(o,n){
     throw perr(`AttributeError: Series não tem “${n}”.`);}
   if(o instanceof GroupBy){if(G_METHODS.includes(n))return new Bound(o,n);if(o.df.cols.includes(n))return new GroupBy(o.df,o.keys,n,o.asIndex);throw perr(`AttributeError: groupby não tem “${n}”. Depois do groupby use sum(), mean(), count(), size() ou agg().`);}
   if(o instanceof StrAcc){if(['contains','upper','lower','strip','startswith','endswith','len','replace'].includes(n))return new Bound(o,n);throw perr(`.str.${n} não é suportado.`);}
-  if(Array.isArray(o)&&['append','count','index'].includes(n))return new Bound(o,n);
-  if(typeof o==='string'&&['upper','lower','strip','replace','startswith'].includes(n))return new Bound(o,n);
+  if(o===NP){if(n==='nan')return null;if(['where','round','mean','sum','max','min','abs','sqrt'].includes(n))return new Bound(NP,n);throw perr(`AttributeError: np.${n} não existe no simulador.`);}
+  if(Array.isArray(o)&&['append','count','index','pop','extend','sort','reverse','insert','copy','remove'].includes(n))return new Bound(o,n);
+  if(typeof o==='string'&&['upper','lower','strip','replace','startswith','endswith','split','join','title','capitalize','count','find','zfill','isdigit','lstrip','rstrip'].includes(n))return new Bound(o,n);
+  if(o instanceof PyDict&&['get','keys','values','items','update','pop','copy'].includes(n))return new Bound(o,n);
   throw perr(`AttributeError: ${typeName(o)} não tem “${n}”.`);
 }
 function elementwise(a,b,f){
@@ -854,7 +1118,12 @@ function binop(op,a,b){
   if(op==='&'||op==='|'){
     const chk=v=>{if(v instanceof Series&&v.values.some(x=>typeof x!=='boolean'))throw perr('Para combinar condições, coloque cada uma entre parênteses: (df["a"] > 1) & (df["b"] == "X")');};
     chk(a);chk(b);return elementwise(a,b,(x,y)=>op==='&'?(!!x&&!!y):(!!x||!!y));}
-  if(op==='in'){const l=toList(b);return l.includes(a);}
+  if(op==='in'){if(typeof b==='string')return b.includes(a);if(b instanceof PyDict)return b.entries.some(e=>e[0]===a);if(b instanceof Series)return b.index.includes(a);const l=toList(b);return l.some(x=>x===a);}
+  if(op==='is')return a===b||(isNull(a)&&isNull(b));
+  if(op==='isnot')return !(a===b||(isNull(a)&&isNull(b)));
+  if(op==='*'&&typeof a==='string'&&typeof b==='number')return a.repeat(Math.max(0,b));
+  if(op==='*'&&Array.isArray(a)&&typeof b==='number'){let r=[];for(let i=0;i<b;i++)r=r.concat(a);return r;}
+  if(op==='%'&&typeof a==='string')throw perr('Formatação com % não é suportada. Use f-strings: f"Total: {valor}"');
   if(['==','!=','>','<','>=','<='].includes(op))return elementwise(a,b,(x,y)=>compare(op,x,y));
   if(Array.isArray(a)&&Array.isArray(b)&&op==='+')return a.concat(b);
   return elementwise(a,b,(x,y)=>arith(op,x,y));
@@ -981,6 +1250,8 @@ function callBound(b,args,kwargs,ctx){
       case 'reset_index':{const nm=kwargs.name||s.name||0;const ic=s.indexName||'index';if(s.isDefault||kwargs.drop)return new Series(s.name,s.values.map((_,i)=>i),s.values.slice(),null,true);return new DF([ic,String(nm)],s.index.map((k,i)=>({[ic]:k,[String(nm)]:s.values[i]})));}
       case 'to_frame':{const nm=s.name||0;if(s.isDefault)return new DF([String(nm)],s.values.map(v=>({[String(nm)]:v})),s.index.slice());const ic=s.indexName||'index';return new DF([ic,String(nm)],s.index.map((k,i)=>({[ic]:k,[String(nm)]:s.values[i]})));}
       case 'plot':throw perr('Gráficos ficam para o Power BI da firma 😉 Aqui, entregue os números.');
+      case 'map':{const m=args[0];if(m instanceof PyDict)return elementwise(s,0,v=>{const r=m.get(v);return r===undefined?null:r;});return elementwise(s,0,v=>chamar(m,[v],ctx));}
+      case 'apply':return elementwise(s,0,v=>chamar(args[0],[v],ctx));
       default:throw perr(`${n}() não é suportado no simulador.`);}
   }
   if(s instanceof GroupBy){
@@ -989,60 +1260,159 @@ function callBound(b,args,kwargs,ctx){
   if(s instanceof StrAcc){
     const v=s.s;const f={contains:x=>typeof x==='string'&&(kwargs.case===false?x.toLowerCase().includes(String(args[0]).toLowerCase()):x.includes(args[0])),upper:x=>typeof x==='string'?x.toUpperCase():x,lower:x=>typeof x==='string'?x.toLowerCase():x,strip:x=>typeof x==='string'?x.trim():x,startswith:x=>typeof x==='string'&&x.startsWith(args[0]),endswith:x=>typeof x==='string'&&x.endsWith(args[0]),len:x=>typeof x==='string'?x.length:null,replace:x=>typeof x==='string'?x.split(args[0]).join(args[1]):x}[n];
     return elementwise(v,0,x=>f(x));}
-  if(Array.isArray(s)){if(n==='append'){s.push(args[0]);return null;}if(n==='count')return s.filter(x=>x===args[0]).length;if(n==='index')return s.indexOf(args[0]);}
-  if(typeof s==='string'){if(n==='upper')return s.toUpperCase();if(n==='lower')return s.toLowerCase();if(n==='strip')return s.trim();if(n==='replace')return s.split(args[0]).join(args[1]);if(n==='startswith')return s.startsWith(args[0]);}
+  if(s===NP){
+    if(n==='where'){const [c,a,b]=args;if(c instanceof Series){return new Series(null,c.index.slice(),c.values.map((v,i)=>{const pick=x=>x instanceof Series?x.values[i]:x;return v?pick(a):pick(b);}),c.indexName,c.isDefault);}return c?a:b;}
+    const f={round:(x,d)=>Math.round(x*10**(d||0))/10**(d||0),abs:Math.abs,sqrt:Math.sqrt}[n];
+    if(f){const x=args[0];if(x instanceof Series)return elementwise(x,0,v=>isNull(v)?v:f(v,args[1]));return f(x,args[1]);}
+    if(['mean','sum','max','min'].includes(n))return aggFn(n,toList(args[0]));}
+  if(Array.isArray(s)){
+    switch(n){case 'append':s.push(args[0]);return null;case 'count':return s.filter(x=>x===args[0]).length;case 'index':{const i=s.indexOf(args[0]);if(i<0)throw perr('ValueError: valor não está na lista');return i;}
+      case 'pop':{if(!s.length)throw perr('IndexError: lista vazia');const i=args.length?args[0]:s.length-1;return s.splice(i<0?s.length+i:i,1)[0];}
+      case 'extend':s.push(...iterar(args[0]));return null;case 'insert':s.splice(args[0],0,args[1]);return null;case 'remove':{const i=s.indexOf(args[0]);if(i<0)throw perr('ValueError: valor não está na lista');s.splice(i,1);return null;}
+      case 'sort':{const key=kwargs.key;s.sort((a,b)=>key?cmpVals(chamar(key,[a],ctx),chamar(key,[b],ctx)):cmpVals(a,b));if(kwargs.reverse)s.reverse();return null;}
+      case 'reverse':s.reverse();return null;case 'copy':return s.slice();}}
+  if(typeof s==='string'){
+    switch(n){case 'upper':return s.toUpperCase();case 'lower':return s.toLowerCase();case 'strip':return s.trim();case 'lstrip':return s.replace(/^\s+/,'');case 'rstrip':return s.replace(/\s+$/,'');
+      case 'replace':return s.split(args[0]).join(args[1]);case 'startswith':return s.startsWith(args[0]);case 'endswith':return s.endsWith(args[0]);
+      case 'split':return args.length&&args[0]!=null?s.split(args[0]):s.trim().split(/\s+/).filter(Boolean);
+      case 'join':return iterar(args[0]).map(x=>{if(typeof x!=='string')throw perr('TypeError: join só junta textos. Use str() nos números.');return x;}).join(s);
+      case 'title':return s.toLowerCase().replace(/(^|\s)\S/g,m=>m.toUpperCase());case 'capitalize':return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
+      case 'count':return s.split(args[0]).length-1;case 'find':return s.indexOf(args[0]);case 'zfill':return s.padStart(args[0],'0');case 'isdigit':return /^\d+$/.test(s);}}
+  if(s instanceof PyDict){
+    switch(n){case 'get':{const v=s.get(args[0]);return v===undefined?(args.length>1?args[1]:null):v;}
+      case 'keys':return s.entries.map(e=>e[0]);case 'values':return s.entries.map(e=>e[1]);case 'items':return s.entries.map(e=>new Tuple([e[0],e[1]]));
+      case 'update':args[0].entries.forEach(([k,v])=>s.set(k,v));return null;case 'pop':{const i=s.entries.findIndex(e=>e[0]===args[0]);if(i<0){if(args.length>1)return args[1];throw perr(`KeyError: ${fmtScalar(args[0])}`);}return s.entries.splice(i,1)[0][1];}
+      case 'copy':return new PyDict(s.entries.map(e=>[e[0],e[1]]));}}
   throw perr(`${n}() não suportado.`);
 }
+function fmtScalar(v){if(v===null||v===undefined)return'None';if(v===true)return'True';if(v===false)return'False';if(typeof v==='number'){if(!isFinite(v))return isNaN(v)?'nan':(v>0?'inf':'-inf');return Number.isInteger(v)?String(v):String(Math.round(v*10000)/10000);}if(Array.isArray(v))return'['+v.map(x=>typeof x==='string'?`'${x}'`:fmtScalar(x)).join(', ')+']';if(v instanceof Tuple)return'('+v.items.map(x=>typeof x==='string'?`'${x}'`:fmtScalar(x)).join(', ')+')';if(v instanceof PyDict)return strPy(v);return String(v);}
+function iterar(v){
+  if(Array.isArray(v))return v.slice();if(v instanceof Tuple)return v.items.slice();if(typeof v==='string')return [...v];
+  if(v instanceof PyDict)return v.entries.map(e=>e[0]);if(v instanceof Series)return v.values.slice();if(v instanceof DF)return v.cols.slice();
+  throw perr(`TypeError: não dá para percorrer ${typeName(v)} com for.`);
+}
+function verdade(v){if(v instanceof Series)throw perr('ValueError: uma Series não é verdadeira nem falsa sozinha. Para filtrar use df[condição]; para testar tudo use .all() ou .any().');if(v instanceof DF)throw perr('ValueError: um DataFrame não é verdadeiro nem falso sozinho.');if(Array.isArray(v))return v.length>0;if(v instanceof PyDict)return v.entries.length>0;if(v instanceof Tuple)return v.items.length>0;if(isNull(v))return false;return !!v;}
+function strPy(v){if(typeof v==='string')return v;if(v instanceof PyDict)return '{'+v.entries.map(([k,x])=>reprPy(k)+': '+reprPy(x)).join(', ')+'}';if(Array.isArray(v))return '['+v.map(reprPy).join(', ')+']';if(v instanceof Tuple)return '('+v.items.map(reprPy).join(', ')+(v.items.length===1?',':'')+')';if(v instanceof PyFunc)return `<function ${v.name}>`;if(v instanceof DF||v instanceof Series)return v;return fmtScalar(v);}
+function reprPy(v){return typeof v==='string'?`'${v}'`:strPy(v);}
+function formatar(v,fmt){
+  if(!fmt)return strPy(v);
+  if(isNull(v))return 'nan';
+  let m=fmt.match(/^([<>^])?(\d+)?(,)?(?:\.(\d+))?([fd%e])?$/);
+  if(!m)throw perr(`Formato “${fmt}” não suportado. Use, por exemplo, {valor:.2f} ou {valor:,.2f}.`);
+  const [,al,w,sep,prec,tp]=m;
+  let s;
+  if(typeof v!=='number'){s=String(v);}
+  else{
+    let x=v;if(tp==='%')x=v*100;
+    const p=prec!=null?+prec:(tp==='f'||tp==='%'?6:(tp==='d'?0:null));
+    s=p!=null?x.toFixed(p):fmtScalar(x);
+    if(sep){const [i,d]=s.split('.');s=i.replace(/\B(?=(\d{3})+(?!\d))/g,',')+(d!==undefined?'.'+d:'');}
+    if(tp==='%')s+='%';
+  }
+  if(w){const n=+w;if(s.length<n){const pad=' '.repeat(n-s.length);s=al==='<'?s+pad:al==='^'?pad.slice(0,pad.length>>1)+s+pad.slice(pad.length>>1):(typeof v==='number'||al==='>'?pad+s:s+pad);}}
+  return s;
+}
 const BUILTINS={
-  len:a=>{const x=a[0];if(x instanceof DF)return x.rows.length;if(x instanceof Series)return x.values.length;if(Array.isArray(x)||typeof x==='string')return x.length;if(x instanceof Tuple)return x.items.length;throw perr('len() não funciona aqui.');},
-  round:a=>{const d=a[1]||0;if(a[0] instanceof Series)return callBound(new Bound(a[0],'round'),[d],{});if(isNull(a[0]))return a[0];return Math.round(a[0]*10**d)/10**d;},
-  sum:a=>toList(a[0]).reduce((x,y)=>x+y,0),
-  max:a=>{const l=a.length>1?a:toList(a[0]);return l.reduce((x,y)=>cmpVals(x,y)>=0?x:y);},
-  min:a=>{const l=a.length>1?a:toList(a[0]);return l.reduce((x,y)=>cmpVals(x,y)<=0?x:y);},
-  abs:a=>Math.abs(a[0]),int:a=>Math.trunc(Number(a[0])),float:a=>Number(a[0]),str:a=>fmtScalar(a[0]),
-  list:a=>a[0] instanceof Series?a[0].values.slice():toList(a[0]).slice(),
-  sorted:a=>[...toList(a[0])].sort(cmpVals),
-  type:a=>`<class '${typeName(a[0])}'>`
+  len:a=>{const x=a[0];if(x instanceof DF)return x.rows.length;if(x instanceof Series)return x.values.length;if(Array.isArray(x)||typeof x==='string')return x.length;if(x instanceof Tuple)return x.items.length;if(x instanceof PyDict)return x.entries.length;throw perr('TypeError: len() não funciona com '+typeName(x)+'.');},
+  round:a=>{const d=a[1]||0;if(a[0] instanceof Series)return callBound(new Bound(a[0],'round'),[d],{});if(isNull(a[0]))return a[0];const r=Math.round(a[0]*10**d)/10**d;return r;},
+  sum:a=>iterar(a[0]).reduce((x,y)=>x+(isNull(y)?0:y),a[1]||0),
+  max:a=>{const l=a.length>1?a:iterar(a[0]);if(!l.length)throw perr('ValueError: max() de lista vazia');return l.reduce((x,y)=>cmpVals(x,y)>=0?x:y);},
+  min:a=>{const l=a.length>1?a:iterar(a[0]);if(!l.length)throw perr('ValueError: min() de lista vazia');return l.reduce((x,y)=>cmpVals(x,y)<=0?x:y);},
+  abs:a=>Math.abs(a[0]),
+  int:a=>{const v=a[0];if(typeof v==='string'){if(!/^\s*-?\d+\s*$/.test(v))throw perr(`ValueError: não dá para converter “${v}” em inteiro.`);return parseInt(v,10);}return Math.trunc(Number(v));},
+  float:a=>{const v=Number(a[0]);if(isNaN(v))throw perr(`ValueError: não dá para converter “${a[0]}” em número.`);return v;},
+  str:a=>strPy(a[0]),bool:a=>verdade(a[0]),
+  list:a=>a.length?iterar(a[0]):[],
+  tuple:a=>new Tuple(a.length?iterar(a[0]):[]),
+  dict:(a,kw)=>{const d=new PyDict([]);if(a.length)iterar(a[0]).forEach(p=>{const it=iterar(p);d.set(it[0],it[1]);});Object.entries(kw||{}).forEach(([k,v])=>d.set(k,v));return d;},
+  set:a=>[...new Set(a.length?iterar(a[0]):[])],
+  sorted:(a,kw,ctx)=>{const l=iterar(a[0]);const key=kw&&kw.key;l.sort((x,y)=>key?cmpVals(chamar(key,[x],ctx),chamar(key,[y],ctx)):cmpVals(x,y));if(kw&&kw.reverse)l.reverse();return l;},
+  range:a=>{let [s,e,st]=a.length===1?[0,a[0],1]:[a[0],a[1],a[2]||1];if(st===0)throw perr('ValueError: passo zero em range()');const r=[];for(let i=s;st>0?i<e:i>e;i+=st){r.push(i);if(r.length>100000)throw perr('range grande demais para o simulador.');}return r;},
+  enumerate:(a,kw)=>{const st=a[1]!=null?a[1]:(kw&&kw.start)||0;return iterar(a[0]).map((v,i)=>new Tuple([i+st,v]));},
+  zip:a=>{const ls=a.map(iterar);const n=Math.min(...ls.map(l=>l.length));const r=[];for(let i=0;i<n;i++)r.push(new Tuple(ls.map(l=>l[i])));return r;},
+  type:a=>`<class '${typeName(a[0])}'>`,
+  isinstance:a=>{const t=a[1];return typeName(a[0])===t;},
+  input:()=>{throw perr('input() não funciona aqui: não tem teclado do outro lado. Coloque o valor direto numa variável.');}
 };
-function fmtScalar(v){if(v===null||v===undefined)return'None';if(v===true)return'True';if(v===false)return'False';if(typeof v==='number'){if(!isFinite(v))return v>0?'inf':'nan';return Number.isInteger(v)?String(v):String(Math.round(v*10000)/10000);}if(Array.isArray(v))return'['+v.map(x=>typeof x==='string'?`'${x}'`:fmtScalar(x)).join(', ')+']';if(v instanceof Tuple)return'('+v.items.map(fmtScalar).join(', ')+')';return String(v);}
+class Sinal{constructor(t,v){this.t=t;this.v=v;}}
+function chamar(f,args,ctx,kwargs){
+  if(f instanceof Bound)return callBound(f,args,kwargs||{},ctx);
+  if(f&&f.builtin==='print'){const sep=kwargs&&kwargs.sep!=null?kwargs.sep:' ';const end=kwargs&&kwargs.end!=null?kwargs.end:'\n';
+    if(args.length===1&&(args[0] instanceof DF||args[0] instanceof Series)){ctx.out.push(args[0]);ctx.lastPrint=args[0];return null;}
+    const txt=args.map(strPy).join(sep);ctx.out.push({txt:txt+end});ctx.lastPrint=args.length===1?args[0]:txt;return null;}
+  if(f&&f.builtin)return BUILTINS[f.builtin](args,kwargs||{},ctx);
+  if(f instanceof PyFunc){
+    if(++ctx.depth>200)throw perr('RecursionError: chamadas demais (a função chama ela mesma sem parar?).');
+    const env=Object.create(f.closure);
+    f.params.forEach((p,i)=>{let v;if(i<args.length)v=args[i];else if(kwargs&&p.n in kwargs)v=kwargs[p.n];else if(p.def!==undefined)v=p.defVal;else throw perr(`TypeError: ${f.name}() precisa do argumento “${p.n}”.`);env[p.n]=v;});
+    if(args.length>f.params.length)throw perr(`TypeError: ${f.name}() recebeu argumentos demais.`);
+    let r=null;
+    if(f.isLambda)r=evalNode(f.body,env,ctx);
+    else{const s=execBlock(f.body,env,ctx);if(s&&s.t==='return')r=s.v;else if(s)throw perr(`SyntaxError: ${s.t} fora de um loop.`);}
+    ctx.depth--;return r;}
+  throw perr(`TypeError: ${typeName(f)} não é uma função.`);
+}
+function atribuir(target,v,env,ctx){
+  if(target.k==='name'){env[target.v]=v;return;}
+  if(target.k==='tuple'){const vals=iterar(v);if(vals.length!==target.items.length)throw perr(`ValueError: esperava ${target.items.length} valores para desempacotar, veio ${vals.length}.`);target.items.forEach((t,i)=>atribuir(t,vals[i],env,ctx));return;}
+  if(target.k==='idx'){const o=evalNode(target.obj,env,ctx);const key=evalNode(target.key,env,ctx);
+    if(o instanceof DF&&typeof key==='string'){const vals=v instanceof Series?v.values:o.rows.map(()=>v);if(vals.length!==o.rows.length)throw perr('A nova coluna precisa ter o mesmo tamanho da tabela.');o.rows=o.rows.map((r,i)=>({...r,[key]:vals[i]}));if(!o.cols.includes(key))o.cols.push(key);return;}
+    if(o instanceof PyDict){o.set(key,v);return;}
+    if(Array.isArray(o)){const i=key<0?o.length+key:key;if(i<0||i>=o.length)throw perr('IndexError: posição fora da lista.');o[i]=v;return;}
+    throw perr('Atribuição com colchetes não suportada para '+typeName(o)+'.');}
+  throw perr('Não dá para atribuir valor a essa expressão.');
+}
+function execBlock(stmts,env,ctx){
+  for(const s of stmts){
+    if(++ctx.passos>300000)throw perr('O código rodou tempo demais (loop infinito?). Confira a condição do while.');
+    switch(s.k){
+      case 'pass':break;
+      case 'expr':{const v=evalNode(s.e,env,ctx);ctx.last=v;ctx.lastIsExpr=!(s.e.k==='call'&&s.e.fn.k==='name'&&s.e.fn.v==='print');break;}
+      case 'assign':{const v=evalNode(s.value,env,ctx);atribuir(s.target,v,env,ctx);ctx.lastIsExpr=false;break;}
+      case 'def':{const f=new PyFunc(s.name,s.params.map(p=>({...p,defVal:p.def!==undefined?evalNode(p.def,env,ctx):undefined})),s.body,env,false);env[s.name]=f;ctx.lastIsExpr=false;break;}
+      case 'return':return new Sinal('return',s.e?evalNode(s.e,env,ctx):null);
+      case 'break':return new Sinal('break');
+      case 'continue':return new Sinal('continue');
+      case 'if':{let done=false;for(const [c,b] of s.branches){if(verdade(evalNode(c,env,ctx))){const r=execBlock(b,env,ctx);if(r)return r;done=true;break;}}
+        if(!done&&s.els){const r=execBlock(s.els,env,ctx);if(r)return r;}ctx.lastIsExpr=false;break;}
+      case 'for':{const it=iterar(evalNode(s.it,env,ctx));
+        for(const v of it){if(s.names.length===1)env[s.names[0]]=v;else atribuir({k:'tuple',items:s.names.map(n=>({k:'name',v:n}))},v,env,ctx);
+          const r=execBlock(s.body,env,ctx);if(r){if(r.t==='break')break;if(r.t==='continue')continue;return r;}}
+        ctx.lastIsExpr=false;break;}
+      case 'while':{while(verdade(evalNode(s.cond,env,ctx))){if(++ctx.passos>300000)throw perr('O código rodou tempo demais (loop infinito?). Confira a condição do while.');const r=execBlock(s.body,env,ctx);if(r){if(r.t==='break')break;if(r.t==='continue')continue;return r;}}ctx.lastIsExpr=false;break;}
+    }
+  }
+  return null;
+}
 function evalNode(n,env,ctx){
   switch(n.k){
     case 'lit':return n.v;
-    case 'name':if(Object.prototype.hasOwnProperty.call(env,n.v))return env[n.v];if(BUILTINS[n.v]||n.v==='print')return{builtin:n.v};throw perr(`NameError: “${n.v}” não foi definido. Tabelas disponíveis: vendas, clientes, campanhas, entregas.`);
+    case 'name':if(n.v in env)return env[n.v];if(BUILTINS[n.v]||n.v==='print')return{builtin:n.v};throw perr(`NameError: “${n.v}” não foi definido. Tabelas disponíveis: vendas, clientes, campanhas, entregas.`);
     case 'list':return n.items.map(x=>evalNode(x,env,ctx));
+    case 'listcomp':{const out=[];const loc=Object.create(env);for(const v of iterar(evalNode(n.it,env,ctx))){if(n.names.length===1)loc[n.names[0]]=v;else atribuir({k:'tuple',items:n.names.map(x=>({k:'name',v:x}))},v,loc,ctx);if(n.cond&&!verdade(evalNode(n.cond,loc,ctx)))continue;out.push(evalNode(n.elt,loc,ctx));}return out;}
     case 'tuple':return new Tuple(n.items.map(x=>evalNode(x,env,ctx)));
     case 'dict':return new PyDict(n.pairs.map(([k,v])=>[evalNode(k,env,ctx),evalNode(v,env,ctx)]));
-    case 'bool':{const a=evalNode(n.a,env,ctx);if(a instanceof Series)throw perr('Com Series use & (e) e | (ou), com parênteses em cada condição, em vez de and/or.');if(n.op==='and')return a?evalNode(n.b,env,ctx):a;return a?a:evalNode(n.b,env,ctx);}
+    case 'fstr':return n.parts.map(p=>p.lit!==undefined?p.lit:formatar(evalNode(p.e,env,ctx),p.fmt)).join('');
+    case 'lambda':return new PyFunc('<lambda>',n.params,n.body,env,true);
+    case 'ternary':return verdade(evalNode(n.cond,env,ctx))?evalNode(n.a,env,ctx):evalNode(n.b,env,ctx);
+    case 'bool':{const a=evalNode(n.a,env,ctx);if(a instanceof Series)throw perr('Com Series use & (e) e | (ou), com parênteses em cada condição, em vez de and/or.');if(n.op==='and')return verdade(a)?evalNode(n.b,env,ctx):a;return verdade(a)?a:evalNode(n.b,env,ctx);}
     case 'bin':return binop(n.op,evalNode(n.a,env,ctx),evalNode(n.b,env,ctx));
-    case 'un':{const a=evalNode(n.a,env,ctx);if(n.op==='-')return elementwise(a,0,v=>isNull(v)?v:-v);if(n.op==='+')return a;if(n.op==='~'){if(a instanceof Series)return elementwise(a,0,v=>!v);return ~a;}if(n.op==='not'){if(a instanceof Series)throw perr('Para negar um filtro use ~ (til).');return !a;}}
+    case 'un':{const a=evalNode(n.a,env,ctx);if(n.op==='-')return elementwise(a,0,v=>isNull(v)?v:-v);if(n.op==='+')return a;if(n.op==='~'){if(a instanceof Series)return elementwise(a,0,v=>!v);return ~a;}if(n.op==='not'){if(a instanceof Series)throw perr('Para negar um filtro use ~ (til).');return !verdade(a);}}
     case 'idx':return getItem(evalNode(n.obj,env,ctx),evalNode(n.key,env,ctx));
     case 'slice':{const o=evalNode(n.obj,env,ctx);const s=n.s?evalNode(n.s,env,ctx):0;const e=n.e?evalNode(n.e,env,ctx):undefined;if(o instanceof DF)return new DF(o.cols.slice(),o.rows.slice(s,e),o.index.slice(s,e));if(o instanceof Series)return new Series(o.name,o.index.slice(s,e),o.values.slice(s,e),o.indexName,o.isDefault);if(Array.isArray(o)||typeof o==='string')return o.slice(s,e);throw perr('Fatiamento não suportado aqui.');}
     case 'attr':return getAttr(evalNode(n.obj,env,ctx),n.name);
-    case 'call':{const f=evalNode(n.fn,env,ctx);const args=n.args.map(x=>evalNode(x,env,ctx));const kwargs={};for(const k in n.kwargs)kwargs[k]=evalNode(n.kwargs[k],env,ctx);
-      if(f instanceof Bound)return callBound(f,args,kwargs,ctx);
-      if(f&&f.builtin==='print'){ctx.out.push(args.length===1?args[0]:args.map(fmtScalar).join(' '));ctx.lastPrint=args.length===1?args[0]:undefined;return null;}
-      if(f&&f.builtin)return BUILTINS[f.builtin](args,kwargs);
-      throw perr(`TypeError: ${typeName(f)} não é uma função.`);}
+    case 'call':{const f=evalNode(n.fn,env,ctx);const args=n.args.map(x=>evalNode(x,env,ctx));const kwargs={};for(const k in n.kwargs)kwargs[k]=evalNode(n.kwargs[k],env,ctx);return chamar(f,args,ctx,kwargs);}
   }
   throw perr('Expressão não suportada.');
 }
-function cloneTables(){const env={pd:PD};for(const t in DATA){const rows=DATA[t].map(r=>({...r}));env[t]=new DF(Object.keys(DATA[t][0]),rows);}return env;}
+function cloneTables(){const env={pd:PD,np:NP};for(const t in DATA){const rows=DATA[t].map(r=>({...r}));env[t]=new DF(Object.keys(DATA[t][0]),rows);}return env;}
 function runPython(code){
-  const env=cloneTables();const ctx={out:[],lastPrint:undefined};
-  const stmts=parse(code);let last;let hasValue=false;
-  for(const s of stmts){
-    if(s.k==='assign'){
-      const v=evalNode(s.value,env,ctx);
-      if(s.target.k==='name')env[s.target.v]=v;
-      else if(s.target.k==='idx'){const o=evalNode(s.target.obj,env,ctx);const key=evalNode(s.target.key,env,ctx);
-        if(o instanceof DF&&typeof key==='string'){const vals=v instanceof Series?v.values:o.rows.map(()=>v);if(vals.length!==o.rows.length)throw perr('A nova coluna precisa ter o mesmo tamanho da tabela.');o.rows=o.rows.map((r,i)=>({...r,[key]:vals[i]}));if(!o.cols.includes(key))o.cols.push(key);}
-        else throw perr('Só dá para atribuir colunas assim: df["nova"] = ...');}
-      else throw perr('Atribuição não suportada.');
-      last=undefined;hasValue=false;
-    }else{last=evalNode(s.e,env,ctx);hasValue=!(s.e.k==='call'&&s.e.fn.k==='name'&&s.e.fn.v==='print');}
-  }
-  let result=hasValue?last:ctx.lastPrint;
-  return {result,prints:ctx.out,hasResult:result!==undefined};
+  const env=cloneTables();const ctx={out:[],lastPrint:undefined,last:undefined,lastIsExpr:false,passos:0,depth:0};
+  const stmts=parse(code);
+  const r=execBlock(stmts,env,ctx);
+  if(r)throw perr(`SyntaxError: “${r.t}” fora de função ou loop.`);
+  const result=ctx.lastIsExpr?ctx.last:ctx.lastPrint;
+  return {result,prints:ctx.out,fromPrint:!ctx.lastIsExpr,hasResult:result!==undefined&&!(ctx.lastIsExpr&&ctx.last===null&&!ctx.out.length)};
 }
 
 /* ============ SQL (alasql) ============ */
@@ -1448,6 +1818,631 @@ const FALAS={
 if(typeof module!=='undefined')module.exports={MISSOES,RECORRENTES,MISSOES_EVENTO};
 MISSOES.forEach(m=>{if(!m.lang&&m.kind!=='quiz')m.lang=m.kind;});
 
+/* ============ MENTORA TEREZA: aulas diárias ============
+ Formato de bloco:
+   ['p', texto]                    parágrafo (aceita `código` e **negrito**)
+   ['code', 'sql'|'py'|'txt', código]  exemplo (sql e py são executáveis)
+   ['cmp', sql, py, legenda]       mesma consulta em SQL e em pandas, lado a lado
+   ['tip', texto]                  dica destacada
+   ['list', [itens]]               lista curta
+*/
+NPCS.tereza={nome:'Tereza',cargo:'Cientista de Dados Sênior',dept:'Dados',skin:'#8d5a3b',hair:'#1f1610',shirt:'#2a9d8f',pants:'#3b3561',long:true,glasses:true};
+FALAS.tereza=['Código bom é código que outra pessoa entende. Inclusive você daqui a seis meses.','Errar a query é normal. Entregar sem conferir é que não pode.','Antes de abrir o Python, me diz: qual pergunta de negócio você quer responder?','SQL e pandas são duas línguas para a mesma conversa.'];
+
+const TEREZA=[
+ {id:'t01',titulo:'Python é uma calculadora com memória',skill:'py',blocos:[
+  ['p','Em SQL você pede dados para o banco. Em Python você guarda valores em **variáveis** e faz contas com elas. Uma variável é só um nome que aponta para um valor.'],
+  ['code','py',`faturamento = 108330
+pedidos = 60
+ticket = faturamento / pedidos
+print(f"Ticket médio: R$ {ticket:.2f}")`],
+  ['p','O `f` antes das aspas cria uma **f-string**: tudo que estiver entre `{ }` vira o valor da variável. O `:.2f` formata com 2 casas decimais.'],
+  ['tip','Nomes de variáveis em Python usam letras minúsculas e _ no lugar de espaço: `ticket_medio`, não `Ticket Médio`.']],
+  desafio:{lang:'py',enunciado:'Crie `investimento = 5000` e `receita = 12000`, calcule o ROI, que é (receita − investimento) ÷ investimento, e deixe `roi` sozinho na última linha.',starter:'investimento = 5000\nreceita = 12000\n',solution:'investimento = 5000\nreceita = 12000\nroi = (receita - investimento) / investimento\nroi'}},
+ {id:'t02',titulo:'Listas: a coluna antes da coluna',skill:'py',blocos:[
+  ['p','Uma **lista** guarda vários valores em ordem, entre colchetes. Pense nela como uma coluna de tabela sem nome.'],
+  ['code','py',`pedidos = [120, 340, 90, 510]
+print(len(pedidos))   # quantos itens: COUNT
+print(sum(pedidos))   # soma: SUM
+print(max(pedidos))   # maior: MAX
+pedidos[0]            # o primeiro item (começa no zero!)`],
+  ['tip','Em Python a contagem começa no **zero**: `pedidos[0]` é o primeiro, `pedidos[-1]` é o último.']],
+  desafio:{lang:'py',enunciado:'Calcule a média da lista `[120, 340, 90, 510]` usando `sum` e `len`.',starter:'pedidos = [120, 340, 90, 510]\n',solution:'pedidos = [120, 340, 90, 510]\nsum(pedidos) / len(pedidos)'}},
+ {id:'t03',titulo:'Dicionários: chave e valor',skill:'py',blocos:[
+  ['p','Um **dicionário** liga uma chave a um valor, como uma linha com nomes de colunas. Fica entre chaves `{ }`.'],
+  ['code','py',`metas = {"Ana": 40000, "Bruno": 30000, "Carla": 45000}
+print(metas["Carla"])
+metas["Diego"] = 25000      # adiciona uma chave nova
+for nome, meta in metas.items():
+    print(f"{nome}: R$ {meta}")`],
+  ['p','Um DataFrame do pandas é, no fundo, um monte de colunas com nome, como um dicionário de listas.']],
+  desafio:{lang:'py',enunciado:'No dicionário `metas`, devolva a meta do Bruno.',starter:'metas = {"Ana": 40000, "Bruno": 30000}\n',solution:'metas = {"Ana": 40000, "Bruno": 30000}\nmetas["Bruno"]'}},
+ {id:'t04',titulo:'for: repetindo sem copiar e colar',skill:'py',blocos:[
+  ['p','O `for` percorre uma lista item por item. Tudo que estiver **recuado** (4 espaços) embaixo dele roda uma vez para cada item.'],
+  ['code','py',`valores = [80, 3500, 150, 1200]
+total_grandes = 0
+for v in valores:
+    if v > 1000:
+        total_grandes += v
+print(total_grandes)`],
+  ['tip','O recuo não é enfeite: é ele que diz ao Python o que está dentro do `for`. Errou o recuo, mudou o programa.']],
+  desafio:{lang:'py',enunciado:'Some apenas os valores acima de 100 da lista `[80, 3500, 150, 1200, 95]`. Deixe o total na última linha.',starter:'valores = [80, 3500, 150, 1200, 95]\ntotal = 0\n',solution:'valores = [80, 3500, 150, 1200, 95]\ntotal = 0\nfor v in valores:\n    if v > 100:\n        total += v\ntotal'}},
+ {id:'t05',titulo:'if, elif, else: o CASE WHEN do Python',skill:'py',blocos:[
+  ['p','Você já conhece o `CASE WHEN`. Em Python a mesma lógica usa `if`, `elif` (senão, se) e `else`.'],
+  ['cmp',`SELECT valor,
+  CASE WHEN valor >= 3000 THEN 'Alto'
+       WHEN valor >= 1000 THEN 'Médio'
+       ELSE 'Baixo' END AS faixa
+FROM vendas LIMIT 5`,`def faixa(v):
+    if v >= 3000:
+        return "Alto"
+    elif v >= 1000:
+        return "Médio"
+    else:
+        return "Baixo"
+
+vendas["faixa"] = vendas["valor"].apply(faixa)
+vendas[["valor", "faixa"]].head()`,'O `apply` aplica a função em cada linha da coluna.']],
+  desafio:{lang:'py',enunciado:'Escreva `classificar(v)` que devolve "Alto" se v ≥ 3000 e "Baixo" caso contrário. Na última linha, chame `classificar(4500)`.',starter:'def classificar(v):\n    ',solution:'def classificar(v):\n    if v >= 3000:\n        return "Alto"\n    return "Baixo"\nclassificar(4500)'}},
+ {id:'t06',titulo:'Funções: escreva uma vez, use sempre',skill:'py',blocos:[
+  ['p','Se você faz a mesma conta toda semana, transforme em **função** com `def`. Ela recebe valores (parâmetros) e devolve um resultado com `return`.'],
+  ['code','py',`def ticket_medio(faturamento, pedidos):
+    if pedidos == 0:
+        return 0          # evita divisão por zero
+    return faturamento / pedidos
+
+print(ticket_medio(108330, 60))
+print(ticket_medio(0, 0))`],
+  ['tip','Uma função boa faz uma coisa só e tem um nome que diz o quê. `calcula_tudo()` é um alerta.']],
+  desafio:{lang:'py',enunciado:'Crie `roi(receita, investimento)` que devolve (receita − investimento) ÷ investimento. Na última linha, chame `roi(12000, 5000)`.',starter:'def roi(receita, investimento):\n    ',solution:'def roi(receita, investimento):\n    return (receita - investimento) / investimento\nroi(12000, 5000)'}},
+ {id:'t07',titulo:'DataFrame: a tabela do SQL dentro do Python',skill:'py',blocos:[
+  ['p','No pandas, uma tabela é um **DataFrame**. As tabelas da empresa já estão carregadas com os mesmos nomes do banco: `vendas`, `clientes`, `campanhas` e `entregas`.'],
+  ['cmp','SELECT * FROM vendas LIMIT 5','vendas.head()','`head()` mostra as 5 primeiras linhas, como LIMIT 5.'],
+  ['code','py',`print(vendas.shape)     # (linhas, colunas)
+print(vendas.columns)   # nomes das colunas
+vendas.dtypes           # tipo de cada coluna`],
+  ['tip','`shape` não tem parênteses: é uma informação guardada, não uma ação. `head()` tem, porque executa algo.']],
+  desafio:{lang:'py',enunciado:'Quantas linhas tem a tabela `clientes`? Devolva o número.',starter:'',solution:'len(clientes)'}},
+ {id:'t08',titulo:'SELECT de colunas',skill:'py',blocos:[
+  ['p','Para escolher colunas, passe uma **lista de nomes** entre colchetes. Por isso aparecem dois pares: um do DataFrame e outro da lista.'],
+  ['cmp','SELECT produto, valor FROM vendas',`vendas[["produto", "valor"]]`],
+  ['p','Com um nome só, sem lista, você recebe uma **Series**, uma coluna sozinha: `vendas["valor"]`. Ela já tem `.sum()`, `.mean()` e companhia.'],
+  ['code','py',`vendas["valor"].sum()`]],
+  desafio:{lang:'py',enunciado:'Selecione as colunas `nome` e `estado` da tabela `clientes`.',starter:'',solution:'clientes[["nome", "estado"]]'}},
+ {id:'t09',titulo:'WHERE vira filtro com colchetes',skill:'py',blocos:[
+  ['p','O filtro do pandas tem duas partes: a **condição** (que gera Verdadeiro/Falso para cada linha) e os colchetes que mantêm só as linhas verdadeiras.'],
+  ['cmp',"SELECT * FROM vendas WHERE canal = 'App'",`vendas[vendas["canal"] == "App"]`,'Em Python, igualdade é `==`. Um `=` só é para guardar valores.'],
+  ['code','py',`condicao = vendas["valor"] > 3000
+print(condicao.head())        # True / False por linha
+vendas[condicao].head()`]],
+  desafio:{lang:'py',enunciado:'Filtre as campanhas do canal "TikTok" (todas as colunas).',starter:'',solution:'campanhas[campanhas["canal"] == "TikTok"]'}},
+ {id:'t10',titulo:'AND e OR: & e | com parênteses',skill:'py',blocos:[
+  ['p','No pandas, `AND` vira `&` e `OR` vira `|`. E cada condição precisa estar **entre parênteses**, senão o Python calcula na ordem errada.'],
+  ['cmp',"SELECT * FROM vendas\nWHERE canal = 'Site' AND valor > 1000",`vendas[(vendas["canal"] == "Site") & (vendas["valor"] > 1000)]`],
+  ['cmp',"SELECT * FROM vendas\nWHERE regiao IN ('Sul', 'Norte')",`vendas[vendas["regiao"].isin(["Sul", "Norte"])]`,'`IN` vira `.isin([...])`.'],
+  ['tip','O erro mais comum de quem vem do SQL: escrever `and` em vez de `&`. Com tabelas, use sempre `&`, `|` e `~` (NOT).']],
+  desafio:{lang:'py',enunciado:'Filtre as vendas do canal "Site" com valor acima de 1000.',starter:'',solution:'vendas[(vendas["canal"] == "Site") & (vendas["valor"] > 1000)]'}},
+ {id:'t11',titulo:'GROUP BY vira groupby',skill:'py',blocos:[
+  ['p','A ideia é a mesma: separar em grupos e resumir cada um. A ordem é: **agrupar → escolher a coluna → agregar**.'],
+  ['cmp','SELECT regiao, SUM(valor)\nFROM vendas\nGROUP BY regiao',`vendas.groupby("regiao")["valor"].sum()`],
+  ['p','O resultado é uma Series com a região no **índice**. Se quiser uma tabela normal, com a região como coluna, adicione `.reset_index()`.'],
+  ['code','py',`vendas.groupby("regiao")["valor"].sum().reset_index()`]],
+  desafio:{lang:'py',enunciado:'Some a `quantidade` vendida por `categoria`.',starter:'',solution:'vendas.groupby("categoria")["quantidade"].sum()'}},
+ {id:'t12',titulo:'Várias contas de uma vez: agg',skill:'py',blocos:[
+  ['p','Em SQL você escreve vários `SUM`, `COUNT` e `AVG` no mesmo SELECT, cada um com seu `AS`. No pandas, o `agg` faz isso dando nome a cada resultado.'],
+  ['cmp','SELECT canal,\n  SUM(valor) AS total,\n  COUNT(id)  AS pedidos,\n  AVG(valor) AS ticket\nFROM vendas GROUP BY canal',`vendas.groupby("canal").agg(
+    total=("valor", "sum"),
+    pedidos=("id", "count"),
+    ticket=("valor", "mean")
+)`,'Cada linha do agg é `nome=("coluna", "função")`.']],
+  desafio:{lang:'py',enunciado:'Por `vendedor`, calcule `total` (soma de valor) e `pedidos` (contagem de id).',starter:'',solution:'vendas.groupby("vendedor").agg(total=("valor", "sum"), pedidos=("id", "count"))'}},
+ {id:'t13',titulo:'ORDER BY e LIMIT',skill:'py',blocos:[
+  ['cmp','SELECT produto, valor FROM vendas\nORDER BY valor DESC\nLIMIT 3',`vendas.sort_values("valor", ascending=False)[["produto", "valor"]].head(3)`,'`ascending=False` é o DESC.'],
+  ['p','Num resultado de groupby, use `sort_values` direto na Series:'],
+  ['code','py',`vendas.groupby("produto")["valor"].sum().sort_values(ascending=False).head(3)`]],
+  desafio:{lang:'py',enunciado:'Mostre as 3 regiões com maior faturamento (soma de valor), da maior para a menor.',starter:'',solution:'vendas.groupby("regiao")["valor"].sum().sort_values(ascending=False).head(3)',ordered:true}},
+ {id:'t14',titulo:'JOIN vira merge',skill:'py',blocos:[
+  ['p','`merge` junta duas tabelas pela chave. Quando as colunas têm nomes diferentes, use `left_on` e `right_on`.'],
+  ['cmp','SELECT c.segmento, SUM(v.valor)\nFROM vendas v\nJOIN clientes c ON v.cliente_id = c.id\nGROUP BY c.segmento',`juntas = pd.merge(vendas, clientes, left_on="cliente_id", right_on="id")
+juntas.groupby("segmento")["valor"].sum()`],
+  ['tip','Se as duas tabelas tiverem colunas com o mesmo nome (como `id`), o pandas renomeia para `id_x` e `id_y`. Não se assuste.']],
+  desafio:{lang:'py',enunciado:'Junte vendas e clientes e some o `valor` por `estado`.',starter:'',solution:'pd.merge(vendas, clientes, left_on="cliente_id", right_on="id").groupby("estado")["valor"].sum()'}},
+ {id:'t15',titulo:'Quem ficou de fora: anti-join',skill:'py',blocos:[
+  ['p','Em SQL, para achar clientes sem compras, usamos `LEFT JOIN ... WHERE v.id IS NULL` ou `NOT IN`. No pandas, o jeito mais direto é `isin` com `~` (NOT).'],
+  ['cmp','SELECT nome FROM clientes\nWHERE id NOT IN (SELECT cliente_id FROM vendas)',`clientes[~clientes["id"].isin(vendas["cliente_id"])]["nome"]`]],
+  desafio:{lang:'py',enunciado:'Liste o `nome` dos clientes que nunca compraram.',starter:'',solution:'clientes[~clientes["id"].isin(vendas["cliente_id"])]["nome"]'}},
+ {id:'t16',titulo:'Nulos: o vazio que engana',skill:'py',blocos:[
+  ['p','Dado vazio aparece como `NaN` no pandas (é o `NULL` do SQL). Antes de qualquer análise, conte os vazios.'],
+  ['code','py',`entregas.isnull().sum()`],
+  ['p','Funções como `mean()` e `sum()` **ignoram** os vazios, como o AVG do SQL. Para trocar o vazio por um valor use `fillna`; para remover a linha, `dropna`.'],
+  ['code','py',`print(entregas["dias_reais"].mean())
+print(entregas["dias_reais"].fillna(0).mean())   # média muda!`],
+  ['tip','Preencher vazio com zero quase sempre distorce a média. Antes, pergunte por que o dado está vazio.']],
+  desafio:{lang:'py',enunciado:'Calcule a média de `dias_reais` das entregas (ignorando os vazios).',starter:'',solution:'entregas["dias_reais"].mean()'}},
+ {id:'t17',titulo:'COUNT DISTINCT e value_counts',skill:'py',blocos:[
+  ['cmp','SELECT COUNT(DISTINCT produto) FROM vendas',`vendas["produto"].nunique()`],
+  ['cmp','SELECT canal, COUNT(*) FROM vendas\nGROUP BY canal ORDER BY 2 DESC',`vendas["canal"].value_counts()`,'`value_counts` já conta e ordena do maior para o menor.']],
+  desafio:{lang:'py',enunciado:'Quantas transportadoras diferentes aparecem em `entregas`?',starter:'',solution:'entregas["transportadora"].nunique()'}},
+ {id:'t18',titulo:'Percentual do total',skill:'negocio',blocos:[
+  ['p','Número absoluto sozinho não diz muito. Participação no total responde “quanto isso pesa?”.'],
+  ['cmp','SELECT regiao,\n  SUM(valor) * 100.0 / (SELECT SUM(valor) FROM vendas) AS pct\nFROM vendas GROUP BY regiao',`(vendas.groupby("regiao")["valor"].sum() / vendas["valor"].sum() * 100).round(1)`],
+  ['code','py',`vendas["canal"].value_counts(normalize=True)   # já em proporção`]],
+  desafio:{lang:'py',enunciado:'Qual o percentual de pedidos de cada canal? (Dica: `value_counts(normalize=True)` vezes 100.)',starter:'',solution:'vendas["canal"].value_counts(normalize=True) * 100'}},
+ {id:'t19',titulo:'Média ou mediana?',skill:'negocio',blocos:[
+  ['p','A **média** soma tudo e divide; a **mediana** é o valor do meio da fila. Quando poucos valores são enormes (como notebooks no meio de mouses), a média sobe e deixa de representar o caso típico.'],
+  ['code','py',`print(f"Média:   R$ {vendas['valor'].mean():,.0f}")
+print(f"Mediana: R$ {vendas['valor'].median():,.0f}")`],
+  ['tip','Use a mediana para descrever o cliente típico e a média para projetar receita total.']],
+  desafio:{lang:'py',enunciado:'Calcule a mediana do `valor` das vendas.',starter:'',solution:'vendas["valor"].median()'}},
+ {id:'t20',titulo:'Taxa de conversão do jeito certo',skill:'negocio',blocos:[
+  ['p','Para taxa geral, **some antes de dividir**. A média das taxas dá o mesmo peso para uma campanha com 100 cliques e outra com 20 mil.'],
+  ['code','py',`certa = campanhas["conversoes"].sum() / campanhas["cliques"].sum()
+errada = (campanhas["conversoes"] / campanhas["cliques"]).mean()
+print(f"Somando antes: {certa:.2%}")
+print(f"Média das taxas: {errada:.2%}")`]],
+  desafio:{lang:'py',enunciado:'Calcule a taxa de conversão geral: soma de conversões ÷ soma de cliques.',starter:'',solution:'campanhas["conversoes"].sum() / campanhas["cliques"].sum()'}}
+];
+
+/* ============ CURSOS: aulas + prova final ============ */
+const CURSOS={
+ c_sql1:{aulas:[
+  {titulo:'SELECT e FROM: pedindo dados ao banco',blocos:[
+   ['p','Toda consulta começa dizendo **o que** você quer (SELECT) e **de onde** (FROM). O banco devolve uma tabela.'],
+   ['code','sql','SELECT produto, valor\nFROM vendas\nLIMIT 5'],
+   ['p','`LIMIT` corta o resultado. Use sempre que estiver explorando: em produção, tabelas podem ter milhões de linhas.'],
+   ['tip','`SELECT *` traz todas as colunas. É ótimo para espiar a tabela, mas em relatório escolha só as colunas que precisa: fica mais rápido e mais claro.']]},
+  {titulo:'WHERE: filtrando linhas',blocos:[
+   ['p','O `WHERE` mantém só as linhas que passam na condição. Texto vai entre **aspas simples**.'],
+   ['code','sql',"SELECT * FROM vendas\nWHERE canal = 'App' AND valor > 1000"],
+   ['list',['`=`, `<>`, `>`, `<`, `>=`, `<=`: comparações','`AND`, `OR`, `NOT`: combinam condições','`IN (\'Sul\', \'Norte\')`: está na lista','`BETWEEN 1000 AND 3000`: dentro do intervalo','`LIKE \'Note%\'`: começa com “Note”']],
+   ['code','sql',"SELECT produto, valor FROM vendas\nWHERE regiao IN ('Sul', 'Norte')\n  AND valor BETWEEN 1000 AND 4000"]]},
+  {titulo:'Agregações: resumindo números',blocos:[
+   ['p','Funções de agregação transformam muitas linhas em um número: `COUNT` (conta), `SUM` (soma), `AVG` (média), `MIN` e `MAX`.'],
+   ['code','sql','SELECT COUNT(*) AS pedidos,\n       SUM(valor) AS faturamento,\n       AVG(valor) AS ticket_medio,\n       MAX(valor) AS maior_pedido\nFROM vendas'],
+   ['tip','`AS` dá nome à coluna do resultado. Nome claro é meio caminho para quem vai ler o relatório.']]},
+  {titulo:'GROUP BY e HAVING',blocos:[
+   ['p','`GROUP BY` faz a agregação **por grupo**. Toda coluna no SELECT que não está agregada precisa estar no GROUP BY.'],
+   ['code','sql','SELECT vendedor, SUM(valor) AS total\nFROM vendas\nGROUP BY vendedor'],
+   ['p','`HAVING` filtra **depois** de agrupar. `WHERE` filtra **antes**. Por isso condição sobre SUM ou COUNT vai no HAVING.'],
+   ['code','sql',"SELECT vendedor, SUM(valor) AS total\nFROM vendas\nWHERE canal <> 'Loja'\nGROUP BY vendedor\nHAVING SUM(valor) > 20000"]]},
+  {titulo:'JOIN: juntando tabelas',blocos:[
+   ['p','As informações ficam espalhadas: o pedido está em `vendas`, o segmento do cliente em `clientes`. O `JOIN` liga as duas pela chave.'],
+   ['code','sql','SELECT c.segmento, COUNT(*) AS pedidos, SUM(v.valor) AS total\nFROM vendas v\nJOIN clientes c ON v.cliente_id = c.id\nGROUP BY c.segmento'],
+   ['p','`v` e `c` são apelidos das tabelas. `JOIN` (ou INNER JOIN) mantém só quem existe nos dois lados. `LEFT JOIN` mantém tudo da tabela da esquerda, mesmo sem par.'],
+   ['tip','Antes de confiar num JOIN, conte as linhas antes e depois. Se aumentou sem motivo, a chave tem duplicados.']]}
+  ],quiz:[
+  {q:'Você quer o faturamento por região, só das regiões que passam de R$ 30 mil. Onde vai a condição do total?',o:['HAVING SUM(valor) > 30000','WHERE SUM(valor) > 30000','ORDER BY SUM(valor) > 30000'],a:0,e:'Condição sobre agregação vai no HAVING, que roda depois do GROUP BY.'},
+  {q:'Qual consulta traz pedidos do Sul OU do Norte?',o:["WHERE regiao IN ('Sul', 'Norte')","WHERE regiao = 'Sul' AND regiao = 'Norte'","WHERE regiao = 'Sul, Norte'"],a:0,e:'IN testa se o valor está na lista. AND exigiria as duas regiões ao mesmo tempo, o que nunca acontece.'},
+  {q:'Depois de um JOIN, o número de linhas dobrou sem explicação. O que provavelmente aconteceu?',o:['A chave tem valores duplicados em uma das tabelas','O banco está lento','Faltou um LIMIT'],a:0,e:'Cada linha casa com todas as linhas de mesma chave do outro lado. Chave duplicada multiplica linhas.'}]},
+
+ c_py1:{aulas:[
+  {titulo:'DataFrame e Series',blocos:[
+   ['p','**DataFrame** é a tabela. **Series** é uma coluna. As tabelas da empresa já estão carregadas: `vendas`, `clientes`, `campanhas`, `entregas`.'],
+   ['code','py','print(vendas.shape)\nvendas.head()'],
+   ['code','py','coluna = vendas["valor"]   # isto é uma Series\nprint(coluna.sum(), coluna.mean(), coluna.max())']]},
+  {titulo:'Selecionar e filtrar',blocos:[
+   ['cmp','SELECT produto, valor FROM vendas','vendas[["produto", "valor"]]'],
+   ['cmp',"SELECT * FROM vendas WHERE valor > 3000 AND canal = 'Site'",'vendas[(vendas["valor"] > 3000) & (vendas["canal"] == "Site")]','Cada condição entre parênteses, e & no lugar de AND.'],
+   ['tip','Leia `vendas[condição]` como “vendas, onde condição”.']]},
+  {titulo:'groupby e agg',blocos:[
+   ['cmp','SELECT regiao, SUM(valor) FROM vendas GROUP BY regiao','vendas.groupby("regiao")["valor"].sum()'],
+   ['cmp','SELECT regiao, SUM(valor) AS total, COUNT(id) AS pedidos\nFROM vendas GROUP BY regiao','vendas.groupby("regiao").agg(total=("valor", "sum"), pedidos=("id", "count"))'],
+   ['p','Funções disponíveis no agg: `sum`, `mean`, `count`, `min`, `max`, `median`, `nunique`.']]},
+  {titulo:'Ordenar, top N e contagens',blocos:[
+   ['cmp','SELECT produto, SUM(valor) AS total FROM vendas\nGROUP BY produto ORDER BY total DESC LIMIT 3','vendas.groupby("produto")["valor"].sum().sort_values(ascending=False).head(3)'],
+   ['code','py','vendas["canal"].value_counts()'],
+   ['tip','`value_counts()` é o atalho para “quantos de cada?”. Com `normalize=True` devolve proporções.']]},
+  {titulo:'merge: o JOIN do pandas',blocos:[
+   ['cmp','SELECT * FROM vendas v JOIN clientes c ON v.cliente_id = c.id','pd.merge(vendas, clientes, left_on="cliente_id", right_on="id")'],
+   ['p','Use `how="left"` para um LEFT JOIN. Depois do merge, você pode filtrar e agrupar normalmente.'],
+   ['code','py','juntas = pd.merge(vendas, clientes, left_on="cliente_id", right_on="id")\njuntas.groupby("segmento")["valor"].mean().round(2)']]}
+  ],quiz:[
+  {q:'Como filtrar vendas do App com valor acima de 1000?',o:['vendas[(vendas["canal"] == "App") & (vendas["valor"] > 1000)]','vendas[vendas["canal"] == "App" and vendas["valor"] > 1000]','vendas.where(canal = "App", valor > 1000)'],a:0,e:'Com tabelas use & e parênteses em cada condição. and não funciona com colunas inteiras.'},
+  {q:'O que `vendas.groupby("canal")["valor"].mean()` devolve?',o:['O ticket médio de cada canal','A média geral de valor','A quantidade de vendas por canal'],a:0,e:'Agrupa por canal, pega a coluna valor e calcula a média de cada grupo.'},
+  {q:'Qual é o equivalente de LEFT JOIN no merge?',o:['how="left"','left=True','join="left_outer"'],a:0,e:'O parâmetro how define o tipo de junção: inner (padrão) ou left.'}]},
+
+ c_neg1:{aulas:[
+  {titulo:'Faturamento e ticket médio',blocos:[
+   ['p','**Faturamento** é quanto entrou. **Ticket médio** é faturamento ÷ pedidos. Receita cresce por três alavancas: mais clientes, mais pedidos por cliente ou ticket maior.'],
+   ['code','sql','SELECT canal, SUM(valor) AS faturamento, COUNT(*) AS pedidos,\n       SUM(valor) / COUNT(*) AS ticket_medio\nFROM vendas GROUP BY canal'],
+   ['tip','Ticket alto com poucos pedidos e ticket baixo com muitos pedidos podem dar o mesmo faturamento. A estratégia para cada caso é diferente.']]},
+  {titulo:'Funil: CTR e conversão',blocos:[
+   ['p','O funil de marketing tem etapas: impressão → clique → venda. **CTR** = cliques ÷ impressões (o anúncio chama atenção?). **Conversão** = vendas ÷ cliques (a página convence?).'],
+   ['code','sql','SELECT canal,\n  SUM(cliques) AS cliques,\n  SUM(conversoes) AS vendas,\n  SUM(conversoes) * 100.0 / SUM(cliques) AS conversao_pct\nFROM campanhas GROUP BY canal ORDER BY conversao_pct DESC'],
+   ['tip','Conversão baixa costuma ser problema da página ou da oferta, não do anúncio.']]},
+  {titulo:'ROI e CAC',blocos:[
+   ['p','**ROI** = (receita − investimento) ÷ investimento: quanto cada real voltou. **CAC** = investimento ÷ clientes novos: quanto custa conquistar um cliente.'],
+   ['code','py','por_canal = campanhas.groupby("canal").agg(inv=("investimento", "sum"), rec=("receita", "sum"), conv=("conversoes", "sum"))\npor_canal["roi"] = (por_canal["rec"] - por_canal["inv"]) / por_canal["inv"]\npor_canal["cac"] = por_canal["inv"] / por_canal["conv"]\npor_canal.sort_values("roi", ascending=False)'],
+   ['tip','ROI alto em canal pequeno nem sempre escala. Investir o dobro raramente traz o dobro de retorno.']]},
+  {titulo:'Churn e retenção',blocos:[
+   ['p','**Churn** é o percentual de clientes que cancelaram no período. Com churn de 20%, você precisa repor um em cada cinco clientes só para ficar no mesmo lugar.'],
+   ['code','sql','SELECT segmento,\n  COUNT(*) AS clientes,\n  SUM(CASE WHEN ativo = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS churn_pct\nFROM clientes GROUP BY segmento'],
+   ['tip','Reter costuma custar bem menos que adquirir. Por isso churn é uma das métricas que a diretoria mais olha.']]}
+  ],quiz:[
+  {q:'Uma campanha tem muitos cliques e pouquíssimas vendas. Onde investigar primeiro?',o:['Na página de destino e na oferta','No criativo do anúncio','No orçamento'],a:0,e:'Se o anúncio gera cliques, ele atrai. Se não converte, o problema costuma estar depois do clique.'},
+  {q:'Investimento de R$ 10 mil, receita de R$ 25 mil. Qual o ROI?',o:['150%','250%','40%'],a:0,e:'(25 − 10) ÷ 10 = 1,5, ou seja, 150%.'},
+  {q:'O que significa CAC?',o:['Custo para adquirir um cliente','Clientes ativos no ciclo','Custo anual de campanhas'],a:0,e:'CAC = investimento em aquisição ÷ clientes conquistados.'}]},
+
+ c_com1:{aulas:[
+  {titulo:'Comece pela conclusão',blocos:[
+   ['p','Quem decide tem pouco tempo. Abra com a **resposta** e o **impacto**; os detalhes vêm depois, se pedirem. É a chamada pirâmide invertida.'],
+   ['code','txt','RUIM:  "Analisei 60 pedidos de 6 meses em 3 canais e cruzei com..."\nBOM:   "O App tem o maior ticket (R$ 3,4 mil). Proponho uma campanha\n        de push para dobrar os pedidos lá. Detalhes no anexo."'],
+   ['tip','Teste do elevador: se você só tivesse 30 segundos, o que diria? Isso é a primeira frase.']]},
+  {titulo:'Escolhendo o gráfico certo',blocos:[
+   ['list',['**Comparar categorias**: barras (horizontais se os nomes forem longos)','**Evolução no tempo**: linha','**Parte de um todo** com até 4 fatias: pizza ou barra empilhada; com mais, barras','**Relação entre duas medidas**: dispersão','**Um número importante**: número grande, sem gráfico']],
+   ['tip','Pizza com 37 fatias (oi, Seu Ronaldo) é uma tabela que ninguém consegue ler. Ordene as barras do maior para o menor.']]},
+  {titulo:'Número sem comparação não diz nada',blocos:[
+   ['p','“Faturamos R$ 11 mil em maio” é bom ou ruim? Sem referência, ninguém sabe. Compare com o mês anterior, com a meta ou com o mesmo período do ano passado.'],
+   ['code','sql','SELECT mes, SUM(valor) AS faturamento\nFROM vendas GROUP BY mes ORDER BY mes'],
+   ['p','Com a série completa fica claro: maio e junho caíram muito em relação a março e abril. Agora sim é uma informação.']]},
+  {titulo:'Resumo executivo em 5 linhas',blocos:[
+   ['code','txt','1. Conclusão:     o que descobrimos (uma frase)\n2. Evidência:     o número que sustenta (com comparação)\n3. Impacto:       quanto vale em R$ ou em clientes\n4. Recomendação:  o que fazer, com dono e prazo\n5. Risco:         o que pode dar errado ou o que ainda não sabemos'],
+   ['tip','Termine sempre com um pedido claro: “preciso da aprovação de R$ X até sexta”. Análise sem pedido vira só curiosidade.']]}
+  ],quiz:[
+  {q:'Você tem 2 minutos com o diretor. Como começa?',o:['Com a recomendação e o impacto','Com a metodologia','Com todos os gráficos'],a:0,e:'Executivos decidem pela conclusão. A metodologia é seu respaldo, não seu roteiro.'},
+  {q:'Qual gráfico mostra melhor o faturamento dos últimos 12 meses?',o:['Linha','Pizza','Dispersão'],a:0,e:'Evolução no tempo pede linha.'},
+  {q:'“O churn foi 5% em junho.” O que falta para essa frase ser útil?',o:['Uma comparação: mês anterior, meta ou mercado','Mais casas decimais','Um gráfico 3D'],a:0,e:'Sem referência ninguém sabe se 5% é bom ou ruim.'}]},
+
+ c_sql2:{aulas:[
+  {titulo:'CASE WHEN: criando categorias',blocos:[
+   ['p','`CASE WHEN` cria uma coluna nova a partir de regras. As condições são testadas em ordem; a primeira verdadeira vence.'],
+   ['code','sql',"SELECT CASE WHEN valor >= 3000 THEN 'Alto'\n            WHEN valor >= 1000 THEN 'Médio'\n            ELSE 'Baixo' END AS faixa,\n       COUNT(*) AS pedidos\nFROM vendas\nGROUP BY CASE WHEN valor >= 3000 THEN 'Alto'\n              WHEN valor >= 1000 THEN 'Médio'\n              ELSE 'Baixo' END"],
+   ['code','sql',"SELECT SUM(CASE WHEN canal = 'App' THEN valor ELSE 0 END) AS app,\n       SUM(CASE WHEN canal <> 'App' THEN valor ELSE 0 END) AS outros\nFROM vendas"],
+   ['tip','`SUM(CASE WHEN ... THEN 1 ELSE 0 END)` é o jeito clássico de contar só o que interessa dentro de um agrupamento.']]},
+  {titulo:'Subconsultas',blocos:[
+   ['p','Uma subconsulta é uma consulta dentro da outra. Útil para comparar cada linha com um valor geral.'],
+   ['code','sql','SELECT produto, valor\nFROM vendas\nWHERE valor > (SELECT AVG(valor) FROM vendas)\nORDER BY valor DESC\nLIMIT 5'],
+   ['p','Também serve como lista: `WHERE id IN (SELECT ...)`.']]},
+  {titulo:'Anti-join: quem está de fora',blocos:[
+   ['p','“Clientes que nunca compraram”, “produtos sem estoque”: perguntas sobre ausência. Duas formas clássicas:'],
+   ['code','sql','SELECT c.nome\nFROM clientes c\nLEFT JOIN vendas v ON v.cliente_id = c.id\nWHERE v.id IS NULL'],
+   ['code','sql','SELECT nome FROM clientes\nWHERE id NOT IN (SELECT cliente_id FROM vendas)'],
+   ['tip','Cuidado: se a subconsulta do NOT IN tiver algum NULL, em bancos reais o resultado pode vir vazio. O LEFT JOIN é mais seguro.']]},
+  {titulo:'DISTINCT e duplicidades',blocos:[
+   ['p','`COUNT(DISTINCT x)` conta valores únicos. Compare com `COUNT(x)` para descobrir se há repetição.'],
+   ['code','sql','SELECT COUNT(cliente_id) AS pedidos,\n       COUNT(DISTINCT cliente_id) AS clientes_unicos\nFROM vendas'],
+   ['p','Aqui, 60 pedidos vêm de 16 clientes: em média, quase 4 pedidos por cliente. Isso é recorrência, um ótimo sinal.']]},
+  {titulo:'WITH: organizando consultas grandes',blocos:[
+   ['p','`WITH` (CTE) dá nome a um passo intermediário. A consulta fica legível de cima para baixo, como uma receita.'],
+   ['code','sql','WITH por_vendedor AS (\n  SELECT vendedor, SUM(valor) AS total\n  FROM vendas GROUP BY vendedor\n)\nSELECT vendedor, total\nFROM por_vendedor\nWHERE total > 30000'],
+   ['tip','Consulta com 4 subconsultas aninhadas é difícil de revisar. Quebre em CTEs com nomes que expliquem cada passo.']]}
+  ],quiz:[
+  {q:'Para achar clientes sem nenhuma compra, qual padrão usar?',o:['LEFT JOIN vendas ... WHERE v.id IS NULL','INNER JOIN vendas ... WHERE v.id IS NULL','GROUP BY cliente HAVING COUNT(*) = 0 direto em vendas'],a:0,e:'O LEFT JOIN mantém todos os clientes; quem não tem venda fica com NULL do lado de vendas.'},
+  {q:'Em um CASE WHEN com várias condições verdadeiras, qual vale?',o:['A primeira, de cima para baixo','A última','A mais específica'],a:0,e:'O CASE para na primeira condição verdadeira. Ordem importa.'},
+  {q:'COUNT(id) = 60 e COUNT(DISTINCT cliente_id) = 16. O que isso indica?',o:['Clientes compram mais de uma vez','Há erro no banco','Há 60 clientes'],a:0,e:'São 60 pedidos de 16 clientes diferentes: recorrência.'}]},
+
+ c_py2:{aulas:[
+  {titulo:'Variáveis, tipos e f-strings',blocos:[
+   ['p','Os tipos básicos: número inteiro (`int`), número com vírgula (`float`), texto (`str`) e verdadeiro/falso (`bool`).'],
+   ['code','py','cliente = "Hotel Mirante"\npedidos = 4\nvalor = 3500.0\nativo = True\nprint(f"{cliente}: {pedidos} pedidos, R$ {valor:,.2f}, ativo={ativo}")'],
+   ['tip','`{valor:,.2f}` usa vírgula para milhar e ponto para decimal, no padrão americano. Para o padrão brasileiro, troque depois: `texto.replace(",", "X").replace(".", ",").replace("X", ".")`.']]},
+  {titulo:'Listas e dicionários',blocos:[
+   ['code','py','regioes = ["Sudeste", "Sul", "Nordeste"]\nregioes.append("Norte")\nprint(regioes, len(regioes))\n\nmeta = {"Sudeste": 100000, "Sul": 40000}\nmeta["Nordeste"] = 30000\nprint(meta.get("Norte", 0))   # get com valor padrão evita erro'],
+   ['p','Lista para coisas em sequência; dicionário para buscar por nome. Uma lista de dicionários é basicamente uma tabela.']]},
+  {titulo:'for e if',blocos:[
+   ['code','py','metas = {"Sudeste": 100000, "Sul": 40000, "Nordeste": 30000}\nfor regiao, meta in metas.items():\n    real = vendas[vendas["regiao"] == regiao]["valor"].sum()\n    status = "bateu" if real >= meta else "não bateu"\n    print(f"{regiao}: {real:,.0f} de {meta:,.0f} ({status})")'],
+   ['tip','`x if condição else y` é um if de uma linha só. Ótimo para rótulos simples.']]},
+  {titulo:'Funções',blocos:[
+   ['code','py','def resumo_regiao(regiao):\n    dados = vendas[vendas["regiao"] == regiao]\n    return {\n        "regiao": regiao,\n        "pedidos": len(dados),\n        "faturamento": dados["valor"].sum(),\n    }\n\nresumo_regiao("Sul")'],
+   ['p','Funções deixam o código reutilizável: o mesmo resumo serve para qualquer região, mês ou vendedor.']]},
+  {titulo:'Automatizando um relatório',blocos:[
+   ['p','Juntando tudo: um relatório que percorre todas as regiões e monta o texto sozinho. Agendado num servidor, ele roda todo dia sem ninguém apertar botão.'],
+   ['code','py','def relatorio():\n    total = vendas["valor"].sum()\n    linhas = ["RELATÓRIO DE VENDAS"]\n    for regiao in sorted(vendas["regiao"].unique()):\n        fat = vendas[vendas["regiao"] == regiao]["valor"].sum()\n        linhas.append(f"- {regiao}: R$ {fat:,.0f} ({fat / total:.1%})")\n    linhas.append(f"TOTAL: R$ {total:,.0f}")\n    return "\\n".join(linhas)\n\nprint(relatorio())'],
+   ['tip','No mundo real, o passo seguinte seria enviar esse texto por e-mail ou Slack e agendar com cron, Airflow ou o agendador da nuvem.']]}
+  ],quiz:[
+  {q:'O que o código abaixo imprime?\n\nfor x in [1, 2, 3]:\n    if x == 2:\n        continue\n    print(x)',o:['1 e 3','1, 2 e 3','Só 2'],a:0,e:'continue pula para o próximo item, então o 2 não é impresso.'},
+  {q:'Qual a vantagem de `meta.get("Norte", 0)` sobre `meta["Norte"]`?',o:['Não dá erro se a chave não existir','É mais rápido','Cria a chave automaticamente'],a:0,e:'get devolve o valor padrão quando a chave não existe, em vez de KeyError.'},
+  {q:'O que faz `return` dentro de uma função?',o:['Devolve o resultado e encerra a função','Imprime o resultado','Repete a função'],a:0,e:'return entrega o valor para quem chamou a função e para a execução dela.'}]},
+
+ c_neg2:{aulas:[
+  {titulo:'Unit economics: LTV e CAC',blocos:[
+   ['p','**LTV** é quanto um cliente deixa de margem durante toda a relação. **CAC** é quanto custou conquistá-lo. Regra de bolso: LTV ÷ CAC acima de 3 é saudável.'],
+   ['code','py','ticket = 1500          # por pedido\npedidos_por_ano = 4\nmargem = 0.30\nanos_como_cliente = 2\nltv = ticket * pedidos_por_ano * margem * anos_como_cliente\ncac = 1200\nprint(f"LTV: R$ {ltv:,.0f} | CAC: R$ {cac:,.0f} | LTV/CAC: {ltv / cac:.1f}")']]},
+  {titulo:'Margem e desconto',blocos:[
+   ['p','Desconto parece pequeno no preço e é enorme no lucro. Com margem de 30%, um desconto de 10% derruba o lucro por unidade em um terço.'],
+   ['code','py','preco, custo = 100, 70\nfor desconto in [0, 0.10, 0.20, 0.30]:\n    novo = preco * (1 - desconto)\n    lucro = novo - custo\n    precisa = (preco - custo) / lucro if lucro > 0 else None\n    print(f"desconto {desconto:.0%}: lucro R$ {lucro:.0f} por unidade; volume necessário: {precisa}x" if precisa else f"desconto {desconto:.0%}: vende sem lucro")'],
+   ['tip','Antes de apoiar uma promoção, calcule quanto o volume precisa crescer para empatar o lucro.']]},
+  {titulo:'Pareto: os 20% que fazem 80%',blocos:[
+   ['p','Em muitos negócios, poucos clientes ou produtos concentram a maior parte da receita. Saber quem são muda prioridades de atendimento e estoque.'],
+   ['code','py','por_cliente = vendas.groupby("cliente_id")["valor"].sum().sort_values(ascending=False)\nacumulado = por_cliente.cumsum() / por_cliente.sum()\nprint(f"{len(por_cliente)} clientes compraram")\nprint(f"Os 4 maiores fazem {acumulado.head(4).max():.0%} da receita")']]},
+  {titulo:'Teste A/B sem se enganar',blocos:[
+   ['p','Num teste A/B, metade vê a versão A e metade a B. Diferença pequena com pouca gente pode ser só sorte. O **p-valor** mede isso: abaixo de 0,05 costuma ser considerado sinal; acima, trate como empate.'],
+   ['list',['Defina a métrica e o tamanho da amostra **antes** de começar','Não pare o teste no primeiro dia em que a B “ganhou”','Um teste por vez na mesma página','Ganho de 0,2 ponto com p-valor 0,30 é empate, não vitória']]]}
+  ],quiz:[
+  {q:'LTV de R$ 3.600 e CAC de R$ 1.200. Como está a saúde da aquisição?',o:['Saudável: LTV/CAC = 3','Ruim: LTV/CAC = 0,3','Impossível saber'],a:0,e:'3.600 ÷ 1.200 = 3, o limite de bolso para considerar saudável.'},
+  {q:'Margem de 30% e desconto de 30%. O que acontece?',o:['Vende sem lucro','Lucro cai 30%','Lucro cai 10%'],a:0,e:'O desconto consome toda a margem: o preço novo cobre só o custo.'},
+  {q:'B converteu 3,2% contra 3,0% de A, com p-valor 0,30. O que fazer?',o:['Tratar como empate ou continuar o teste','Trocar para B','Voltar para A'],a:0,e:'p-valor alto indica que a diferença pode ser acaso.'}]},
+
+ c_ml:{aulas:[
+  {titulo:'O que é (e o que não é) Machine Learning',blocos:[
+   ['p','Machine Learning é ensinar o computador a achar padrões em exemplos do passado para prever casos novos. Não é mágica e não funciona sem dados históricos confiáveis.'],
+   ['list',['**Prever um número** (quanto vamos vender?): regressão','**Prever uma categoria** (o cliente vai cancelar?): classificação','**Agrupar parecidos** sem resposta prévia: clusterização']],
+   ['tip','Se uma regra simples resolve 90% do problema, comece pela regra. Modelo é para quando a regra não dá conta.']]},
+  {titulo:'Features e target',blocos:[
+   ['p','O **target** é o que você quer prever (ex.: `ativo`). As **features** são as informações que ajudam a prever (ex.: quantos pedidos o cliente fez, quanto gastou).'],
+   ['code','py','compras = vendas.groupby("cliente_id").agg(pedidos=("id", "count"), gasto=("valor", "sum")).reset_index()\nbase = pd.merge(clientes, compras, left_on="id", right_on="cliente_id", how="left")\nbase["pedidos"] = base["pedidos"].fillna(0)\nbase[["nome", "pedidos", "gasto", "ativo"]].head(8)'],
+   ['tip','80% do trabalho de ML é montar essa tabela de features direito. O algoritmo é a parte curta.']]},
+  {titulo:'Treino, teste e overfitting',blocos:[
+   ['p','Separe os dados: uma parte para **treinar** e outra, nunca vista pelo modelo, para **testar**. Um modelo que acerta tudo no treino e erra no teste decorou em vez de aprender: isso é **overfitting**.'],
+   ['code','txt','from sklearn.model_selection import train_test_split\nX_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size=0.3)\nmodelo.fit(X_treino, y_treino)\nmodelo.score(X_teste, y_teste)   # a nota que importa'],
+   ['p','Esse exemplo usa scikit-learn, que roda no Python de verdade (Google Colab, por exemplo), não aqui no simulador.']]},
+  {titulo:'Métricas: acurácia, precisão e recall',blocos:[
+   ['p','Imagine prever cancelamentos. **Acurácia**: quanto acertou no total. **Precisão**: dos que o modelo disse que iam cancelar, quantos cancelaram. **Recall**: dos que cancelaram, quantos o modelo pegou.'],
+   ['code','py','vp, fp, fn, vn = 30, 10, 20, 140   # verdadeiro/falso positivo e negativo\nacuracia = (vp + vn) / (vp + fp + fn + vn)\nprecisao = vp / (vp + fp)\nrecall = vp / (vp + fn)\nprint(f"Acurácia {acuracia:.0%} | Precisão {precisao:.0%} | Recall {recall:.0%}")'],
+   ['tip','Com poucos cancelamentos na base, acurácia engana: dizer “ninguém cancela” acerta muito e não serve para nada.']]},
+  {titulo:'Sempre comece por um baseline',blocos:[
+   ['p','Antes de qualquer modelo, crie uma regra simples e meça. O modelo só vale a pena se for claramente melhor.'],
+   ['code','py','compras = vendas.groupby("cliente_id")["id"].count()\nclientes["pedidos"] = clientes["id"].map(dict(zip(compras.index, compras.values))).fillna(0)\nclientes["previsto_ativo"] = np.where(clientes["pedidos"] >= 3, 1, 0)\nacerto = (clientes["previsto_ativo"] == clientes["ativo"]).mean()\nprint(f"Regra “3 ou mais pedidos = ativo” acerta {acerto:.0%}")']]}
+  ],quiz:[
+  {q:'O modelo acerta 99% no treino e 60% no teste. O que aconteceu?',o:['Overfitting: decorou os dados de treino','O teste está errado','É um ótimo modelo'],a:0,e:'A nota que importa é a do teste. Diferença grande indica que o modelo não generaliza.'},
+  {q:'Prever “vai cancelar: sim ou não” é um problema de…',o:['Classificação','Regressão','Clusterização'],a:0,e:'O resultado é uma categoria.'},
+  {q:'Por que começar com uma regra simples (baseline)?',o:['Para saber se o modelo realmente melhora alguma coisa','Porque modelos são proibidos no começo','Para economizar memória'],a:0,e:'Sem baseline não dá para saber se a complexidade do modelo se paga.'}]}
+};
+
+/* ============ SOM: trilha procedural com Web Audio ============ */
+const SOM={ctx:null,master:null,mus:null,filtro:null,sfx:null,trilha:null,nome:null,passo:0,proximo:0,timer:null,
+  cfg:{musica:true,efeitos:true,vozes:true,volume:0.55},ruido:null,ultimoBlip:0};
+(function(){try{const c=JSON.parse(localStorage.getItem('select-from-carreira-som')||'null');if(c)Object.assign(SOM.cfg,c);}catch(e){}})();
+function somSalvarCfg(){try{localStorage.setItem('select-from-carreira-som',JSON.stringify(SOM.cfg));}catch(e){}}
+const midiHz=m=>440*Math.pow(2,(m-69)/12);
+function rng32(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+/* Gera uma trilha a partir de parâmetros: progressão de acordes, baixo, arpejo, melodia e bateria */
+function gerarTrilha(o){
+  const maior=o.modo!=='menor';
+  const esc=maior?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
+  const penta=maior?[0,2,4,7,9]:[0,3,5,7,10];
+  const graus=o.prog||(maior?[0,5,3,4]:[0,5,2,6]);
+  const acorde=g=>[0,2,4,6].map(k=>{const i=g+k;return o.raiz+esc[i%7]+12*Math.floor(i/7);});
+  const barras=graus.length*(o.barrasPorAcorde||1),len=barras*16;
+  const R=rng32(o.seed||1);
+  const notas=[];
+  graus.forEach((g,gi)=>{
+    const ac=acorde(g);const b0=gi*(o.barrasPorAcorde||1)*16;
+    for(let bar=0;bar<(o.barrasPorAcorde||1);bar++){
+      const s=b0+bar*16;
+      // baixo
+      (o.baixo||[0,8]).forEach(st=>notas.push({s:s+st,m:ac[0]-12,d:o.baixoDur||6,v:'baixo'}));
+      if(o.quinta)notas.push({s:s+14,m:ac[2]-12,d:2,v:'baixo'});
+      // acordes / arpejo
+      if(o.arpejo){for(let k=0;k<16;k+=o.arpejo){notas.push({s:s+k,m:ac[(k/o.arpejo)%4]+12,d:o.arpejo,v:'arp'});}}
+      if(o.teclas)o.teclas.forEach(st=>ac.slice(0,o.notasAcorde||4).forEach(m=>notas.push({s:s+st,m:m+12,d:o.teclaDur||6,v:'tecla'})));
+    }
+  });
+  // melodia (pentatônica, determinística pela semente)
+  if(o.melodia){
+    let pos=0,grau=2;
+    while(pos<len){
+      const dur=[2,2,4,4,6,8][Math.floor(R()*6)];
+      if(R()<o.melodia){grau=Math.max(0,Math.min(9,grau+[-2,-1,-1,0,1,1,2][Math.floor(R()*7)]));
+        const m=o.raiz+24+penta[grau%5]+12*Math.floor(grau/5)+(o.oitavaMel||0);notas.push({s:pos,m,d:Math.max(2,dur-1),v:'mel'});}
+      pos+=dur;}
+  }
+  const bat={kick:[],caixa:[],chimbal:[]};
+  for(let b=0;b<barras;b++){const s=b*16;(o.kick||[]).forEach(k=>bat.kick.push(s+k));(o.caixa||[]).forEach(k=>bat.caixa.push(s+k));(o.chimbal||[]).forEach(k=>bat.chimbal.push(s+k));}
+  const porPasso=Array.from({length:len},()=>[]);notas.forEach(n=>{if(n.s<len)porPasso[n.s].push(n);});
+  return {bpm:o.bpm,len,porPasso,bat,timbre:o.timbre,swing:o.swing||0,ganho:o.ganho||1};
+}
+const TRILHAS={
+  escritorio:gerarTrilha({bpm:78,raiz:53,modo:'maior',prog:[0,2,1,4],barrasPorAcorde:2,baixo:[0,10],teclas:[0,7],teclaDur:5,melodia:.55,seed:7,kick:[0,10],caixa:[4,12],chimbal:[0,2,4,6,8,10,12,14],swing:.12,
+    timbre:{baixo:['triangle',.22],tecla:['sine',.05],mel:['triangle',.07],arp:['sine',.03]}}),
+  festa:gerarTrilha({bpm:118,raiz:55,modo:'maior',prog:[0,3,4,0],baixo:[0,6,8,14],baixoDur:2,arpejo:2,melodia:.8,seed:21,kick:[0,4,8,12],caixa:[4,12],chimbal:[2,6,10,14],
+    timbre:{baixo:['square',.08],arp:['square',.025],mel:['square',.045]}})
+};
+const TEMAS={
+  chefe:{bpm:96,raiz:43,modo:'maior',seed:11,teclas:[0,8],notasAcorde:3,baixo:[0,4,8,12],baixoDur:3,melodia:.6,caixa:[4,12],timbre:{baixo:['square',.06],tecla:['sawtooth',.018],mel:['square',.04]},oitavaMel:0},
+  bia:{bpm:120,raiz:60,modo:'maior',seed:3,arpejo:2,baixo:[0,8],melodia:.7,chimbal:[2,6,10,14],timbre:{baixo:['sine',.18],arp:['sine',.04],mel:['triangle',.07]}},
+  carlao:{bpm:110,raiz:45,modo:'maior',seed:5,teclas:[2,6,10,14],teclaDur:2,notasAcorde:3,baixo:[0,3,8,11],baixoDur:2,melodia:.65,kick:[0,8],chimbal:[0,4,8,12],timbre:{baixo:['triangle',.2],tecla:['square',.016],mel:['sawtooth',.025]}},
+  neide:{bpm:72,raiz:53,modo:'maior',seed:9,arpejo:4,baixo:[0],baixoDur:12,melodia:.5,timbre:{baixo:['sine',.18],arp:['triangle',.04],mel:['sine',.07]}},
+  jorge:{bpm:84,raiz:50,modo:'menor',seed:13,teclas:[0,4,8,12],teclaDur:3,notasAcorde:3,baixo:[0,8],melodia:.45,timbre:{baixo:['triangle',.2],tecla:['square',.014],mel:['square',.035]}},
+  kevin:{bpm:132,raiz:62,modo:'maior',seed:17,arpejo:1,baixo:[0,4,8,12],baixoDur:2,melodia:.85,chimbal:[0,2,4,6,8,10,12,14],timbre:{baixo:['square',.06],arp:['square',.015],mel:['square',.04]},oitavaMel:12},
+  fabio:{bpm:112,raiz:52,modo:'menor',seed:19,arpejo:1,baixo:[0,2,4,6,8,10,12,14],baixoDur:1,melodia:.4,kick:[0,4,8,12],chimbal:[2,6,10,14],timbre:{baixo:['sawtooth',.05],arp:['square',.012],mel:['sawtooth',.02]}},
+  tereza:{bpm:70,raiz:58,modo:'maior',seed:23,arpejo:4,teclas:[0],teclaDur:14,baixo:[0],baixoDur:14,melodia:.55,timbre:{baixo:['sine',.16],arp:['sine',.035],tecla:['sine',.03],mel:['triangle',.065]}}
+};
+const VOZ={chefe:110,bia:520,carlao:180,neide:330,jorge:220,kevin:440,fabio:260,tereza:380,eu:300};
+function trilhaDe(nome){if(TRILHAS[nome])return TRILHAS[nome];if(TEMAS[nome]){TRILHAS[nome]=gerarTrilha(TEMAS[nome]);return TRILHAS[nome];}return TRILHAS.escritorio;}
+
+function somIniciar(){
+  if(SOM.ctx){if(SOM.ctx.state==='suspended')SOM.ctx.resume();return;}
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  try{SOM.ctx=new AC();}catch(e){return;}
+  const c=SOM.ctx;
+  SOM.master=c.createGain();SOM.master.gain.value=SOM.cfg.volume;SOM.master.connect(c.destination);
+  SOM.filtro=c.createBiquadFilter();SOM.filtro.type='lowpass';SOM.filtro.frequency.value=5200;SOM.filtro.connect(SOM.master);
+  SOM.mus=c.createGain();SOM.mus.gain.value=SOM.cfg.musica?1:0;SOM.mus.connect(SOM.filtro);
+  SOM.sfx=c.createGain();SOM.sfx.gain.value=SOM.cfg.efeitos?1:0;SOM.sfx.connect(SOM.master);
+  const buf=c.createBuffer(1,c.sampleRate*.5,c.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;SOM.ruido=buf;
+  SOM.timer=setInterval(somAgendar,25);
+  if(SOM.pendente)somTocar(SOM.pendente);
+}
+function tom(dest,t,freq,dur,tipo,vol,ataque,soltura){
+  const c=SOM.ctx;const o=c.createOscillator();const g=c.createGain();
+  o.type=tipo;o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+(ataque||.01));
+  g.gain.setTargetAtTime(0,t+Math.max(.02,dur*.6),(soltura||dur*.35)+.01);
+  o.connect(g);g.connect(dest);o.start(t);o.stop(t+dur+(soltura||.3)*4+.05);
+}
+function bateria(t,tipo){
+  const c=SOM.ctx;
+  if(tipo==='kick'){const o=c.createOscillator();const g=c.createGain();o.frequency.setValueAtTime(120,t);o.frequency.exponentialRampToValueAtTime(40,t+.12);g.gain.setValueAtTime(.32,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(SOM.mus);o.start(t);o.stop(t+.2);return;}
+  const s=c.createBufferSource();s.buffer=SOM.ruido;const f=c.createBiquadFilter();const g=c.createGain();
+  if(tipo==='caixa'){f.type='bandpass';f.frequency.value=1800;g.gain.setValueAtTime(.09,t);g.gain.exponentialRampToValueAtTime(.001,t+.14);}
+  else{f.type='highpass';f.frequency.value=7000;g.gain.setValueAtTime(.025,t);g.gain.exponentialRampToValueAtTime(.001,t+.05);}
+  s.connect(f);f.connect(g);g.connect(SOM.mus);s.start(t);s.stop(t+.2);
+}
+function somAgendar(){
+  const c=SOM.ctx,tr=SOM.trilha;if(!c||!tr||!SOM.cfg.musica)return;
+  const passoSeg=60/tr.bpm/4;
+  while(SOM.proximo<c.currentTime+.15){
+    const p=SOM.passo,t=SOM.proximo+(p%2?tr.swing*passoSeg:0);
+    tr.porPasso[p].forEach(n=>{const tb=tr.timbre[n.v];if(!tb)return;tom(SOM.mus,t,midiHz(n.m),n.d*passoSeg,tb[0],tb[1]*tr.ganho,n.v==='tecla'?.02:.008,n.v==='baixo'?.12:.2);});
+    if(tr.bat.kick.includes(p))bateria(t,'kick');if(tr.bat.caixa.includes(p))bateria(t,'caixa');if(tr.bat.chimbal.includes(p))bateria(t,'chimbal');
+    SOM.passo=(p+1)%tr.len;SOM.proximo+=passoSeg;
+  }
+}
+function somTocar(nome){
+  if(!SOM.ctx){SOM.pendente=nome;return;}
+  if(SOM.nome===nome)return;
+  const c=SOM.ctx;const g=SOM.mus.gain;
+  const alvo=SOM.cfg.musica?1:0;
+  g.cancelScheduledValues(c.currentTime);g.setValueAtTime(g.value,c.currentTime);g.linearRampToValueAtTime(0,c.currentTime+.35);
+  SOM.nome=nome;
+  setTimeout(()=>{if(SOM.nome!==nome)return;SOM.trilha=trilhaDe(nome);SOM.passo=0;SOM.proximo=c.currentTime+.05;
+    g.cancelScheduledValues(c.currentTime);g.setValueAtTime(0,c.currentTime);g.linearRampToValueAtTime(alvo,c.currentTime+.6);},380);
+}
+function somNoite(noite){if(!SOM.ctx)return;SOM.filtro.frequency.setTargetAtTime(noite?1400:5200,SOM.ctx.currentTime,.8);}
+function somAplicarCfg(){
+  if(!SOM.ctx)return;const t=SOM.ctx.currentTime;
+  SOM.master.gain.setTargetAtTime(SOM.cfg.volume,t,.05);
+  SOM.mus.gain.cancelScheduledValues(t);SOM.mus.gain.setTargetAtTime(SOM.cfg.musica?1:0,t,.1);
+  SOM.sfx.gain.setTargetAtTime(SOM.cfg.efeitos?1:0,t,.05);
+  if(SOM.cfg.musica){SOM.proximo=Math.max(SOM.proximo,t+.05);}
+}
+function somBlip(quem){
+  if(!SOM.ctx||!SOM.cfg.vozes||!SOM.cfg.efeitos)return;const c=SOM.ctx;const agora=c.currentTime;
+  if(agora-SOM.ultimoBlip<.055)return;SOM.ultimoBlip=agora;
+  const base=VOZ[quem]||300;tom(SOM.sfx,agora,base*(0.92+Math.random()*.2),.045,quem==='chefe'||quem==='carlao'?'square':'triangle',.05,.004,.02);
+}
+function somEfeito(tipo){
+  if(!SOM.ctx||!SOM.cfg.efeitos)return;const t=SOM.ctx.currentTime;const d=SOM.sfx;
+  const seq=(ns,dur,tp,v)=>ns.forEach((m,i)=>tom(d,t+i*dur,midiHz(m),dur*1.2,tp,v,.005,.06));
+  switch(tipo){
+    case 'sucesso':seq([72,76,79,84],.09,'square',.06);break;
+    case 'erro':seq([52,47],.13,'square',.05);break;
+    case 'moeda':seq([83,88],.07,'square',.05);break;
+    case 'promocao':seq([60,64,67,72,76,79,84],.08,'square',.06);break;
+    case 'clique':tom(d,t,880,.03,'square',.025,.002,.01);break;
+    case 'porta':tom(d,t,90,.25,'triangle',.18,.005,.08);break;
+    case 'cafe':seq([67,71,74],.07,'triangle',.06);break;
+    case 'aula':seq([69,73,76,81],.1,'sine',.07);break;
+  }
+}
+['pointerdown','keydown','touchstart'].forEach(ev=>window.addEventListener(ev,somIniciar,{passive:true}));
+
+/* ============ IDE: editor com destaque de sintaxe ============ */
+const SQL_KW=new Set('SELECT FROM WHERE AND OR NOT IN IS NULL AS ON JOIN LEFT RIGHT INNER OUTER FULL CROSS GROUP BY ORDER HAVING LIMIT OFFSET DESC ASC DISTINCT CASE WHEN THEN ELSE END BETWEEN LIKE WITH UNION ALL EXISTS TOP'.split(' '));
+const SQL_FN=new Set('COUNT SUM AVG MIN MAX ROUND COALESCE UPPER LOWER LENGTH ABS CAST IFNULL NULLIF SUBSTRING TRIM'.split(' '));
+const PY_KW=new Set('def return if elif else for while in not and or is None True False import as from lambda break continue pass with try except class'.split(' '));
+const PY_FN=new Set('print len range sum min max round int float str list dict sorted enumerate zip type abs set tuple bool isinstance'.split(' '));
+const TABELAS=['vendas','clientes','campanhas','entregas'];
+function escH(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function realcar(code,lang){
+  if(lang==='txt')return escH(code);
+  const re=lang==='sql'
+    ?/(--[^\n]*)|('(?:[^']|'')*'?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)|([^\sA-Za-z0-9_']+|\s+)/g
+    :/(#[^\n]*)|([fFrR]?(?:"""[\s\S]*?(?:"""|$)|'''[\s\S]*?(?:'''|$)|"(?:[^"\\\n]|\\.)*"?|'(?:[^'\\\n]|\\.)*'?))|(\b\d+(?:\.\d+)?\b)|([A-Za-z_\u00C0-\u00FF][A-Za-z0-9_\u00C0-\u00FF]*)|([^\sA-Za-z0-9_'"#\u00C0-\u00FF]+|\s+)/g;
+  let out='',m,prev='';
+  while((m=re.exec(code))){
+    const [tok,com,str,num,word]=m;
+    if(com)out+=`<span class="t-com">${escH(com)}</span>`;
+    else if(str)out+=`<span class="t-str">${escH(str)}</span>`;
+    else if(num)out+=`<span class="t-num">${num}</span>`;
+    else if(word){
+      if(lang==='sql'){const U=word.toUpperCase();
+        out+=SQL_KW.has(U)?`<span class="t-kw">${word}</span>`:SQL_FN.has(U)?`<span class="t-fn">${word}</span>`:TABELAS.includes(word.toLowerCase())?`<span class="t-tb">${word}</span>`:`<span class="t-id">${word}</span>`;}
+      else{out+=PY_KW.has(word)?`<span class="t-kw">${word}</span>`:prev==='.'?`<span class="t-fn">${word}</span>`:PY_FN.has(word)?`<span class="t-bi">${word}</span>`:(TABELAS.includes(word)||word==='pd'||word==='np')?`<span class="t-tb">${word}</span>`:`<span class="t-id">${word}</span>`;}
+    }else out+=escH(tok);
+    prev=tok.trim()?tok.slice(-1):prev;
+  }
+  return out;
+}
+/* Editor: textarea transparente sobre um <pre> realçado + gutter com números de linha */
+function editorHTML(id,lang,code){
+  return `<div class="ed" id="${id}" data-lang="${lang}"><div class="ed-gut" aria-hidden="true"></div><div class="ed-area"><pre class="ed-hl" aria-hidden="true"></pre><textarea class="ed-ta" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Editor de código ${lang==='sql'?'SQL':'Python'}">${escH(code)}</textarea></div></div>`;
+}
+function editorLigar(root,{onRun,onChange}={}){
+  const ta=root.querySelector('.ed-ta'),hl=root.querySelector('.ed-hl'),gut=root.querySelector('.ed-gut'),lang=root.dataset.lang;
+  const upd=()=>{
+    hl.innerHTML=realcar(ta.value,lang)+'\n';
+    const n=ta.value.split('\n').length;gut.innerHTML=Array.from({length:Math.max(n,1)},(_,i)=>`<span>${i+1}</span>`).join('');
+    ta.style.height='auto';ta.style.height=Math.max(ta.scrollHeight,root.classList.contains('mini')?60:140)+'px';
+    hl.style.transform=`translateX(${-ta.scrollLeft}px)`;
+    if(onChange)onChange(ta.value);
+  };
+  ta.addEventListener('input',upd);
+  ta.addEventListener('scroll',()=>{hl.style.transform=`translateX(${-ta.scrollLeft}px)`;});
+  ta.addEventListener('keydown',e=>{
+    e.stopPropagation();
+    if((e.key==='Enter'&&(e.ctrlKey||e.metaKey))||(e.key==='Enter'&&e.shiftKey&&lang==='py')){e.preventDefault();if(onRun)onRun();return;}
+    if(e.key==='F5'&&lang==='sql'){e.preventDefault();if(onRun)onRun();return;}
+    if(e.key==='Tab'){e.preventDefault();const s=ta.selectionStart;ta.setRangeText('    ',s,ta.selectionEnd,'end');upd();return;}
+    if(e.key==='Enter'){
+      const s=ta.selectionStart;const ini=ta.value.lastIndexOf('\n',s-1)+1;const linha=ta.value.slice(ini,s);
+      let ind=(linha.match(/^ */)||[''])[0];if(lang==='py'&&/:\s*$/.test(linha))ind+='    ';
+      if(ind){e.preventDefault();ta.setRangeText('\n'+ind,s,ta.selectionEnd,'end');upd();}
+    }
+  });
+  upd();
+  return {ta,valor:()=>ta.value,definir:v=>{ta.value=v;upd();},inserir:t=>{const s=ta.selectionStart;ta.setRangeText(t,s,ta.selectionEnd,'end');ta.focus();upd();},atualizar:upd};
+}
+/* Tipos das colunas para o navegador de banco */
+function tipoColuna(t,c){const v=DATA[t].map(r=>r[c]).find(x=>x!==null&&x!==undefined);if(typeof v==='number')return DATA[t].every(r=>r[c]==null||Number.isInteger(r[c]))?'INT':'DECIMAL';return 'TEXT';}
+function dtypePandas(t,c){const tp=tipoColuna(t,c);return tp==='INT'?(DATA[t].some(r=>r[c]==null)?'float64':'int64'):tp==='DECIMAL'?'float64':'object';}
+
+/* ============ GRADES DE RESULTADO ============ */
+function celula(v){if(v===null||v===undefined||(typeof v==='number'&&isNaN(v)))return'<span class="nan">NULL</span>';if(typeof v==='number')return Number.isInteger(v)?String(v):(Math.round(v*10000)/10000).toString();if(typeof v==='boolean')return v?'true':'false';return escH(v);}
+function celulaPd(v){if(v===null||v===undefined||(typeof v==='number'&&isNaN(v)))return'<span class="nan">NaN</span>';if(typeof v==='number')return Number.isInteger(v)?String(v):(Math.round(v*1e6)/1e6).toString();if(typeof v==='boolean')return v?'True':'False';return escH(v);}
+function gradeSQL(df,ms){
+  const max=200;const rows=df.rows.slice(0,max);
+  const num=c=>df.rows.some(r=>typeof r[c]==='number');
+  return `<div class="grid-wrap"><table class="grid"><thead><tr><th class="rn"></th>${df.cols.map(c=>`<th class="${num(c)?'n':''}"><span class="ct">${num(c)?'123':'abc'}</span>${escH(c)}</th>`).join('')}</tr></thead><tbody>${rows.map((r,i)=>`<tr><td class="rn">${i+1}</td>${df.cols.map(c=>`<td class="${typeof r[c]==='number'?'n':''}">${celula(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <div class="grid-status"><span class="ok">✔</span> ${df.rows.length} linha${df.rows.length!==1?'s':''} retornada${df.rows.length!==1?'s':''}${ms!=null?` em ${ms} ms`:''}${df.rows.length>max?` (mostrando ${max})`:''}</div>`;
+}
+function tabelaPandas(v){
+  if(v instanceof DF){
+    const max=30,rows=v.rows,cut=rows.length>max;const show=cut?[...rows.slice(0,15).map((r,i)=>[v.index[i],r]),null,...rows.slice(-10).map((r,i)=>[v.index[rows.length-10+i],r])]:rows.map((r,i)=>[v.index[i],r]);
+    return `<div class="pdwrap"><table class="pdtable"><thead><tr><th></th>${v.cols.map(c=>`<th>${escH(c)}</th>`).join('')}</tr></thead><tbody>${show.map(x=>x===null?`<tr><th>…</th>${v.cols.map(()=>'<td>…</td>').join('')}</tr>`:`<tr><th>${celulaPd(x[0])}</th>${v.cols.map(c=>`<td class="${typeof x[1][c]==='number'?'n':''}">${celulaPd(x[1][c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="pdshape">${rows.length} rows × ${v.cols.length} columns</p>`;}
+  if(v instanceof Series){
+    const lines=v.index.map((k,i)=>[k,v.values[i]]);const cut=lines.length>30;const show=cut?[...lines.slice(0,15),null,...lines.slice(-10)]:lines;
+    const w=Math.max(...v.index.map(k=>String(k).length),(v.indexName||'').length,1);
+    const txt=(v.indexName?v.indexName+'\n':'')+show.map(x=>x===null?'...':String(x[0]).padEnd(w+4)+(typeof x[1]==='number'?(Number.isInteger(x[1])?String(x[1]):(Math.round(x[1]*1e6)/1e6).toString()):x[1]===null?'NaN':String(x[1]))).join('\n')+`\nName: ${v.name==null?'None':v.name}, Length: ${v.values.length}, dtype: ${v.values.every(x=>typeof x==='number'&&Number.isInteger(x))?'int64':v.values.every(x=>typeof x==='number'||x===null)?'float64':v.values.every(x=>typeof x==='boolean')?'bool':'object'}`;
+    return `<pre class="pdseries">${escH(txt)}</pre>`;}
+  if(v instanceof GroupBy)return `<pre class="pdseries">&lt;pandas.core.groupby.DataFrameGroupBy object&gt;\n<span class="dica"># Falta agregar: use .sum(), .mean(), .count()…</span></pre>`;
+  if(v instanceof Bound)return `<pre class="pdseries">&lt;bound method ${escH(v.name)}&gt;\n<span class="dica"># Faltou abrir e fechar parênteses: ${escH(v.name)}()</span></pre>`;
+  return `<pre class="pdseries">${escH(typeof v==='string'?`'${v}'`:strPy(v))}</pre>`;
+}
+function saidaNotebook(r){
+  let h='';let txt='';
+  const flush=()=>{if(txt){h+=`<pre class="stdout">${escH(txt)}</pre>`;txt='';}};
+  (r.prints||[]).forEach(p=>{if(p&&p.txt!==undefined)txt+=p.txt;else{flush();h+=tabelaPandas(p);}});
+  flush();
+  const out=(r.hasResult&&!r.fromPrint)?tabelaPandas(r.result):'';
+  return {stdout:h,out};
+}
+
+/* ============ AULAS (mentora e cursos) ============ */
+function mdInline(s){return escH(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');}
+let blocoSeq=0;
+function blocoExec(lang,code,titulo){
+  const id='bx'+(++blocoSeq);
+  if(lang==='txt')return `<div class="ex"><div class="ex-h"><span>${titulo||'Exemplo'}</span></div><pre class="ex-txt">${escH(code)}</pre></div>`;
+  return `<div class="ex ex-${lang}" data-ex="${id}"><div class="ex-h"><span>${titulo||(lang==='sql'?'SQL':'Python')}</span><button class="ex-run" data-run="${id}">▶ Executar</button></div>${editorHTML(id,lang,code).replace('class="ed"','class="ed mini"')}<div class="ex-out" id="${id}-out"></div></div>`;
+}
+function renderBlocos(blocos){
+  return blocos.map(b=>{
+    switch(b[0]){
+      case 'p':return `<p>${mdInline(b[1])}</p>`;
+      case 'tip':return `<div class="tip"><b>Dica</b> ${mdInline(b[1])}</div>`;
+      case 'list':return `<ul class="aula-l">${b[1].map(x=>`<li>${mdInline(x)}</li>`).join('')}</ul>`;
+      case 'code':return blocoExec(b[1],b[2]);
+      case 'cmp':return `<div class="cmp"><div class="cmp-col">${blocoExec('sql',b[1],'Em SQL')}</div><div class="cmp-col">${blocoExec('py',b[2],'Em pandas')}</div>${b[3]?`<p class="cmp-leg">${mdInline(b[3])}</p>`:''}</div>`;
+    }
+    return '';}).join('');
+}
+function ligarBlocos(root,onRun){
+  root.querySelectorAll('.ed.mini').forEach(ed=>{
+    const id=ed.id;const box=root.querySelector(`[data-ex="${id}"]`);const lang=ed.dataset.lang;
+    const api=editorLigar(ed,{onRun:()=>exec()});
+    const exec=()=>{const out=document.getElementById(id+'-out');
+      try{const t0=performance.now();
+        if(lang==='sql'){const df=runSQL(api.valor());out.innerHTML=gradeSQL(df,Math.max(1,Math.round(performance.now()-t0)));}
+        else{const r=runPython(api.valor());const s=saidaNotebook(r);out.innerHTML=s.stdout+s.out||'<pre class="stdout muted">(sem saída)</pre>';}
+        if(onRun)onRun();}
+      catch(err){out.innerHTML=`<pre class="ex-err">${escH(err.message||String(err))}</pre>`;}};
+    box.querySelector('.ex-run').onclick=exec;
+  });
+}
+
 /* ================= ESTADO ================= */
 const SAVE_KEY='select-from-carreira-v1';
 const T=16,MW=24,MH=16;
@@ -1460,7 +2455,8 @@ function novoEstado(nome,look){
     skills:{sql:0,py:0,negocio:0,com:0},energia:100,rep:{Marketing:50,Vendas:50,'Operações':50,Financeiro:50},chefe:50,
     missoes:[],feitas:{},totalFeitas:0,recFeitos:{rel_vendas:0,rel_mkt:0,rel_ops:0},
     roupa:'basica',owned:['basica'],acess:[],cursos:[],autos:[],ultimoAumento:-99,falou:{},pato:0,
-    pos:{x:11,y:14},dir:'up',hoje:{entregas:[],ganhos:0,xp:0,atrasos:[]},cenasVistas:[],uid:1,aviso18:false,histor:[]};
+    pos:{x:11,y:14},dir:'up',hoje:{entregas:[],ganhos:0,xp:0,atrasos:[]},cenasVistas:[],uid:1,aviso18:false,histor:[],
+    tereza:{idx:0,dia:0,feitas:[],desafios:[],apresentada:false},cursoProg:{}};
 }
 function salvar(){if(!S)return;if(typeof player!=='undefined'&&player)S.pos={x:player.x,y:player.y};try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}}
 function carregar(){try{const s=localStorage.getItem(SAVE_KEY);return s?JSON.parse(s):null;}catch(e){return null;}}
@@ -1509,6 +2505,7 @@ function buildMap(){
   // áreas
   const areaDesk=(x,y,npc,dept)=>{F('deskNpc',x,y,2,1,{npc});S_(x,y,2);I_(x,y,2,1,{t:'npc',id:npc,label:`Falar com ${NPCS[npc].nome} (${NPCS[npc].cargo})`});F('cadeira',x,y-1,1,1,{cor:'#3b4254',behind:true});};
   areaDesk(7,3,'bia');areaDesk(10,3,'carlao');areaDesk(13,3,'jorge');areaDesk(7,8,'neide');areaDesk(13,8,'fabio');
+  F('mesaMentora',13,11,2);S_(13,11,2);I_(13,11,2,1,{t:'npc',id:'tereza',label:'Falar com Tereza (Cientista de Dados Sênior)'});F('cadeira',13,10,1,1,{cor:'#2a6f68',behind:true});
   F('rack',15,8);S_(15,8);I_(15,8,1,1,{t:'obj',id:'rack',label:'Servidor'});
   F('quadro',11,1,2);I_(11,1,2,1,{t:'carreira',label:'Quadro de metas (plano de carreira)'});
   // sala do chefe
@@ -1537,7 +2534,7 @@ function buildMap(){
   // NPCs
   npcs={
     bia:mkNpc('bia',7,2),carlao:mkNpc('carlao',10,2),jorge:mkNpc('jorge',13,2),neide:mkNpc('neide',7,7),fabio:mkNpc('fabio',13,7),
-    chefe:mkNpc('chefe',19,3),kevin:mkNpc('kevin',2,13,true)};
+    chefe:mkNpc('chefe',19,3),kevin:mkNpc('kevin',2,13,true),tereza:mkNpc('tereza',13,10)};
 }
 function mkNpc(id,x,y,wander){return {id,x,y,px:x*T,py:y*T,dir:'down',moving:false,wander:!!wander,timer:2+Math.random()*3,frame:0,home:{x,y}};}
 function blocked(x,y,who){
@@ -1594,6 +2591,9 @@ function drawFurn(f){
       break;}
     case 'cadeira':{const c=f.cor;if(f.grande){R(px+3,py-6,10,12,c);R(px+3,py-6,10,2,'#7a3a3a');}else{R(px+4,py-3,8,8,c);R(px+4,py-3,8,2,'#4d5468');}R(px+7,py+5,2,4,'#2a2d35');R(px+4,py+9,8,2,'#2a2d35');break;}
     case 'cadeiraPlayer':{const ergo=has('cadeira');const c=ergo?'#1f6f8b':'#3b4254';R(px+4,py+2,8,6,c);R(px+3,py+8,10,3,c);if(ergo){R(px+4,py+1,8,2,'#2a9fc7');R(px+2,py+6,1,4,'#2a2d35');R(px+13,py+6,1,4,'#2a2d35');}R(px+7,py+11,2,3,'#2a2d35');R(px+4,py+14,8,1,'#2a2d35');break;}
+    case 'mesaMentora':{R(px,py-4,T*2,8,'#8a5a36');R(px,py-4,T*2,2,'#a8744a');R(px,py+4,T*2,9,'#6b4426');R(px+2,py+4,2,10,'#4a2e19');R(px+T*2-4,py+4,2,10,'#4a2e19');
+      R(px+3,py-9,10,6,'#c9d0db');R(px+4,py-8,8,4,'#2a9d8f');R(px+3,py-3,10,1,'#9aa4b5');
+      R(px+18,py-7,7,2,'#c0392b');R(px+19,py-9,6,2,'#2b59c3');R(px+18,py-11,7,2,'#ffd23f');R(px+27,py-6,3,3,'#f6f7f9');break;}
     case 'rack':{R(px+2,py-10,12,24,'#1f232c');for(let k=0;k<5;k++){R(px+4,py-8+k*4,8,2,'#2f3542');R(px+10,py-8+k*4,1,1,((t/300+k)|0)%2?'#2ecc71':'#0f5132');}break;}
     case 'servidores':{R(px+3,py-8,10,20,'#20242e');const n=S.autos.length;for(let k=0;k<5;k++){R(px+5,py-6+k*4,6,2,'#2f3542');if(k<n)R(px+9,py-6+k*4,1,1,((t/250+k)|0)%2?'#4fc3f7':'#0d3c55');}
       R(px+4,py-12,8,4,'#9aa4b5');R(px+5,py-11,2,1,'#4fc3f7');R(px+9,py-11,2,1,'#4fc3f7');break;}
@@ -1681,7 +2681,8 @@ function drawPortrait(canvas,id){
 }
 function drawShadow(px,py){ctx.fillStyle='rgba(20,25,40,.28)';ctx.fillRect(px+3,py+13,10,2);ctx.fillRect(px+4,py+12,8,1);}
 function bubble(px,py,txt,col){ctx.fillStyle=col||'#fff';ctx.fillRect(px+4,py-15,9,8);ctx.fillRect(px+6,py-7,2,2);ctx.fillStyle='#1b2233';
-  if(txt==='!'){ctx.fillRect(px+8,py-14,1,4);ctx.fillRect(px+8,py-9,1,1);}else{ctx.fillRect(px+6,py-11,1,1);ctx.fillRect(px+8,py-11,1,1);ctx.fillRect(px+10,py-11,1,1);}}
+  if(txt==='!'){ctx.fillRect(px+8,py-14,1,4);ctx.fillRect(px+8,py-9,1,1);}
+  else if(txt==='book'){ctx.fillStyle='#2b59c3';ctx.fillRect(px+5,py-14,3,5);ctx.fillRect(px+9,py-14,3,5);ctx.fillStyle='#ffffff';ctx.fillRect(px+6,py-13,1,3);ctx.fillRect(px+10,py-13,1,3);}else{ctx.fillRect(px+6,py-11,1,1);ctx.fillRect(px+8,py-11,1,1);ctx.fillRect(px+10,py-11,1,1);}}
 
 /* ================= LOOP ================= */
 let keys={},lastT=0,paused=true,inPC=false,frameN=0;
@@ -1697,7 +2698,8 @@ function render(){
     const L=ch===player?lookOf('eu'):lookOf(ch.id);
     drawChar(ctx,ch.px+2,ch.py-6,L,ch.dir,ch.moving?1+(((ch.anim||0)*6)|0)%2:0,1);
     if(ch!==player){
-      if(npcHasDueToday(ch.id))bubble(ch.px,ch.py,'!','#ffd23f');
+      if(ch.id==='tereza'&&S.tereza&&terezaDisponivel()){bubble(ch.px,ch.py,'book','#bfe6ff');}
+      else if(npcHasDueToday(ch.id))bubble(ch.px,ch.py,'!','#ffd23f');
       else if(S.falou[ch.id]!==S.dia&&!paused)bubble(ch.px,ch.py,'…','#ffffff');
     }}}));
   items.sort((a,b)=>a.z-b.z).forEach(i=>i.fn());
@@ -1735,6 +2737,7 @@ function update(dt){
       stepChar(n,dt,3);}
     const vel=inPC?1.1:2.2;
     S.minuto+=dt*vel;
+    somNoite(S.minuto>=1080);
     if(S.minuto>=1080&&!S.aviso18){S.aviso18=true;toast('18:00. Expediente encerrado: saia pela porta quando quiser. Hora extra conta pontos com o chefe, mas cansa.');}
     if(S.minuto>=1260){S.minuto=1260;fimDoDia(true);}
     updateHud();
@@ -1848,7 +2851,8 @@ function concluir(e,extra){
 /* ================= DIÁLOGO ================= */
 let dlgQueue=[],dlgDone=null,typing=null;
 function nomeDe(id){return id==='eu'?S.nome:NPCS[id].nome;}
-function falar(lines,done){dlgQueue=lines.slice();dlgDone=done||null;paused=true;$('#dialog').hidden=false;proxFala();}
+function falar(lines,done){dlgQueue=lines.slice();dlgDone=done||null;paused=true;$('#dialog').hidden=false;
+  const quem=lines.find(l=>Array.isArray(l)&&l[0]!=='eu'&&NPCS[l[0]]);somTocar(quem?quem[0]:musicaAmbiente());proxFala();}
 function aplicarFx(fx){if(!fx)return;
   if(fx.com)S.skills.com+=fx.com;if(fx.negocio)S.skills.negocio+=fx.negocio;if(fx.energia)S.energia=clamp(S.energia+fx.energia,0,100);
   if(fx.boss)S.chefe=clamp(S.chefe+fx.boss,0,100);if(fx.dinheiro)S.dinheiro+=fx.dinheiro;
@@ -1857,7 +2861,7 @@ function aplicarFx(fx){if(!fx)return;
   if(parts.length)toast(parts.join(' · '));lastHud='';updateHud();}
 function proxFala(){
   const box=$('#dialog');const ch=$('#dlgChoices');ch.innerHTML='';
-  if(!dlgQueue.length){box.hidden=true;paused=modalAberto();const d=dlgDone;dlgDone=null;salvar();if(d)d();return;}
+  if(!dlgQueue.length){box.hidden=true;paused=modalAberto();const d=dlgDone;dlgDone=null;salvar();somTocar(musicaAmbiente());if(d)d();return;}
   const l=dlgQueue.shift();
   if(l.q){
     $('#dlgName').textContent=S.nome;drawPortrait($('#dlgPort'),'eu');$('#dlgText').textContent=l.q;$('#dlgNext').hidden=true;
@@ -1871,7 +2875,7 @@ function proxFala(){
   if(fx)aplicarFx(fx);
   if(reduceMotion){$('#dlgText').textContent=full;typing=null;return;}
   let i=0;const el=$('#dlgText');el.textContent='';clearInterval(typing);
-  typing=setInterval(()=>{i+=2;el.textContent=full.slice(0,i);if(i>=full.length){clearInterval(typing);typing=null;}},16);
+  typing=setInterval(()=>{i+=2;el.textContent=full.slice(0,i);if(/\S/.test(full.charAt(i-1)))somBlip(who);if(i>=full.length){clearInterval(typing);typing=null;}},16);
   el.dataset.full=full;
 }
 function avancar(){if(typing){clearInterval(typing);typing=null;$('#dlgText').textContent=$('#dlgText').dataset.full;return;}if($('#dlgChoices').children.length)return;proxFala();}
@@ -1879,7 +2883,7 @@ function avancar(){if(typing){clearInterval(typing);typing=null;$('#dlgText').te
 /* ================= INTERAÇÕES ================= */
 function interagir(){
   const a=alvo();if(!a)return;
-  if(a.t==='npc'){const n=npcs[a.id];const inv={up:'down',down:'up',left:'right',right:'left'}[player.dir];if(n&&!(a.id==='chefe'))n.dir=inv;if(a.id==='chefe')return falarChefe();return falarNpc(a.id);}
+  if(a.t==='npc'){const n=npcs[a.id];const inv={up:'down',down:'up',left:'right',right:'left'}[player.dir];if(n&&!(a.id==='chefe'))n.dir=inv;if(a.id==='chefe')return falarChefe();if(a.id==='tereza')return falarTereza();return falarNpc(a.id);}
   if(a.t==='pc')return abrirPC();
   if(a.t==='cafe')return cafe();
   if(a.t==='porta')return porta();
@@ -1899,6 +2903,20 @@ function falarNpc(id){
     linhas.push({q:'Algo mais?',opts:[{t:'Tem alguma demanda para mim?',fn:()=>pedirDemanda(id)},{t:'Só passando. Até mais!'}]});}
   falar(linhas);
 }
+function falarTereza(){
+  const linhas=[];const primeira=S.falou.tereza!==S.dia;
+  if(primeira){S.falou.tereza=S.dia;}
+  if(terezaDisponivel()){const a=aulaDeHoje();linhas.push(['tereza',S.tereza.idx>=TEREZA.length?`Você já viu todas as minhas aulas! Hoje vamos revisar: “${a.titulo}”.`:`Bom dia, ${S.nome}! A aula de hoje é: “${a.titulo}”. Leva uns minutinhos.`]);
+    linhas.push({q:'Vamos?',opts:[{t:'Bora, quero a aula de hoje',fn:()=>{dlgDone=()=>abrirAulaTereza(a,true);}},{t:'Rever aulas anteriores',fn:()=>{dlgDone=()=>abrirPC('caderno');}},{t:'Agora não, depois eu volto'}]});}
+  else{linhas.push(['tereza',FALAS.tereza[Math.floor(Math.random()*FALAS.tereza.length)]]);linhas.push(['tereza','A aula de hoje já foi. Amanhã tem outra! As anteriores ficam no seu computador, em “Aulas da Tereza”.']);
+    linhas.push({q:'Algo mais?',opts:[{t:'Abrir minhas aulas anteriores',fn:()=>{dlgDone=()=>abrirPC('caderno');}},{t:'Só passando'}]});}
+  falar(linhas);
+}
+function apresentarTereza(){
+  S.tereza.apresentada=true;
+  falar([['chefe','Atenção, pessoal! Esta é a Tereza, nossa nova cientista de dados sênior.'],['tereza','Oi! Vou ficar naquela mesa perto do TI.'],['tereza','Todo dia eu preparo uma aula curta de código, de SQL e de Python. Passa lá quando aparecer o livrinho em cima da minha cabeça.'],['kevin','Tem prova?'],['tereza','Tem desafio. E vale XP.'],['eu','(Os cursos da loja também ganharam aulas de verdade, com exemplos para executar. Ficam no computador, na aba Cursos.)']]);
+}
+function musicaAmbiente(){const ev=eventoHoje();return ev&&ev.deco&&ev.deco!=='halloween'?'festa':'escritorio';}
 function pedirDemanda(id){
   if(S.missoes.length>=6){dlgQueue.unshift([id,'Você já tá com a caixa cheia. Entrega o que tem primeiro!']);return;}
   const p=poolDisponivel(id).filter(m=>!m._rev);
@@ -1939,7 +2957,7 @@ function pedirPromocao(){
   dlgQueue.unshift(['chefe','Olha… eu estava esperando você vir aqui.'],['chefe',`A partir de hoje você é ${CARREIRA[novo].nome}! Parabéns!`],['chefe',S.cargo===0?'E chega de bancada: você ganhou mesa própria no open space.':novo===3?'Sua nova mesa fica perto da minha sala. Para eu te chamar mais fácil.':novo===4?'Aquela sala de reunião com vidro agora é sua. Não deixe o Kevin cochilar lá.':'Agora você responde direto para a diretoria. Que a força esteja com você.'],
     ['eu',`Novo salário: ${brl(Math.max(S.salario*1.1,CARREIRA[novo].salario))}. Novo crachá. Nova mesa.`,null]);
   const done=()=>{S.cargo=novo;S.salario=Math.round(Math.max(S.salario*1.1,CARREIRA[novo].salario)/10)*10;S.chefe=clamp(S.chefe+5,0,100);
-    const d=deskAtual();buildMap();player.x=d.cx;player.y=d.cy;player.px=d.cx*T;player.py=d.cy*T;player.dir='up';lastHud='';updateHud();salvar();toast(`Promoção! Agora você é ${CARREIRA[novo].nome}.`,'gold');confete();};
+    const d=deskAtual();buildMap();player.x=d.cx;player.y=d.cy;player.px=d.cx*T;player.py=d.cy*T;player.dir='up';lastHud='';updateHud();salvar();toast(`Promoção! Agora você é ${CARREIRA[novo].nome}.`,'gold');somEfeito('promocao');confete();};
   const prev=dlgDone;dlgDone=()=>{done();if(prev)prev();};
 }
 function pedirAumento(){
@@ -1958,7 +2976,7 @@ function cafe(){
   const preco=has('cafeteira')?0:has('caneca')?4:8;
   if(S.energia>=100){falar([['eu','Mais café agora e eu começo a enxergar sons.']]);return;}
   if(S.dinheiro<preco){falar([['eu','Sem dinheiro nem para o café. Hora de entregar alguma coisa.']]);return;}
-  S.dinheiro-=preco;S.energia=clamp(S.energia+30,0,100);lastHud='';updateHud();
+  S.dinheiro-=preco;S.energia=clamp(S.energia+30,0,100);lastHud='';updateHud();somEfeito('cafe');
   const f=['Café passado. +30 de energia.','O café da Neide. Forte o suficiente para compilar sozinho. +30 de energia.','Cafeína: o ETL do corpo humano. +30 de energia.'];
   toast(f[Math.floor(Math.random()*f.length)]+(preco?` (${brl(preco)})`:''));salvar();
 }
@@ -1985,7 +3003,7 @@ function rendaAutos(){return S.autos.reduce((a,id)=>a+LOJA.automacoes.find(x=>x.
 
 /* ================= DIAS ================= */
 function fimDoDia(forcado){
-  fecharModal(true);$('#dialog').hidden=true;dlgQueue=[];
+  somEfeito('porta');fecharModal(true);$('#dialog').hidden=true;dlgQueue=[];
   paused=true;
   const horaExtra=S.minuto>=19*60&&!forcado;if(horaExtra)S.chefe=clamp(S.chefe+2,0,100);
   // atrasos
@@ -2025,14 +3043,15 @@ function comecarDia(){
   gerarMissoesDoDia();
   const cenas=[];
   const ev=eventoHoje();
-  if(S.dia===1){cenas.push(['chefe','Bem-vindo(a) à Tabelão S.A., {nome}! Eu sou o Seu Ronaldo, gerente de BI.'],['chefe','Sua mesa é a bancada ali embaixo, à esquerda, do lado do Kevin. Não toque no teclado dele.'],['chefe','As demandas das áreas chegam no seu computador. Cada uma tem prazo: atrasou, a área fica chateada. E eu também.'],['chefe','Salário cai a cada 4 dias. Café fica na copa. Aumento e promoção, na minha sala… quando você merecer.'],['kevin','Oi! Eu sou o Kevin. Se o servidor cair, não fui eu.'],['eu','(Ande com as setas ou WASD. Aperte E ou Espaço perto das coisas e das pessoas para interagir.)']);}
+  if(S.dia===1){cenas.push(['chefe','Bem-vindo(a) à Tabelão S.A., {nome}! Eu sou o Seu Ronaldo, gerente de BI.'],['chefe','Sua mesa é a bancada ali embaixo, à esquerda, do lado do Kevin. Não toque no teclado dele.'],['chefe','As demandas das áreas chegam no seu computador. Cada uma tem prazo: atrasou, a área fica chateada. E eu também.'],['chefe','Salário cai a cada 4 dias. Café fica na copa. Aumento e promoção, na minha sala… quando você merecer.'],['kevin','Oi! Eu sou o Kevin. Se o servidor cair, não fui eu.'],['tereza','E eu sou a Tereza, cientista de dados. Todo dia tenho uma aula curta de código na minha mesa, perto do TI. Passa lá quando aparecer o livrinho!'],['eu','(Ande com as setas ou WASD. Aperte E ou Espaço perto das coisas e das pessoas para interagir.)']);}
   else{
     if(ev){if(ev.bonus){if(ev.bonus.energia)S.energia=clamp(S.energia+ev.bonus.energia,0,120);if(ev.bonus.dinheiro)S.dinheiro+=ev.bonus.dinheiro;}if(ev.cena)cenas.push(...ev.cena);}
     if(S.aniversario){cenas.push(['kevin',`Hoje é aniversário de ${NPCS[S.aniversario].nome}! Tem bolo na copa!`]);}
     if(S.chefe<20){cenas.push(['chefe','Precisamos conversar. As áreas reclamaram de atrasos.'],['chefe','Não vou te mandar embora, mas preciso ver entregas no prazo. Combinado?'],['eu','Combinado. (Moral com o chefe recuperada para 30.)']);S.chefe=30;}
     else if(!ev&&Math.random()<.5){const pend=CENAS_ALEATORIAS.filter(c=>!S.cenasVistas.includes(c));const pool=pend.length?pend:CENAS_ALEATORIAS;const c=pool[Math.floor(Math.random()*pool.length)];if(!pend.length)S.cenasVistas=[];S.cenasVistas.push(c);cenas.push(...CENAS[c]);}
   }
-  lastHud='';updateHud();salvar();
+  if(S.dia===1&&S.tereza)S.tereza.apresentada=true;
+  lastHud='';updateHud();salvar();somTocar(musicaAmbiente());
   const fim=()=>{paused=false;toast(`${S.missoes.length} demanda${S.missoes.length!==1?'s':''} na sua caixa de entrada. Vá até o seu computador.`);};
   if(cenas.length)falar(cenas,fim);else fim();
 }
@@ -2057,7 +3076,7 @@ function fecharModal(force){
 function confete(){if(reduceMotion)return;const c=$('#confete');c.innerHTML='';for(let i=0;i<40;i++){const s=document.createElement('i');s.style.left=Math.random()*100+'%';s.style.background=['#ffd23f','#2b59c3','#2f9e5b','#e85d9a','#d6453d'][i%5];s.style.animationDelay=Math.random()*.4+'s';c.appendChild(s);}setTimeout(()=>c.innerHTML='',2600);}
 
 /* ================= COMPUTADOR ================= */
-let pcTab='inbox',pcUid=null;
+let pcTab='inbox',pcUid=null,edApi=null;
 const KIND={fill:'Lacunas',sql:'SQL',py:'Python',quiz:'Pergunta'};
 function abrirPC(tab){
   inPC=true;pcTab=tab||'inbox';pcUid=null;
@@ -2066,18 +3085,20 @@ function abrirPC(tab){
 }
 function renderPC(){
   const nav=$('#pcNav');if(!nav)return;
-  const tabs=[['inbox','Caixa de entrada',S.missoes.length],['dados','Dicionário de dados'],['hist','Entregues']];
+  const tabs=[['inbox','Caixa de entrada',S.missoes.length],['cursos','Cursos'],['caderno','Aulas da Tereza'],['dados','Dicionário de dados'],['hist','Entregues']];
   nav.innerHTML=tabs.map(([k,n,c])=>`<button class="${pcTab===k&&!pcUid?'on':''}" data-tab="${k}">${n}${c!=null?` <b>${c}</b>`:''}</button>`).join('')+`<div class="pc-energy">Energia <strong>${Math.round(S.energia)}</strong></div>`;
-  nav.querySelectorAll('button').forEach(b=>b.onclick=()=>{salvarRascunho();pcTab=b.dataset.tab;pcUid=null;renderPC();});
+  nav.querySelectorAll('button').forEach(b=>b.onclick=()=>{salvarRascunho();pcTab=b.dataset.tab;pcUid=null;cursoAberto=null;renderPC();});
   const main=$('#pcMain');
   if(pcUid){const e=S.missoes.find(x=>x.uid===pcUid);if(e)return renderMissao(main,e);pcUid=null;}
   if(pcTab==='inbox')return renderInbox(main);
   if(pcTab==='dados')return renderDados(main);
   if(pcTab==='hist')return renderHist(main);
+  if(pcTab==='cursos')return renderCursosPC(main);
+  if(pcTab==='caderno')return renderCaderno(main);
 }
 function renderInbox(main){
   const ms=S.missoes.map(e=>({e,m:getM(e)})).filter(x=>x.m).sort((a,b)=>a.e.due-b.e.due);
-  if(!ms.length){main.innerHTML=`<div class="empty-state"><p>Caixa de entrada zerada.</p><p class="muted">Converse com as áreas para pedir novas demandas, ou volte amanhã. Aproveite para estudar o dicionário de dados.</p></div>`;return;}
+  if(!ms.length){main.innerHTML=`<div class="empty-state"><p>Caixa de entrada zerada.</p><p class="muted">Converse com as áreas para pedir novas demandas, ou volte amanhã. Aproveite para fazer um curso ou rever as aulas da Tereza.</p></div>`;return;}
   main.innerHTML=`<ul class="inbox">${ms.map(({e,m})=>{const rw=rewardOf(m,e);return `<li><button data-uid="${e.uid}">
     <canvas width="28" height="28" data-port="${m.from}"></canvas>
     <span class="ib-from">${NPCS[m.from].nome}<small>${NPCS[m.from].cargo}</small></span>
@@ -2086,53 +3107,95 @@ function renderInbox(main){
     <span class="ib-due ${dueCls(e)}">${dueTxt(e)}</span>
     <span class="ib-rw">${brl(rw.pay)} · ${rw.xp} XP</span></button></li>`;}).join('')}</ul>`;
   main.querySelectorAll('canvas[data-port]').forEach(c=>drawPortrait(c,c.dataset.port));
-  main.querySelectorAll('button[data-uid]').forEach(b=>b.onclick=()=>{pcUid=+b.dataset.uid;renderPC();});
+  main.querySelectorAll('button[data-uid]').forEach(b=>b.onclick=()=>{somEfeito('clique');pcUid=+b.dataset.uid;renderPC();});
 }
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function esc(s){return escH(s);}
+/* --- contexto de dados da missão --- */
+function tabelasDaMissao(m){const code=m.kind==='fill'?m.template:(m.solution||'');return TABELAS.filter(t=>new RegExp('\\b'+t+'\\b').test(code));}
+function colunasUsadas(m,t){const code=m.kind==='fill'?solutionCode(m):(m.solution||'');return Object.keys(DATA[t][0]).filter(c=>new RegExp('\\b'+c+'\\b').test(code));}
+function descreverEsperado(m){
+  let exp;try{exp=expected(m);}catch(e){return '';}
+  const ord=m.ordered?' <b>na ordem pedida</b>':'';
+  if(exp instanceof DF){
+    if(exp.rows.length===1&&exp.cols.length===1)return `um único número${ord}.`;
+    const nomes=m.lang==='py'?`: ${exp.cols.map(c=>`<code>${escH(c)}</code>`).join(', ')}`:'';
+    return `uma tabela com <b>${exp.rows.length} linha${exp.rows.length!==1?'s':''}</b> e <b>${exp.cols.length} coluna${exp.cols.length!==1?'s':''}</b>${nomes}${ord}.`;}
+  if(exp instanceof Series)return exp.isDefault?`uma coluna com <b>${exp.values.length} valores</b>${ord}.`:`uma Series com <b>${exp.values.length} linhas</b>, uma para cada <code>${escH(exp.indexName||'item')}</code>${ord}.`;
+  if(Array.isArray(exp))return `uma lista com ${exp.length} itens${ord}.`;
+  return 'um único valor.';
+}
+function painelDados(m){
+  const ts=tabelasDaMissao(m);if(!ts.length)return '';
+  const aberto=m.tier<=2||m.rec?'open':'';
+  return `<details class="mctx" ${aberto}><summary>Dados desta missão <span class="muted">(${ts.join(', ')})</span></summary>
+    ${ts.map(t=>{const usadas=colunasUsadas(m,t);const cols=Object.keys(DATA[t][0]);
+      return `<div class="mctx-t"><div class="mctx-h"><b>${t}</b><span class="muted">${SCHEMAS[t].desc} ${DATA[t].length} linhas.</span></div>
+      <div class="mini-wrap"><table class="mini"><thead><tr>${cols.map(c=>`<th class="${usadas.includes(c)?'use':''}" title="${escH(SCHEMAS[t].cols[c])}">${c}<small>${m.lang==='py'?dtypePandas(t,c):tipoColuna(t,c)}</small></th>`).join('')}</tr></thead>
+      <tbody>${DATA[t].slice(0,4).map(r=>`<tr>${cols.map(c=>`<td class="${usadas.includes(c)?'use':''}">${celula(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;}).join('')}
+    <p class="muted small">As colunas em destaque provavelmente vão ser úteis. Passe o mouse no nome para ver a descrição.</p></details>`;
+}
+/* --- tela da missão --- */
 function renderMissao(main,e){
   const m=getM(e);const rw=rewardOf(m,e);
   const head=`<button class="back" id="pcBack">‹ Caixa de entrada</button>
    <header class="mail-h"><canvas width="44" height="44" id="mailPort"></canvas><div><div class="mail-from">${NPCS[m.from].nome} <span>${NPCS[m.from].cargo}</span></div>
    <h3>${m.title}</h3><div class="mail-meta"><span class="ib-due ${dueCls(e)}">Prazo: ${dueTxt(e).toLowerCase()}</span><span>${brl(rw.pay)} + ${rw.xp} XP${e.start===S.dia&&!e.revisao?' (+20% se entregar hoje)':''}</span><span class="tag t-${m.kind}">${KIND[m.kind]}</span></div></div></header>
    <p class="brief">${esc(m.brief)}</p>`;
-  let work='';
+  edApi=null;
   if(m.kind==='quiz'){
     const order=m.options.map((_,i)=>i);for(let i=order.length-1;i>0;i--){const j=(e.uid*7+i*13)%(i+1);[order[i],order[j]]=[order[j],order[i]];}
-    work=`<div class="quiz">${order.map(i=>`<button class="opt" data-i="${i}" ${e.tried&&e.tried.includes(i)?'disabled':''}>${esc(m.options[i])}</button>`).join('')}</div><div id="out" class="out"></div>`;
-  }else{
-    const lang=m.lang==='sql'?'SQL':'Python (pandas)';
-    let editor;
-    if(m.kind==='fill'){
-      let k=0;const parts=m.template.split('___');const vals=e.draft||[];
-      editor=`<pre class="code fill">${parts.map((p,i)=>esc(p)+(i<parts.length-1?`<input class="blank" data-b="${i}" value="${esc(vals[i]||'')}" size="${Math.max(3,m.answers[i].length+1)}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Lacuna ${i+1}">`:'')).join('')}</pre>`;
-    }else{
-      editor=`<textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Editor de código ${lang}">${esc(e.draft!=null?e.draft:(m.starter||''))}</textarea>`;
-    }
-    work=`<div class="ed-head"><span>${lang}</span><span class="muted">${m.kind==='fill'?'Preencha as lacunas':'Ctrl + Enter executa'}</span></div>${editor}
-      ${m.kind!=='fill'?tabelasHelper(m.lang):''}
-      <div class="ed-actions"><button class="btn" id="btnRun">Executar</button><button class="btn primary" id="btnSend">Entregar</button><span class="sp"></span>
-      <button class="btn ghost" id="btnHint">${has('pato')&&S.pato!==S.dia?'Perguntar ao pato (grátis)':'Pedir dica (R$ 20)'}</button><button class="btn ghost" id="btnGab">Ver gabarito</button></div>
-      <div id="hint" class="hint" hidden></div><div id="out" class="out"></div>`;
-  }
-  main.innerHTML=head+work;
-  drawPortrait($('#mailPort'),m.from);
-  $('#pcBack').onclick=()=>{salvarRascunho();pcUid=null;renderPC();};
-  if(m.kind==='quiz'){
+    main.innerHTML=head+`<div class="quiz">${order.map(i=>`<button class="opt" data-i="${i}" ${e.tried&&e.tried.includes(i)?'disabled':''}>${esc(m.options[i])}</button>`).join('')}</div><div id="out" class="out"></div>`;
+    drawPortrait($('#mailPort'),m.from);$('#pcBack').onclick=()=>{pcUid=null;renderPC();};
     main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
       const i=+b.dataset.i;
       if(S.energia<custoEnergia())return outErro('Sem energia para pensar. Vá até a copa tomar um café.');
-      if(i===m.answer){mostrarSucesso(concluir(e));}
-      else{e.wrong++;e.tried=(e.tried||[]).concat(i);S.energia=clamp(S.energia-3,0,100);b.disabled=true;b.classList.add('no');outErro('Não é bem isso. Pense no impacto para o negócio e tente de novo (a recompensa diminui um pouco).');lastHud='';updateHud();}
+      if(i===m.answer){somEfeito('sucesso');mostrarSucesso(concluir(e));}
+      else{somEfeito('erro');e.wrong++;e.tried=(e.tried||[]).concat(i);S.energia=clamp(S.energia-3,0,100);b.disabled=true;b.classList.add('no');outErro('Não é bem isso. Pense no impacto para o negócio e tente de novo (a recompensa diminui um pouco).');lastHud='';updateHud();}
     });
     return;}
-  const ta=$('#code');
-  if(ta){ta.addEventListener('keydown',ev=>{
-      if(ev.key==='Tab'){ev.preventDefault();const s=ta.selectionStart;ta.setRangeText('    ',s,ta.selectionEnd,'end');}
-      if(ev.key==='Enter'&&(ev.ctrlKey||ev.metaKey)){ev.preventDefault();executar(m,e);}
-      ev.stopPropagation();});
-    setTimeout(()=>{ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);},40);}
+  const sql=m.lang==='sql';
+  const arquivo=`missao_${String(m.id).replace(/[^a-z0-9]/gi,'_')}`;
+  let editor;
+  if(m.kind==='fill'){
+    const parts=m.template.split('___');const vals=e.draft||[];
+    const linhas=m.template.split('\n').length;
+    editor=`<div class="ed fill" data-lang="${m.lang}"><div class="ed-gut" aria-hidden="true">${Array.from({length:linhas},(_,i)=>`<span>${i+1}</span>`).join('')}</div><div class="ed-area"><pre class="ed-hl static">${parts.map((p,i)=>realcar(p,m.lang)+(i<parts.length-1?`<input class="blank" data-b="${i}" value="${esc(vals[i]||'')}" size="${Math.max(3,m.answers[i].length+1)}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Lacuna ${i+1}">`:'')).join('')}</pre></div></div>`;
+  }else editor=editorHTML('missEd',m.lang,e.draft!=null?e.draft:(m.starter||''));
+  const botoes=`<button class="tb-btn run" id="btnRun" title="${sql?'Ctrl+Enter ou F5':'Shift+Enter ou Ctrl+Enter'}">▶ Executar</button><button class="tb-btn send" id="btnSend">✓ Entregar</button><span class="sp"></span>
+      <button class="tb-btn ghost" id="btnHint">${has('pato')&&S.pato!==S.dia?'🦆 Perguntar ao pato':'💡 Dica (R$ 20)'}</button><button class="tb-btn ghost" id="btnGab">Gabarito</button>`;
+  const esperado=descreverEsperado(m);
+  let tool;
+  if(sql){
+    tool=`<div class="tool sqltool">
+      <div class="tool-bar"><span class="tool-logo">🛢 Cliente SQL</span><span class="conn"><i class="dot"></i>tabelao_prod</span>${botoes}</div>
+      <div class="tool-main">
+        <aside class="dbnav"><div class="dbnav-h">Navegador do banco</div>
+          <div class="tree"><div class="tr-db">▾ 🛢 tabelao_prod</div><div class="tr-f">▾ 📁 Tabelas</div>
+          ${TABELAS.map(t=>`<details class="tr-t" ${tabelasDaMissao(m).includes(t)?'open':''}><summary><span class="ico">▦</span>${t}</summary>${Object.keys(DATA[t][0]).map(c=>`<button class="tr-c" data-ins="${c}" title="${esc(SCHEMAS[t].cols[c])}"><span>${c}</span><small>${tipoColuna(t,c)}</small></button>`).join('')}</details>`).join('')}</div></aside>
+        <div class="tool-ed"><div class="ed-tabs"><span class="ed-tab on">${arquivo}.sql</span></div>${editor}</div>
+      </div>
+      <div class="tool-res"><div class="ed-tabs res-tabs"><span class="ed-tab on" id="tabRes">Resultado</span><span class="ed-tab" id="tabMsg">Mensagens</span></div><div id="out" class="out"><p class="res-vazio">Execute a consulta para ver o resultado aqui.</p></div></div>
+    </div>`;
+  }else{
+    e.execN=e.execN||0;
+    tool=`<div class="tool nb">
+      <div class="nb-top"><span class="nb-logo">jupyter</span><span class="nb-file">${arquivo}.ipynb</span><span class="nb-saved">salvo automaticamente</span><span class="nb-kernel">Python 3 (pandas) <i class="dot"></i></span></div>
+      <div class="tool-bar nb-bar">${botoes}</div>
+      <details class="nb-vars"><summary>Variáveis carregadas</summary><div class="vars">${TABELAS.map(t=>`<div class="var"><button class="chip tname" data-ins="${t}">${t}</button><span class="muted">DataFrame ${DATA[t].length} × ${Object.keys(DATA[t][0]).length}</span><div class="var-cols">${Object.keys(DATA[t][0]).map(c=>`<button class="chip" data-ins="'${c}'" title="${esc(SCHEMAS[t].cols[c])}">${c}</button>`).join('')}</div></div>`).join('')}<div class="var"><button class="chip tname" data-ins="pd">pd</button><span class="muted">módulo pandas</span></div><div class="var"><button class="chip tname" data-ins="np">np</button><span class="muted">módulo numpy (np.where)</span></div></div></details>
+      <div class="nb-body">
+        <div class="cell md"><div class="prompt"></div><div class="md-txt"><b>${esc(m.title)}</b><br>${esc(m.brief)}</div></div>
+        <div class="cell cc sel"><div class="prompt" id="inPrompt">In [${e.execN||' '}]:</div><div class="cell-in">${editor}</div></div>
+        <div class="cell-out" id="out"></div>
+      </div>
+    </div>`;
+  }
+  main.innerHTML=head+painelDados(m)+(esperado?`<div class="esperado"><span>🎯</span><div>Resultado esperado: ${esperado}</div></div>`:'')+tool+`<div id="hint" class="hint" hidden></div>`;
+  drawPortrait($('#mailPort'),m.from);
+  $('#pcBack').onclick=()=>{salvarRascunho();pcUid=null;renderPC();};
+  if(m.kind!=='fill'){const ed=$('#missEd');edApi=editorLigar(ed,{onRun:()=>executar(m,e)});setTimeout(()=>{edApi.ta.focus();edApi.ta.setSelectionRange(edApi.ta.value.length,edApi.ta.value.length);},40);}
   main.querySelectorAll('.blank').forEach((inp,i,all)=>{inp.addEventListener('keydown',ev=>{ev.stopPropagation();if(ev.key==='Enter'){ev.preventDefault();if(all[i+1])all[i+1].focus();else executar(m,e);}});if(i===0)setTimeout(()=>inp.focus(),40);});
-  main.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(!ta)return;const s=ta.selectionStart;ta.setRangeText(c.dataset.ins,s,ta.selectionEnd,'end');ta.focus();});
+  main.querySelectorAll('[data-ins]').forEach(c=>c.onclick=()=>{if(edApi)edApi.inserir(c.dataset.ins);});
+  if(sql){$('#tabRes').onclick=()=>{if(main._ultimo)mostrarSQL(main._ultimo);};$('#tabMsg').onclick=()=>mostrarMsg(main._msg||'Nenhuma mensagem.');}
   $('#btnRun').onclick=()=>executar(m,e);
   $('#btnSend').onclick=()=>entregar(m,e);
   $('#btnHint').onclick=()=>{
@@ -2144,46 +3207,58 @@ function renderMissao(main,e){
     if(!e.gab){abrirConfirm('Ver o gabarito? A entrega passa a valer só 30% da recompensa.',()=>{e.gab=true;aplicarGabarito(m);});}
     else aplicarGabarito(m);};
 }
-function abrirConfirm(msg,ok){const out=$('#out');out.innerHTML=`<div class="confirm"><p>${msg}</p><button class="btn primary" id="cfOk">Ver gabarito</button><button class="btn ghost" id="cfNo">Cancelar</button></div>`;$('#cfOk').onclick=()=>{out.innerHTML='';ok();};$('#cfNo').onclick=()=>out.innerHTML='';}
+function mostrarSQL(x){const out=$('#out');if(!out)return;$('#tabRes')&&$('#tabRes').classList.add('on');$('#tabMsg')&&$('#tabMsg').classList.remove('on');out.innerHTML=(x.aviso||'')+gradeSQL(x.df,x.ms);}
+function mostrarMsg(msg,erro){const out=$('#out');if(!out)return;if($('#tabMsg')){$('#tabMsg').classList.add('on');$('#tabRes').classList.remove('on');}out.innerHTML=`<pre class="msg ${erro?'err-msg':''}">${esc(msg)}</pre>`;}
+function abrirConfirm(msg,ok){const h=$('#hint');h.hidden=false;h.innerHTML=`<div class="confirm"><p>${msg}</p><button class="btn primary" id="cfOk">Ver gabarito</button><button class="btn ghost" id="cfNo">Cancelar</button></div>`;$('#cfOk').onclick=()=>{h.hidden=true;ok();};$('#cfNo').onclick=()=>{h.hidden=true;h.innerHTML='';};}
 function aplicarGabarito(m){
   if(m.kind==='fill'){document.querySelectorAll('.blank').forEach((inp,i)=>inp.value=m.answers[i]);}
-  else{$('#code').value=m.solution;}
-  $('#hint').hidden=false;$('#hint').innerHTML='<b>Gabarito aplicado.</b> Execute, entenda cada parte e entregue. Na próxima, tente sem!';
-}
-function tabelasHelper(lang){
-  const q=lang==='sql';
-  return `<details class="tbls"><summary>Tabelas e colunas (clique para inserir)</summary>${Object.keys(SCHEMAS).map(t=>`<div class="tb"><button class="chip tname" data-ins="${t}">${t}</button>${Object.keys(SCHEMAS[t].cols).map(c=>`<button class="chip" data-ins="${q?c:`'${c}'`}" title="${esc(SCHEMAS[t].cols[c])}">${c}</button>`).join('')}</div>`).join('')}</details>`;
+  else if(edApi)edApi.definir(m.solution);
+  const h=$('#hint');h.hidden=false;h.innerHTML='<b>Gabarito aplicado.</b> Execute, entenda cada parte e entregue. Na próxima, tente sem!';
 }
 function codigoAtual(m){
   if(m.kind==='fill'){const vals=[...document.querySelectorAll('.blank')].map(i=>i.value.trim());let i=0;return {code:m.template.replace(/___/g,()=>vals[i++]||'___'),vals};}
-  return {code:$('#code').value};
+  return {code:edApi?edApi.valor():''};
 }
 function salvarRascunho(){
   if(!pcUid)return;const e=S.missoes.find(x=>x.uid===pcUid);if(!e)return;const m=getM(e);if(!m||m.kind==='quiz')return;
   if(m.kind==='fill'){const b=document.querySelectorAll('.blank');if(b.length)e.draft=[...b].map(i=>i.value);}
-  else{const ta=$('#code');if(ta)e.draft=ta.value;}
+  else if(edApi)e.draft=edApi.valor();
 }
-function outErro(msg){const o=$('#out');if(o)o.innerHTML=`<div class="err">${esc(msg)}</div>`;}
-function rodar(m){
+function outErro(msg){const m=pcUid&&getM(S.missoes.find(x=>x.uid===pcUid)||{ref:''});
+  if(m&&m.lang==='sql'){mostrarMsg(msg,true);return;}
+  const o=$('#out');if(o)o.innerHTML=`<pre class="nb-err">${esc(msg)}</pre>`;}
+function rodar(m,e){
   const {code,vals}=codigoAtual(m);
   if(m.kind==='fill'&&vals.some(v=>!v)){outErro('Preencha todas as lacunas.');return null;}
-  try{return runCode(m.lang,code);}catch(err){outErro(err.message||String(err));return null;}
+  try{const t0=performance.now();const r=runCode(m.lang,code);r.ms=Math.max(1,Math.round(performance.now()-t0));return r;}
+  catch(err){somEfeito('erro');const msg=err.message||String(err);
+    if(m.lang==='sql')mostrarMsg('SQL Error: '+msg,true);
+    else{e.execN=(e.execN||0)+1;$('#inPrompt').textContent=`In [${e.execN}]:`;$('#out').innerHTML=`<pre class="nb-err"><b>${esc(msg.split(':')[0])}</b>${esc(msg.includes(':')?msg.slice(msg.indexOf(':')):'')}</pre>`;}
+    return null;}
 }
-function executar(m,e){salvarRascunho();const r=rodar(m);if(!r)return;$('#out').innerHTML=renderSaida(r);}
+function mostrarResultado(m,e,r,aviso){
+  aviso=aviso||'';
+  if(m.lang==='sql'){const main=$('#pcMain');main._ultimo={df:r.result,ms:r.ms,aviso};main._msg=`Consulta executada com sucesso.\n${r.result.rows.length} linha(s) em ${r.ms} ms.`;mostrarSQL(main._ultimo);return;}
+  e.execN=(e.execN||0)+1;$('#inPrompt').textContent=`In [${e.execN}]:`;
+  const s=saidaNotebook(r);
+  $('#out').innerHTML=aviso+(s.stdout?`<div class="out-row"><div class="prompt"></div><div class="out-body">${s.stdout}</div></div>`:'')+(s.out?`<div class="out-row"><div class="prompt out">Out[${e.execN}]:</div><div class="out-body">${s.out}</div></div>`:'')+(!s.stdout&&!s.out?'<div class="out-row"><div class="prompt"></div><div class="out-body muted small">(sem saída: deixe a expressão na última linha para ver o resultado)</div></div>':'');
+}
+function executar(m,e){salvarRascunho();const r=rodar(m,e);if(!r)return;somEfeito('clique');mostrarResultado(m,e,r);}
 function entregar(m,e){
   salvarRascunho();
   if(S.energia<custoEnergia()){outErro(`Sem energia (precisa de ${custoEnergia()}). Vá até a copa tomar um café.`);return;}
-  const r=rodar(m);if(!r)return;
+  const r=rodar(m,e);if(!r)return;
   if(!r.hasResult){outErro('Seu código não devolveu resultado. Deixe a expressão final na última linha (sem atribuir a uma variável) ou use print().');return;}
   let exp;try{exp=expected(m);}catch(err){outErro('Erro interno ao conferir. Tente executar de novo.');return;}
   const c=compareResults(r.result,exp,m.ordered);
-  if(!c.ok){e.wrong++;S.energia=clamp(S.energia-3,0,100);lastHud='';updateHud();
-    $('#out').innerHTML=`<div class="err"><b>${NPCS[m.from].nome} devolveu:</b> “Não é isso que eu pedi.” ${esc(c.msg)}</div>`+renderSaida(r);return;}
-  mostrarSucesso(concluir(e));
+  if(!c.ok){e.wrong++;S.energia=clamp(S.energia-3,0,100);lastHud='';updateHud();somEfeito('erro');
+    mostrarResultado(m,e,r,`<div class="devolveu"><b>${NPCS[m.from].nome} devolveu:</b> “Não é isso que eu pedi.” ${esc(c.msg)}</div>`);return;}
+  somEfeito('sucesso');mostrarSucesso(concluir(e));
 }
 function mostrarSucesso(res){
   const {pay,xp,rapido,m}=res;
-  const reac={bia:'Amei!!! Vai direto pro slide ✨',carlao:'É disso que eu tô falando! Valeu!',neide:'Conferi no caderninho: bate. Muito bem.',jorge:'Isso fecha. Obrigado.',chefe:'Excelente. Vou apresentar como se fosse meu. Brincadeira. Talvez.',fabio:'Limpo e sem gambiarra. Respeito.',kevin:'Uau. Me ensina depois?'}[m.from];
+  const reac={bia:'Amei!!! Vai direto pro slide ✨',carlao:'É disso que eu tô falando! Valeu!',neide:'Conferi no caderninho: bate. Muito bem.',jorge:'Isso fecha. Obrigado.',chefe:'Excelente. Vou apresentar como se fosse meu. Brincadeira. Talvez.',fabio:'Limpo e sem gambiarra. Respeito.',kevin:'Uau. Me ensina depois?',tereza:'Muito bem. Agora explica pra mim o porquê.'}[m.from];
+  edApi=null;
   $('#pcMain').innerHTML=`<div class="done"><canvas width="56" height="56" id="donePort"></canvas>
     <div><p class="done-q">“${reac}”</p><p class="done-who">${NPCS[m.from].nome}</p></div>
     <div class="done-rw"><span class="money">+${brl(pay)}</span><span>+${xp} XP</span>${rapido?'<span class="fast">Entrega no mesmo dia +20%</span>':''}</div>
@@ -2194,33 +3269,106 @@ function mostrarSucesso(res){
   pcUid=null;const nav=$('#pcNav');if(nav){nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));const b=nav.querySelector('[data-tab="inbox"] b');if(b)b.textContent=S.missoes.length;}
   toast(`Entregue: ${m.title}. +${brl(pay)}`,'good');
 }
-function fmtCell(v){if(v===null||v===undefined||(typeof v==='number'&&isNaN(v)))return'<span class="nan">NaN</span>';if(typeof v==='number')return Number.isInteger(v)?v.toLocaleString('pt-BR'):(Math.round(v*100)/100).toLocaleString('pt-BR');if(typeof v==='boolean')return v?'True':'False';return esc(v);}
-function tabelaHTML(cols,rows,idx){
-  const max=25;const shown=rows.slice(0,max);
-  return `<div class="tbl-wrap"><table class="res"><thead><tr>${idx?`<th class="ix">${esc(idx.name||'')}</th>`:''}${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${shown.map((r,i)=>`<tr>${idx?`<td class="ix">${fmtCell(idx.vals[i])}</td>`:''}${cols.map(c=>`<td>${fmtCell(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${rows.length>max?`<p class="muted small">… mais ${rows.length-max} linhas</p>`:''}<p class="muted small">${rows.length} linha${rows.length!==1?'s':''} × ${cols.length} coluna${cols.length!==1?'s':''}</p>`;
-}
-function renderValor(v){
-  if(v instanceof DF)return tabelaHTML(v.cols,v.rows,null);
-  if(v instanceof Series){const nm=v.name==null?'':String(v.name);
-    return tabelaHTML([nm||'valor'],v.values.map(x=>({[nm||'valor']:x})),{name:v.indexName||'',vals:v.index});}
-  if(v instanceof GroupBy)return `<div class="val">&lt;DataFrameGroupBy&gt; <span class="muted">Falta agregar: use .sum(), .mean(), .count()…</span></div>`;
-  if(v instanceof Bound)return `<div class="val">&lt;método ${esc(v.name)}&gt; <span class="muted">Faltou abrir e fechar parênteses: ${esc(v.name)}()</span></div>`;
-  return `<div class="val">${esc(fmtScalar(v))}</div>`;
-}
-function renderSaida(r){
-  let h='';(r.prints||[]).forEach(p=>{if(p!==r.result)h+=renderValor(p);});
-  if(r.hasResult)h+=renderValor(r.result);else if(!h)h='<div class="val muted">(sem saída)</div>';
-  return `<div class="out-label">Resultado</div>`+h;
-}
+function renderValor(v){return tabelaPandas(v);}
 function renderDados(main){
   main.innerHTML=`<p class="muted">Estas são as tabelas da Tabelão S.A. Em SQL use o nome direto (FROM vendas). Em Python elas já estão carregadas como DataFrames: vendas, clientes, campanhas, entregas.</p>`+
-  Object.keys(SCHEMAS).map(t=>{const df=new DF(Object.keys(DATA[t][0]),DATA[t].slice(0,6));return `<section class="dict"><h4>${t} <span class="muted">${DATA[t].length} linhas</span></h4><p>${SCHEMAS[t].desc}</p>
-    <dl>${Object.entries(SCHEMAS[t].cols).map(([c,d])=>`<div><dt>${c}</dt><dd>${esc(d)}</dd></div>`).join('')}</dl>
-    <details><summary>Ver as primeiras linhas</summary>${tabelaHTML(df.cols,df.rows,null)}</details></section>`;}).join('');
+  Object.keys(SCHEMAS).map(t=>{const cols=Object.keys(DATA[t][0]);const df=new DF(cols,DATA[t].slice(0,6));return `<section class="dict"><h4>${t} <span class="muted">${DATA[t].length} linhas</span></h4><p>${SCHEMAS[t].desc}</p>
+    <dl>${Object.entries(SCHEMAS[t].cols).map(([c,d])=>`<div><dt>${c}</dt><dd><span class="tp">${tipoColuna(t,c)}</span> ${esc(d)}</dd></div>`).join('')}</dl>
+    <details><summary>Ver as primeiras linhas</summary>${gradeSQL(df)}</details></section>`;}).join('');
 }
 function renderHist(main){
   if(!S.histor.length){main.innerHTML='<div class="empty-state"><p>Nada entregue ainda.</p><p class="muted">Suas entregas aparecem aqui.</p></div>';return;}
   main.innerHTML=`<table class="ledger hist">${S.histor.map(h=>`<tr><td>Dia ${h.dia}</td><td>${esc(h.t)}<small>${NPCS[h.from].nome}</small></td><td class="num">${brl(h.pay)}</td><td class="num">${h.xp} XP</td></tr>`).join('')}</table>`;
+}
+
+/* ================= AULAS DA TEREZA ================= */
+const SKILL_NOME={sql:'SQL',py:'Python',negocio:'Negócio',com:'Comunicação'};
+function terezaDisponivel(){return S.tereza.dia!==S.dia;}
+function aulaDeHoje(){return TEREZA[S.tereza.idx%TEREZA.length];}
+function abrirAulaTereza(aula,doDia){
+  const jaFeita=S.tereza.feitas.includes(aula.id);
+  const revisao=S.tereza.idx>=TEREZA.length&&doDia;
+  const body=`<div class="aula">
+    <div class="aula-top"><canvas width="44" height="44" id="aulaPort"></canvas><div><span class="tag t-${aula.skill==='sql'?'sql':aula.skill==='py'?'py':'fill'}">${SKILL_NOME[aula.skill]}</span><h3>${esc(aula.titulo)}</h3><p class="muted small">Aula ${TEREZA.indexOf(aula)+1} de ${TEREZA.length}${revisao?' · revisão':''}</p></div></div>
+    ${renderBlocos(aula.blocos)}
+    ${aula.desafio?`<section class="desafio"><h4>Desafio rápido</h4><p>${mdInline(aula.desafio.enunciado)}</p>${blocoExec(aula.desafio.lang,aula.desafio.starter||'','Sua resposta')}<div class="desafio-acoes"><button class="btn primary" id="btnDesafio">Conferir</button><span id="desafioMsg" class="small"></span></div></section>`:''}
+  </div>`;
+  abrirModal(`Aula da Tereza`,body,[{t:'Fechar',fn:()=>fecharModal()}],{wide:true,noFocus:true});
+  drawPortrait($('#aulaPort'),'tereza');
+  const root=$('#modalBody');ligarBlocos(root);
+  if(doDia&&!jaFeita&&S.tereza.dia!==S.dia){S.tereza.dia=S.dia;S.skills[aula.skill]+=10;toast(`Aula concluída: +10 XP de ${SKILL_NOME[aula.skill]}.`);somEfeito('aula');}
+  else if(doDia&&S.tereza.dia!==S.dia){S.tereza.dia=S.dia;}
+  if(doDia){if(!S.tereza.feitas.includes(aula.id))S.tereza.feitas.push(aula.id);S.tereza.idx++;}
+  salvar();lastHud='';updateHud();
+  const bd=$('#btnDesafio');
+  if(bd)bd.onclick=()=>{
+    const box=root.querySelector('.desafio .ed');const code=box.querySelector('.ed-ta').value;const msg=$('#desafioMsg');
+    let r;try{r=runCode(aula.desafio.lang,code);}catch(err){msg.className='small bad';msg.textContent=err.message;somEfeito('erro');return;}
+    const out=document.getElementById(box.id+'-out');
+    if(aula.desafio.lang==='sql')out.innerHTML=gradeSQL(r.result);else{const s=saidaNotebook(r);out.innerHTML=s.stdout+s.out;}
+    if(!r.hasResult){msg.className='small bad';msg.textContent='Deixe o resultado na última linha para eu conferir.';return;}
+    const c=compareResults(r.result,runCode(aula.desafio.lang,aula.desafio.solution).result,aula.desafio.ordered);
+    if(!c.ok){msg.className='small bad';msg.textContent='Ainda não. '+c.msg;somEfeito('erro');return;}
+    if(!S.tereza.desafios.includes(aula.id)){S.tereza.desafios.push(aula.id);S.skills[aula.skill]+=20;S.xp+=10;msg.textContent='Isso! +20 XP de '+SKILL_NOME[aula.skill]+'.';salvar();lastHud='';updateHud();}
+    else msg.textContent='Certo de novo!';
+    msg.className='small good';somEfeito('sucesso');
+  };
+}
+function renderCaderno(main){
+  const vistas=TEREZA.filter(a=>S.tereza.feitas.includes(a.id));
+  main.innerHTML=`<div class="caderno"><p class="muted">Toda manhã a Tereza tem uma aula nova na mesa dela, perto do TI. As aulas que você já viu ficam guardadas aqui para revisar.</p>
+    ${vistas.length?`<ol class="aulas-lista">${TEREZA.map((a,i)=>S.tereza.feitas.includes(a.id)?`<li><button data-a="${a.id}"><span class="num">${i+1}</span><span>${esc(a.titulo)}</span><span class="tag t-${a.skill==='sql'?'sql':a.skill==='py'?'py':'fill'}">${SKILL_NOME[a.skill]}</span>${S.tereza.desafios.includes(a.id)?'<span class="ok-mark">✔ desafio</span>':''}</button></li>`:'').join('')}</ol>`:'<div class="empty-state"><p>Nenhuma aula ainda.</p><p class="muted">Vá até a mesa da Tereza e peça a aula do dia.</p></div>'}
+    <p class="muted small">${S.tereza.feitas.length} de ${TEREZA.length} aulas vistas · ${S.tereza.desafios.length} desafios resolvidos</p></div>`;
+  main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=TEREZA.find(x=>x.id===b.dataset.a);inPC=false;abrirAulaTereza(a,false);});
+}
+
+/* ================= CURSOS ================= */
+let cursoAberto=null,aulaAberta=0;
+function progCurso(id){S.cursoProg[id]=S.cursoProg[id]||{vistas:[],ok:false,nota:null};return S.cursoProg[id];}
+function renderCursosPC(main){
+  if(cursoAberto)return renderCurso(main,cursoAberto);
+  main.innerHTML=`<div class="ead"><div class="ead-h"><b>Escola Tabelão</b><span class="muted">Cursos comprados na loja aparecem aqui. A prova final libera o XP do curso.</span></div>
+   <div class="ead-grid">${LOJA.cursos.map(c=>{const meu=S.cursos.includes(c.id);const p=progCurso(c.id);const n=CURSOS[c.id].aulas.length;
+     return `<div class="ead-card ${meu?'':'lock'}"><div class="ead-card-h"><span class="tag t-${c.skill==='sql'?'sql':c.skill==='py'?'py':'fill'}">${SKILL_NOME[c.skill]}</span>${p.ok?'<span class="ok-mark">✔ concluído</span>':''}</div>
+       <b>${esc(c.nome)}</b><p class="muted small">${n} aulas + prova · ${c.desc}</p>
+       <div class="bar"><i style="width:${Math.round(p.vistas.length/n*100)}%"></i></div>
+       ${meu?`<button class="btn primary" data-c="${c.id}">${p.vistas.length?'Continuar':'Começar'}</button>`:`<button class="btn" data-loja="1">Comprar na loja · ${brl(c.preco)}</button>`}</div>`;}).join('')}</div></div>`;
+  main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{cursoAberto=b.dataset.c;aulaAberta=Math.min(progCurso(cursoAberto).vistas.length,CURSOS[cursoAberto].aulas.length);renderPC();});
+  main.querySelectorAll('[data-loja]').forEach(b=>b.onclick=()=>{fecharModal();abrirLoja('cursos');});
+}
+function renderCurso(main,id){
+  const c=LOJA.cursos.find(x=>x.id===id),cur=CURSOS[id],p=progCurso(id);const n=cur.aulas.length;
+  const naProva=aulaAberta>=n;
+  if(!naProva&&!p.vistas.includes(aulaAberta)){p.vistas.push(aulaAberta);salvar();}
+  main.innerHTML=`<div class="curso"><button class="back" id="cBack">‹ Todos os cursos</button>
+   <div class="curso-l"><aside class="curso-nav"><b>${esc(c.nome)}</b><ol>${cur.aulas.map((a,i)=>`<li><button class="${i===aulaAberta?'on':''}" data-i="${i}">${p.vistas.includes(i)?'✔':'○'} ${esc(a.titulo)}</button></li>`).join('')}
+     <li><button class="${naProva?'on':''}" data-i="${n}">${p.ok?'✔':'★'} Prova final</button></li></ol></aside>
+   <div class="curso-c" id="cursoC"></div></div></div>`;
+  $('#cBack').onclick=()=>{cursoAberto=null;renderPC();};
+  main.querySelectorAll('.curso-nav [data-i]').forEach(b=>b.onclick=()=>{aulaAberta=+b.dataset.i;renderCurso(main,id);});
+  const cc=$('#cursoC');
+  if(!naProva){
+    const a=cur.aulas[aulaAberta];
+    cc.innerHTML=`<p class="muted small">Aula ${aulaAberta+1} de ${n}</p><h3>${esc(a.titulo)}</h3>${renderBlocos(a.blocos)}<div class="curso-nav-b">${aulaAberta>0?'<button class="btn" id="cPrev">‹ Anterior</button>':''}<button class="btn primary" id="cNext">${aulaAberta<n-1?'Próxima aula ›':'Ir para a prova ›'}</button></div>`;
+    ligarBlocos(cc);
+    if($('#cPrev'))$('#cPrev').onclick=()=>{aulaAberta--;renderCurso(main,id);main.scrollTop=0;};
+    $('#cNext').onclick=()=>{aulaAberta++;renderCurso(main,id);main.scrollTop=0;};
+    return;}
+  if(p.vistas.length<n){cc.innerHTML=`<h3>Prova final</h3><p>Veja todas as aulas antes da prova. Faltam ${n-p.vistas.length}.</p>`;return;}
+  cc.innerHTML=`<h3>Prova final</h3><p class="muted">Acerte pelo menos 2 de 3 para concluir${p.ok?'':` e ganhar <b>+${c.xp} XP de ${SKILL_NOME[c.skill]}</b>`}.</p>
+    ${cur.quiz.map((q,qi)=>{const ord=q.o.map((_,i)=>i);const R=rng32(qi*97+id.length*13+id.charCodeAt(2));for(let i=ord.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]];}return `<fieldset class="pq"><legend>${qi+1}. ${mdInline(q.q)}</legend>${ord.map(oi=>`<label><input type="radio" name="q${qi}" value="${oi}"> ${mdInline(q.o[oi])}</label>`).join('')}<p class="pq-exp" hidden></p></fieldset>`;}).join('')}
+    <button class="btn primary" id="cProva">Entregar prova</button><p id="cRes"></p>`;
+  cc.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',ev=>ev.stopPropagation()));
+  $('#cProva').onclick=()=>{
+    let acertos=0;
+    cur.quiz.forEach((q,qi)=>{const sel=cc.querySelector(`input[name="q${qi}"]:checked`);const fs=cc.querySelectorAll('.pq')[qi];const ok=sel&&+sel.value===q.a;if(ok)acertos++;fs.classList.toggle('certo',!!ok);fs.classList.toggle('errado',!ok);const ex=fs.querySelector('.pq-exp');ex.hidden=false;ex.textContent=(ok?'Certo. ':'Resposta: '+q.o[q.a]+'. ')+q.e;});
+    p.nota=Math.max(p.nota||0,acertos);
+    const res=$('#cRes');
+    if(acertos>=2){if(!p.ok){p.ok=true;S.skills[c.skill]+=c.xp;if(c.extra)for(const k in c.extra)S.skills[k]+=c.extra[k];S.xp+=Math.round(c.xp/4);toast(`Curso concluído: ${c.nome}. +${c.xp} XP!`,'gold');somEfeito('promocao');confete();}
+      res.innerHTML=`<b class="good">${acertos} de 3. Aprovado!</b>`;}
+    else{res.innerHTML=`<b class="bad">${acertos} de 3.</b> Revise as aulas e tente de novo.`;somEfeito('erro');}
+    salvar();lastHud='';updateHud();
+  };
 }
 
 /* ================= LOJA ================= */
@@ -2233,13 +3381,13 @@ function renderLoja(){
   $('#shopNav').innerHTML=tabs.map(([k,n])=>`<button class="${lojaTab===k?'on':''}" data-k="${k}">${n}</button>`).join('')+`<span class="shop-money">${brl(S.dinheiro)}</span>`;
   $('#shopNav').querySelectorAll('button').forEach(b=>b.onclick=()=>{lojaTab=b.dataset.k;renderLoja();});
   const items=LOJA[lojaTab];
-  $('#shopList').innerHTML=(lojaTab==='automacoes'?'<p class="muted">Automações trabalham por você todos os dias: geram renda, melhoram a reputação da área e eliminam relatórios recorrentes da sua caixa.</p>':lojaTab==='cursos'?'<p class="muted">Cursos dão XP direto na habilidade. Alguns exigem cargo mínimo.</p>':'')+
+  $('#shopList').innerHTML=(lojaTab==='automacoes'?'<p class="muted">Automações trabalham por você todos os dias: geram renda, melhoram a reputação da área e eliminam relatórios recorrentes da sua caixa.</p>':lojaTab==='cursos'?'<p class="muted">Cada curso tem aulas com exemplos que você pode executar e uma prova final. O XP vem quando você passa na prova. Os cursos ficam no seu computador, na aba Cursos.</p>':'')+
   items.map(it=>{
     let btn='',st='',extra='';
     if(lojaTab==='roupas'){if(S.roupa===it.id){btn='Vestindo';st='disabled';}else if(has(it.id))btn='Vestir';else btn=`Comprar ${brl(it.preco)}`;}
     else if(lojaTab==='acessorios'){if(has(it.id))btn=S.acess.includes(it.id)?'Tirar':'Usar';else btn=`Comprar ${brl(it.preco)}`;}
     else if(lojaTab==='mesa'){if(has(it.id)){btn='Na sua mesa';st='disabled';}else btn=`Comprar ${brl(it.preco)}`;}
-    else if(lojaTab==='cursos'){if(S.cursos.includes(it.id)){btn='Concluído';st='disabled';}else if(it.min&&S.cargo<it.min){btn=`Exige ${CARREIRA[it.min].nome}`;st='disabled';}else btn=`Matricular ${brl(it.preco)}`;}
+    else if(lojaTab==='cursos'){if(S.cursos.includes(it.id)){btn=progCurso(it.id).ok?'Rever aulas':'Estudar';}else if(it.min&&S.cargo<it.min){btn=`Exige ${CARREIRA[it.min].nome}`;st='disabled';}else btn=`Matricular ${brl(it.preco)}`;}
     else{if(S.autos.includes(it.id)){btn=`Rodando · ${brl(it.renda)}/dia`;st='disabled';}else{const f=reqAuto(it);if(f.length){btn='Bloqueada';st='disabled';extra=`<p class="req">Precisa de: ${f.join(', ')}</p>`;}else btn=`Implantar ${brl(it.preco)}`;}}
     const pobre=btn.startsWith('Comprar')||btn.startsWith('Matricular')||btn.startsWith('Implantar');
     if(pobre&&S.dinheiro<it.preco){st='disabled';}
@@ -2251,9 +3399,11 @@ function comprar(tab,id){
   const it=LOJA[tab].find(x=>x.id===id);
   if(tab==='roupas'&&has(id)){S.roupa=id;toast(`Vestindo: ${it.nome}.`);}
   else if(tab==='acessorios'&&has(id)){S.acess=S.acess.includes(id)?S.acess.filter(x=>x!==id):[...S.acess,id];}
+  else if(tab==='cursos'&&S.cursos.includes(id)){fecharModal();abrirPC('cursos');cursoAberto=id;aulaAberta=Math.min(progCurso(id).vistas.length,CURSOS[id].aulas.length-1);renderPC();return;}
   else{
     if(S.dinheiro<it.preco)return;S.dinheiro-=it.preco;
-    if(tab==='cursos'){S.cursos.push(id);S.skills[it.skill]+=it.xp;if(it.extra)for(const k in it.extra)S.skills[k]+=it.extra[k];toast(`Curso concluído: ${it.nome}. +${it.xp} XP.`,'good');}
+    somEfeito('moeda');
+    if(tab==='cursos'){S.cursos.push(id);progCurso(id);salvar();toast(`Matrícula feita: ${it.nome}. Bons estudos!`,'good');fecharModal();abrirPC('cursos');cursoAberto=id;aulaAberta=0;renderPC();return;}
     else if(tab==='automacoes'){S.autos.push(id);if(it.rec)S.missoes=S.missoes.filter(e=>!e.ref.startsWith('rec:'+it.rec));buildMap();toast(`${it.nome} implantada! Renda de ${brl(it.renda)} por dia.`,'gold');confete();}
     else{S.owned.push(id);if(tab==='roupas')S.roupa=id;if(tab==='acessorios')S.acess.push(id);toast(`Comprado: ${it.nome}.`,'good');}
   }
@@ -2294,8 +3444,18 @@ function abrirAjuda(){
     <div><dt>Crescer</dt><dd>Converse com as áreas, peça demandas, peça aumento e promoção na sala do chefe.</dd></div>
     <div><dt>Calendário</dt><dd>Cada dia do jogo é uma semana do ano: Carnaval, Festa Junina, Black Friday e Natal acontecem no escritório.</dd></div>
    </dl>
-   <p class="muted small">O Python aqui é um simulador do pandas que roda no seu navegador: cobre filtros, groupby, agg, merge, pivot_table, value_counts, sort_values e mais. O SQL roda num banco em memória (AlaSQL).</p>
+   <h4>Som</h4>
+   <div class="som-cfg">
+    <label><input type="checkbox" id="cfMus" ${SOM.cfg.musica?'checked':''}> Música</label>
+    <label><input type="checkbox" id="cfSfx" ${SOM.cfg.efeitos?'checked':''}> Efeitos sonoros</label>
+    <label><input type="checkbox" id="cfVoz" ${SOM.cfg.vozes?'checked':''}> Vozes nos diálogos</label>
+    <label class="vol">Volume <input type="range" id="cfVol" min="0" max="1" step="0.05" value="${SOM.cfg.volume}"></label>
+   </div>
+   <p class="muted small">O Python aqui é um simulador que roda no seu navegador: aceita variáveis, listas, dicionários, for, if, funções, f-strings e boa parte do pandas (filtros, groupby, agg, merge, pivot_table, apply e mais). O SQL roda num banco em memória (AlaSQL).</p>
   </div>`,[{t:'Recomeçar do zero',fn:()=>{if(confirm('Apagar todo o progresso e começar de novo?')){try{localStorage.removeItem(SAVE_KEY);}catch(e){}location.reload();}}},{t:'Voltar ao jogo',primary:true,fn:()=>fecharModal()}],{});
+  const liga=(id,k)=>{$('#'+id).onchange=ev=>{SOM.cfg[k]=ev.target.checked;somSalvarCfg();somAplicarCfg();atualizarBotaoSom();};};
+  liga('cfMus','musica');liga('cfSfx','efeitos');liga('cfVoz','vozes');
+  $('#cfVol').oninput=ev=>{SOM.cfg.volume=+ev.target.value;somSalvarCfg();somAplicarCfg();};
 }
 
 /* ================= TELA INICIAL ================= */
@@ -2325,11 +3485,14 @@ function telaInicial(sv){
 }
 function entrar(st,novo){
   S=st;S.hoje=S.hoje||{entregas:[],ganhos:0,xp:0,atrasos:[]};
+  S.tereza=S.tereza||{idx:0,dia:0,feitas:[],desafios:[],apresentada:false};
+  if(!S.cursoProg){S.cursoProg={};(S.cursos||[]).forEach(id=>{S.cursoProg[id]={vistas:CURSOS[id].aulas.map((_,i)=>i),ok:true,nota:null};});}
   player={id:'player',x:S.pos.x,y:S.pos.y,px:S.pos.x*T,py:S.pos.y*T,dir:S.dir||'up',moving:false};
   buildMap();
   if(blocked(player.x,player.y,'player')){player.x=11;player.y=14;player.px=11*T;player.py=14*T;}
   lastHud='';updateHud();
-  if(novo)comecarDia();else{paused=false;toast(`Bem-vindo(a) de volta, ${S.nome}. Dia ${S.dia}, ${horaStr(S.minuto)}.`);}
+  somTocar(musicaAmbiente());
+  if(novo)comecarDia();else if(!S.tereza.apresentada){paused=false;apresentarTereza();}else{paused=false;toast(`Bem-vindo(a) de volta, ${S.nome}. Dia ${S.dia}, ${horaStr(S.minuto)}.`);}
 }
 
 /* ================= CONTROLES ================= */
@@ -2360,6 +3523,9 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')fecharModal();
 $('#btnLoja').onclick=()=>{if(S&&$('#dialog').hidden)abrirLoja();};
 $('#btnCarreira').onclick=()=>{if(S&&$('#dialog').hidden)abrirCarreira();};
 $('#btnAjuda').onclick=()=>{if(S&&$('#dialog').hidden)abrirAjuda();};
+function atualizarBotaoSom(){const b=$('#btnSom');if(!b)return;b.textContent=SOM.cfg.musica?'♪':'♪̸';b.setAttribute('aria-label',SOM.cfg.musica?'Desligar música':'Ligar música');b.classList.toggle('off',!SOM.cfg.musica);}
+$('#btnSom').onclick=()=>{somIniciar();SOM.cfg.musica=!SOM.cfg.musica;somSalvarCfg();somAplicarCfg();atualizarBotaoSom();};
+atualizarBotaoSom();
 $('#btnPC').onclick=()=>{if(S&&$('#dialog').hidden)toast('Vá até o seu computador para trabalhar nas demandas (a mesa com o monitor azul).');};
 setInterval(()=>{if(S&&!paused)salvar();},8000);
 window.addEventListener('pagehide',()=>salvar());
